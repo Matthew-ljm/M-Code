@@ -92,18 +92,28 @@
     <div id="infoBox">版本v2.2以下的录屏软件当前已下架！</div>
     <button class="download-button" style="left:10%;" onclick="window.location.href='录屏软件v2.2安装包.exe'">录屏软件 v2.2（命令行版）</button>
     <button class="download-button" style="left:40%;" onclick="window.location.href='录屏软件v2.3安装包.7z'">录屏软件 v2.3（图形化 GUI 版）</button>
-    <button class="download-button" style="left:80%;" onclick="window.location.href='备份v1.0.exe'">备份 v1.0</button>
+    <button class="download-button" style="left:70%;" onclick="window.location.href='备份v1.0.exe'">备份 v1.0</button>
     <button class="download-button" style="left:10%;top:40%;" onclick="window.location.href='抽签助手v1.0安装包.exe'">抽签助手 v1.0</button>
     <button class="download-button" style="left:40%;top:40%;" onclick="window.location.href='抽签助手v1.1安装包.exe'">抽签助手 v1.1</button>
+    <button class="download-button" style="left:70%;top:40%;" onclick="window.location.href='有理数计算大闯关v1.0安装包.exe'">有理数计算大闯关v1.0</button>
+    <button id="docConvertButton" class="download-button" style="left:10%;top:60%;">抽签助手v1.2（校园版）</button>
     <button id="infoButton"></button>
 </body>
 
 <script>
-    const tipButton = document.querySelector('.tip-button');
+    const tipButton = document.getElementById('infoButton');
     tipButton.addEventListener('click', function () {
         const infoBox = document.getElementById('infoBox');
         infoBox.style.display = infoBox.style.display === 'none'? 'block' : 'none';
     });
+
+        const docConvertButton = document.getElementById('docConvertButton');
+        docConvertButton.addEventListener('mouseover', function () {
+            this.innerHTML = '该软件正在制作中，敬请期待';
+        });
+        docConvertButton.addEventListener('mouseout', function () {
+            this.innerHTML = '抽签助手v1.2（校园版）';
+        });
 </script>
 
 </html>
