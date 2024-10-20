@@ -121,7 +121,7 @@
     <button class="download-button" style="left:10%;top:40%;" onclick="window.location.href='抽签助手v1.0安装包.exe'">抽签助手 v1.0</button>
     <button class="download-button" style="left:40%;top:40%;" onclick="window.location.href='抽签助手v1.1安装包.exe'">抽签助手 v1.1</button>
     <button class="download-button" style="left:70%;top:40%;" onclick="window.location.href='有理数计算大闯关v1.0安装包.exe'">有理数计算大闯关v1.0</button>
-    <button id="docConvertButton" class="download-button" style="left:10%;top:60%;">抽签助手v1.2（校园版）</button>
+    <button class="download-button" style="left:10%;top:60%;" onclick="window.location.href='抽签助手v1.2（校园版）安装包.exe'">抽签助手v1.2（校园版）</button>
     <button id="anotherInfoButton"></button>
 </body>
 
@@ -136,14 +136,6 @@
     anotherTipButton.addEventListener('click', function () {
         const textBoxContainer = document.getElementById('textBoxContainer');
         textBoxContainer.style.display = textBoxContainer.style.display === 'none'? 'block' : 'none';
-    });
-
-    const docConvertButton = document.getElementById('docConvertButton');
-    docConvertButton.addEventListener('mouseover', function () {
-        this.innerHTML = '该软件正在制作中，敬请期待';
-    });
-    docConvertButton.addEventListener('mouseout', function () {
-        this.innerHTML = '抽签助手v1.2（校园版）';
     });
 </script>
 
