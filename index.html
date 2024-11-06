@@ -23,7 +23,7 @@
             object-fit: cover;
         }
 
-      .text-on-top {
+       .text-on-top {
             position: absolute;
             top: 0;
             left: 0;
@@ -46,7 +46,7 @@
             }
         }
 
-      .subtext {
+       .subtext {
             font-size: 1.5rem;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -78,7 +78,7 @@
         }
 
         #downloadButton2 {
-            top: 50%;
+            top: 55%;
             left: 50%;
             background-color: red;
             color: white;
@@ -122,6 +122,30 @@
             font-size: 0.8rem;
             z-index: 2;
         }
+
+        #tipButton {
+            top: 52%;
+            right: 36%;
+            position: absolute;
+            background: url('提示.png') no-repeat center center/cover;
+            width: 50px;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        #tipBox {
+            position: absolute;
+            top: 63%;
+            right: 30%;
+            width: 30%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 2;
+        }
     </style>
 </head>
 
@@ -131,13 +155,20 @@
     <div class="subtext">Crafting Software, Inspiring the Future</div>
     <a id="infoButton" class="button">简介</a>
     <a id="downloadButton" class="button" href="download.html">下载</a>
-    <a id="downloadButton2" class="button" href="fireworks-show.html">2025年烟花秀展示</a>
+    <a id="downloadButton2" class="button" href="fireworks-show.html">2025 年烟花秀展示</a>
     <div id="infoBox">M-Code，一个由 Matthew 精心创建的软件开发个人项目组，于 2024 年 9 月创建。在这里，你将邂逅各种独具创意的实用软件和精妙代码。每一款软件都凝聚着 Matthew 的智慧与心血，无论是在工作效率提升方面，还是在娱乐体验上，都有着独特的魅力。它们以创新的设计和强大的功能，为你的数字生活带来全新的可能。欢迎大家前来下载和使用，一同感受 M-Code 带来的精彩与便捷！</div>
-    <div id="footerText">如有任何疑问或建议，欢迎致电13691170408，或发送邮件至huifeidexiaogougou@126.com</div>
+    <div id="footerText">如有任何疑问或建议，欢迎致电 13691170408，或发送邮件至 huifeidexiaogougou@126.com</div>
+    <button id="tipButton"></button>
+    <div id="tipBox">该项目为限时展示版，展示截止时间为 2025 年 3 月 31 日。提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！</div>
     <script>
         document.getElementById('infoButton').addEventListener('click', function () {
             const infoBox = document.getElementById('infoBox');
             infoBox.style.display = infoBox.style.display === 'none'? 'block' : 'none';
+        });
+
+        document.getElementById('tipButton').addEventListener('click', function () {
+            const tipBox = document.getElementById('tipBox');
+            tipBox.style.display = tipBox.style.display === 'none'? 'block' : 'none';
         });
     </script>
 </body>
