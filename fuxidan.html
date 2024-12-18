@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>信息技术七年级知识点总结</title>
+    <link rel="shortcut icon" href="icon/explorer.ico" type="image/x-icon">
     <style>
         * {
             margin: 0;
@@ -13,11 +14,10 @@
         img {
             width: 100vw;
             height: 100vh;
-            object-fit: cover;
             display: block;
         }
 
-     .download-button {
+      .download-button {
             position: absolute;
             top: 20%;
             padding: 15px 30px;
@@ -30,11 +30,11 @@
             transition: background-color 0.3s ease;
         }
 
-     .download-button:hover {
+      .download-button:hover {
             background-color: goldenrod;
         }
 
-     .text-on-top {
+      .text-on-top {
             position: absolute;
             top: 0;
             left: 0;
@@ -49,9 +49,9 @@
 
 <body>
     <div class="text-on-top">信息技术七年级知识点总结</div>
-    <img src="https://m-code.top/信息技术七年级知识点总结.jpg" alt="Background Image" id="myImage">
-    <button class="download-button" style="left:10%;top:20%;" onclick="saveFile()">保存</button>
-    <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='download.html'">返回</button>
+    <img src="信息技术七年级知识点总结.jpg" alt="Background Image" id="myImage">
+    <button class="download-button" style="right: 0%; top: 5%;" onclick="saveFile()">自由缩放</button>
+    <button class="download-button" style="left: 0%; top: 5%;" onclick="window.location.href='download.html'"><返回</button>
 
     <script>
         function saveFile() {
@@ -61,6 +61,21 @@
             a.download = '信息技术七年级知识点总结.jpg';
             a.click();
         }
+
+        const myImage = document.getElementById('myImage');
+        let scaleFactor = 1;
+
+        document.addEventListener('keydown', function (e) {
+            if (e.ctrlKey) {
+                if (e.key === 'ArrowUp') {
+                    scaleFactor += 0.1;
+                    myImage.style.transform = `scale(${scaleFactor})`;
+                } else if (e.key === 'ArrowDown') {
+                    scaleFactor = Math.max(0.1, scaleFactor - 0.1);
+                    myImage.style.transform = `scale(${scaleFactor})`;
+                }
+            }
+        });
     </script>
 </body>
 
