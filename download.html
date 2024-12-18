@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>下载</title>
+    <link rel="shortcut icon" href="icon/download.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+        }
+
+       .download-button {
+            position: absolute;
+            top: 20%;
+            padding: 15px 30px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+       .download-button:hover {
+            background-color: goldenrod;
+        }
+
+       .text-on-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 4rem;
+            color: #FFD700;
+            z-index: 2;
+        }
+
+        #footerText {
+            position: absolute;
+            bottom: 2%;
+            left: 5%;
+            width: 90%;
+            text-align: center;
+            color: white;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+
+       .highlighted-link {
+            position: absolute;
+            top: 93%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: yellow;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text-on-top">下载</div>
+    <img src="icon/background.jpg" alt="Background Image">
+    <div id="footerText">更多内容敬请期待</div>
+    <button class="download-button" style="left:10%;" onclick="window.location.href='lupingruanjian/index.html'">录屏软件</button>
+    <button class="download-button" style="left:40%;" onclick="window.location.href='chouqianzhushou/index.html'">抽签助手</button>
+    <button class="download-button" style="left:70%;" onclick="window.location.href='software/有理数计算大闯关v1.0安装包.exe'">有理数计算大闯关v1.0</button>
+    <button class="download-button" style="left:10%;top:40%;" onclick="window.location.href='software/成语填空大挑战v1.0安装包.exe'">成语填空大挑战v1.0</button>
+    <button class="download-button" style="left:40%;top:40%;" onclick="window.location.href='software/编码解码辅助工具.exe'">编码解码辅助工具v1.0</button>
+    <a class="highlighted-link" href="uptdf-and-tf.html">访问https://m-code.top/uptdf-and-tf.html可查看测试文件等更多内容</a>
+</body>
+
+</html>
