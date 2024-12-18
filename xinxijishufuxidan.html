@@ -17,7 +17,7 @@
             display: block;
         }
 
-       .download-button {
+     .download-button {
             position: absolute;
             top: 20%;
             padding: 15px 30px;
@@ -30,17 +30,17 @@
             transition: background-color 0.3s ease;
         }
 
-       .download-button:hover {
+     .download-button:hover {
             background-color: goldenrod;
         }
 
-       .text-on-top {
+     .text-on-top {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             text-align: center;
-            font-size: 3rem;
+            font-size: 2rem;
             color: #FFD700;
             z-index: 2;
         }
@@ -49,10 +49,19 @@
 
 <body>
     <div class="text-on-top">信息技术七年级知识点总结</div>
-    <img src="信息技术七年级知识点总结.jpg" alt="Background Image">
-    <button class="download-button" style="left:10%;top:20%;" onclick="window.location.href='抽签助手v1.0安装包.exe'">抽签助手v1.0</button>
-    <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='抽签助手v1.1安装包.exe'">抽签助手v1.1</button>
-    <button class="download-button" style="left:70%;top:20%;" onclick="window.location.href='抽签助手v1.2（校园版）安装包.exe'">抽签助手v1.2（校园版）</button>
+    <img src="https://m-code.top/信息技术七年级知识点总结.jpg" alt="Background Image" id="myImage">
+    <button class="download-button" style="left:10%;top:20%;" onclick="saveFile()">保存</button>
+    <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='download.html'">返回</button>
+
+    <script>
+        function saveFile() {
+            const img = document.getElementById('myImage');
+            const a = document.createElement('a');
+            a.href = img.src;
+            a.download = '信息技术七年级知识点总结.jpg';
+            a.click();
+        }
+    </script>
 </body>
 
 </html>
