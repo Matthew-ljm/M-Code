@@ -11,10 +11,14 @@
             padding: 0;
         }
 
-        img {
-            width: 100vw;
-            height: 100vh;
-            display: block;
+        #text-display {
+            white-space: pre-wrap;
+            padding: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
       .download-button {
@@ -44,38 +48,72 @@
             color: #FFD700;
             z-index: 2;
         }
+
+        #loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 5px;
+            z-index: 999;
+        }
     </style>
 </head>
 
 <body>
-    <div class="text-on-top">信息技术七年级知识点总结</div>
-    <img src="信息技术七年级知识点总结.txt" alt="Background Image" id="myImage">
+    <div class="text-on-top">信息技术七年级知识点总结</title>
+    <div id="text-display"></div>
     <button class="download-button" style="right: 0%; top: 5%;" onclick="saveFile()">保存</button>
     <button class="download-button" style="left: 0%; top: 5%;" onclick="window.location.href='fuxidan.html'"><返回</button>
+    <div id="loading">正在加载，请稍候...</div>
 
     <script>
-        function saveFile() {
-            const img = document.getElementById('myImage');
-            const a = document.createElement('a');
-            a.href = img.src;
-            a.download = '信息技术七年级知识点总结.txt';
-            a.click();
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
         }
 
-        const myImage = document.getElementById('myImage');
-        let scaleFactor = 1;
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
 
-        document.addEventListener('keydown', function (e) {
-            if (e.ctrlKey) {
-                if (e.key === 'ArrowUp') {
-                    scaleFactor += 0.1;
-                    myImage.style.transform = `scale(${scaleFactor})`;
-                } else if (e.key === 'ArrowDown') {
-                    scaleFactor = Math.max(0.1, scaleFactor - 0.1);
-                    myImage.style.transform = `scale(${scaleFactor})`;
-                }
-            }
-        });
+        function fetchText() {
+            showLoading();
+            const url = 'https://m-code.top/信息技术七年级知识点总结.txt';
+            fetch(url)
+            .then(response => {
+                    if (!response.ok) {
+                        throw new Error('读取文件出错，状态码：' + response.status);
+                    }
+                    return response.text();
+                })
+            .then(data => {
+                    const textDisplay = document.getElementById('text-display');
+                    textDisplay.textContent = data;
+                    hideLoading();
+                })
+            .catch(error => {
+                    console.error('读取文件出错：', error);
+                    const textDisplay = document.getElementById('text-display');
+                    textDisplay.textContent = '读取文件出现错误，错误信息：' + error.message;
+                    hideLoading();
+                });
+        }
+
+        window.onload = fetchText;
+
+        function saveFile() {
+            const link = document.createElement('a');
+            link.href = '信息技术七年级知识点总结.txt';
+            link.download = '信息技术七年级知识点总结.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
     </script>
 </body>
 
