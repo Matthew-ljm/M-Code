@@ -110,14 +110,14 @@
     <div id="result"></div>
     <button id="nextPageButton" onclick="goToNextPage()">下一页</button>
 
-    <!-- Pusher JavaScript库 -->
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
         // Pusher配置
-        var pusher = new Pusher('0cfb156006dc69bb5924', {
-            cluster: 'ap1',
-            encrypted: true
-        });
+        const pusher = {
+            appId: '1917886', // 替换为您的 Pusher App ID
+            key: '0cfb156006dc69bb5924', // 替换为您的 Pusher Key
+            secret: '0c69d5490c7a6b7909f3', // 替换为您的 Pusher Secret
+            cluster: 'ap1' // 替换为您的 Pusher Cluster
+        };
 
         // 检查答案并获取得分
         function checkAnswers() {
@@ -134,7 +134,7 @@
             return score;
         }
 
-        // 提交学生ID并发送数据到Pusher
+        // 提交学生ID并使用 Pusher HTTP API 发送数据
         function submitStudentId() {
             const studentId = document.getElementById('studentIdInput').value;
             if (studentId === "") {
@@ -145,27 +145,24 @@
             quizForm.style.display = 'none';
             document.getElementById('nextPageButton').style.display = 'block';
 
-            // 检查答案并获取得分
             const score = checkAnswers();
-
-            // 准备要发送的数据
             const data = {
                 studentId: studentId,
                 score: score
             };
 
-            // 订阅在线状态通道
-            var channel = pusher.subscribe('presence-test-channel', {
-                presence: {
-                    user_id: studentId // 使用学生ID作为用户ID
-                }
-            });
-
-            // 在订阅成功后触发客户端事件
-            channel.bind('pusher:subscription_succeeded', function(members) {
-                console.log('Subscribed to presence channel. Current members:', members.count);
-                channel.trigger('client-my-event', data);
-            });
+            // 使用 Pusher HTTP API 发送事件
+            fetch(`https://api.pusher.com/v1/channels/public-my-channel/events/client-my-event`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${pusher.key}:${pusher.secret}`
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Event sent successfully', data))
+            .catch(error => console.error('Error sending event', error));
         }
 
         // 跳转到下一页
