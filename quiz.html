@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《狼》课文测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
+
+        #studentIdInput {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+        #nextPageButton {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>《狼》课文知识测试</h1>
+    <form id="quizForm">
+        <input type="text" id="studentIdInput" placeholder="请输入学号">
+        <button type="button" onclick="submitStudentId()">提交学号</button>
+        <label>
+            1. 《狼》这篇课文的作者是（  ）
+            <input type="radio" name="q1" value="A"> A. 蒲松龄
+            <input type="radio" name="q1" value="B"> B. 李白
+            <input type="radio" name="q1" value="C"> C. 杜甫
+            <input type="radio" name="q1" value="D"> D. 王维
+        </label>
+        <label>
+            2. 下列对《狼》文中“其一犬坐于前”一句翻译正确的是（  ）
+            <input type="radio" name="q2" value="A"> A. 其中一只狗坐在前面
+            <input type="radio" name="q2" value="B"> B. 其中一只狼像狗一样蹲坐在前面
+            <input type="radio" name="q2" value="C"> C. 一只狗在前面坐着
+            <input type="radio" name="q2" value="D"> D. 一只狼坐在前面像狗一样
+        </label>
+        <label>
+            3. 《狼》文中表现屠户勇敢的情节是（  ）
+            <input type="radio" name="q3" value="A"> A. 遇狼
+            <input type="radio" name="q3" value="B"> B. 惧狼
+            <input type="radio" name="q3" value="C"> C. 御狼
+            <input type="radio" name="q3" value="D"> D. 杀狼
+        </label>
+        <label>
+            4. “屠自后断其股”中的“股”的意思是（  ）
+            <input type="radio" name="q4" value="A"> A. 大腿
+            <input type="radio" name="q4" value="B"> B. 屁股
+            <input type="radio" name="q4" value="C"> C. 腰身
+            <input type="radio" name="q4" value="D"> D. 小腿
+        </label>
+        <label>
+            5. 文中两只狼的主要特点是（  ）
+            <input type="radio" name="q5" value="A"> A. 愚蠢
+            <input type="radio" name="q5" value="B"> B. 贪婪、狡诈
+            <input type="radio" name="q5" value="C"> C. 凶狠
+            <input type="radio" name="q5" value="D"> D. 温顺
+        </label>
+    </form>
+    <div id="result"></div>
+    <button id="nextPageButton" onclick="goToNextPage()">下一页</button>
+
+    <!-- Pusher JavaScript库 -->
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script>
+        // Pusher配置
+        var pusher = new Pusher('0cfb156006dc69bb5924', {
+            cluster: 'ap1',
+            encrypted: true
+        });
+
+        // 检查答案并获取得分
+        function checkAnswers() {
+            const answers = ["A", "B", "D", "A", "B"];
+            let score = 0;
+            for (let i = 1; i <= 5; i++) {
+                const selectedAnswer = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selectedAnswer && selectedAnswer.value === answers[i - 1]) {
+                    score++;
+                }
+            }
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = `你的得分是：${score}分（满分5分）`;
+            return score;
+        }
+
+        // 提交学生ID并发送数据到Pusher
+        function submitStudentId() {
+            const studentId = document.getElementById('studentIdInput').value;
+            if (studentId === "") {
+                alert("请输入学号");
+                return;
+            }
+            const quizForm = document.getElementById('quizForm');
+            quizForm.style.display = 'none';
+            document.getElementById('nextPageButton').style.display = 'block';
+
+            // 检查答案并获取得分
+            const score = checkAnswers();
+
+            // 准备要发送的数据
+            const data = {
+                studentId: studentId,
+                score: score
+            };
+
+            // 订阅在线状态通道
+            var channel = pusher.subscribe('presence-test-channel', {
+                presence: {
+                    user_id: studentId // 使用学生ID作为用户ID
+                }
+            });
+
+            // 在订阅成功后触发客户端事件
+            channel.bind('pusher:subscription_succeeded', function(members) {
+                console.log('Subscribed to presence channel. Current members:', members.count);
+                channel.trigger('client-my-event', data);
+            });
+        }
+
+        // 跳转到下一页
+        function goToNextPage() {
+            window.location.href = "目标文件名.html"; // 将这里替换为实际要跳转的文件名
+        }
+    </script>
+</body>
+
+</html>
