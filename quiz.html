@@ -3,302 +3,48 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>《狼》课文测试</title>
+    <link rel="shortcut icon" href="icon/quiz.ico" type="image/x-icon">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+        * {
+            margin: 0;
+            padding: 0;
         }
 
-        h1 {
-            color: #333;
-        }
-
-        form {
-            background-color: white;
-            padding: 20px;
+      .download-button {
+            position: absolute;
+            top: 20%;
+            padding: 15px 30px;
+            background-color: orange;
+            color: white;
+            border: none;
             border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            margin: 0 auto;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-
-        input[type="radio"] {
-            margin-right: 5px;
-        }
-
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 3px;
+            font-size: 30px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #0056b3;
+      .download-button:hover {
+            background-color: goldenrod;
         }
 
-        #result {
-            margin-top: 20px;
-            font-weight: bold;
-            color: green;
-        }
-
-    .essay-question {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        textarea {
+      .text-on-top {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        #finishButton {
-            margin-top: 20px;
-        }
-
-        #explanationButton {
-            margin-top: 20px;
-            background-color: #FF9800;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        #explanationButton:hover {
-            background-color: #F57C00;
-        }
-
-    .answer-tip {
-            color: #007BFF;
-            font-style: italic;
-            display: none;
-        }
-
-    .explanation-text {
-            display: none;
-            text-align: left;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-
-    .fade-out {
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-        }
-
-    .fade-in {
-            opacity: 1;
-            transition: opacity 0.5s ease-in;
+            text-align: center;
+            font-size: 3rem;
+            color: #FFD700;
+            z-index: 2;
         }
     </style>
 </head>
 
 <body>
-    <h1>《狼》课文知识测试</h1>
-    <form id="quizForm">
-        <label>
-            1. 字词理解：下列句中加点词意思完全相同的一组是（  ）<br>
-            <input type="radio" name="q1" value="A"> A.<br>
-            屠自后断其股 <br>
-            <input type="radio" name="q1" value="B"> B.<br>
-            乃悟前狼假寐 <br>
-            <input type="radio" name="q1" value="C"> C.<br>
-            其一犬坐于前 <br>
-            <input type="radio" name="q1" value="D"> D.<br>
-            以刀劈狼首 <br>
-            <span class="answer-tip">（正确答案：A）</span>
-            <div class="explanation-text">
-                - A选项中，“屠自后断其股”和“两股战战”中的“股”都意为大腿。<br>
-                - B选项里，“乃悟前狼假寐”中“乃”是“才”的意思，“去后乃至”中“乃”是“才、于是”的意思，二者不同。<br>
-                - C选项中，“其一犬坐于前”的“于”是“在”的意思，“皆以美于徐公”的“于”是“比”的意思，含义不一样。<br>
-                - D选项中，“以刀劈狼首”的“以”是“用”的意思，“意将隧入以攻其后也”的“以”是“来”的意思，用法有别。
-            </div>
-        </label>
-        <label>
-            2. 一词多义：下列各组句中加点词的意义和用法相同的一项是（  ）<br>
-            <input type="radio" name="q2" value="A"> A.<br>
-            以刀劈狼首 <br>
-            <input type="radio" name="q2" value="B"> B.<br>
-            其一犬坐于前 <br>
-            <input type="radio" name="q2" value="C"> C.<br>
-            而两狼之并驱如故 <br>
-            <input type="radio" name="q2" value="D"> D.<br>
-            屠乃奔倚其下 <br>
-            <span class="answer-tip">（正确答案：C）</span>
-            <div class="explanation-text">
-                - A选项中，“以刀劈狼首”的“以”是“用”的意思，“先帝不以臣卑鄙”的“以”是“因为”的意思，意义不同。<br>
-                - B选项里，“其一犬坐于前”的“于”是“在”的意思，“皆以美于徐公”的“于”是“比”的意思，解释不一样。<br>
-                - C选项中，两个“而”都表示转折关系，用法相同。<br>
-                - D选项中，“屠乃奔倚其下”的“其”是代词，指代柴草堆，“安陵君其许寡人”的“其”是语气副词，表祈使语气，二者不同。
-            </div>
-        </label>
-        <label>
-            3. 古今异义：下列句中加点词不是古今异义的一项是（  ）<br>
-            <input type="radio" name="q3" value="A"> A.<br>
-            一狼径去 <br>
-            <input type="radio" name="q3" value="B"> B.<br>
-            屠乃奔倚其下 <br>
-            <input type="radio" name="q3" value="C"> C.<br>
-            屠自后断其股 <br>
-            <input type="radio" name="q3" value="D"> D.<br>
-            身亡所寄 <br>
-            <span class="answer-tip">（正确答案：B）</span>
-            <div class="explanation-text">
-                - A选项中，“径去”里的“去”在古文中是“离开”的意思，现在常表示“到……去”，属于古今异义。<br>
-                - B选项里，“屠乃奔倚其下”中字词意思古今变化不大，不是古今异义的情况。<br>
-                - C选项中，“股”在古文中指“大腿”，现在多表示量词等其他含义，是古今异义词汇。<br>
-                - D选项中，“亡”在古文中有“无”的意思，现在多表示“死亡”等意思，存在古今差异。
-            </div>
-        </label>
-        <label>
-            4. 虚词“而”的用法：下列句子中的“而”与其他几句不同的一项是（  ）<br>
-            <input type="radio" name="q4" value="A"> A.<br>
-            后狼止而前狼又至 <br>
-            <input type="radio" name="q4" value="B"> B.<br>
-            骨已尽矣，而两狼之并驱如故 <br>
-            <input type="radio" name="q4" value="C"> C.<br>
-            狼亦黠矣，而顷刻两毙 <br>
-            <input type="radio" name="q4" value="D"> D.<br>
-            俄而雪骤 <br>
-            <span class="answer-tip">（正确答案：D）</span>
-            <div class="explanation-text">
-                - A选项中，“后狼止而前狼又至”里的“而”表示转折关系，意为“可是、但是”。<br>
-                - B选项里，“骨已尽矣，而两狼之并驱如故”中的“而”同样表示转折关系，意思是“可是、但是”。<br>
-                - C选项中，“狼亦黠矣，而顷刻两毙”中的“而”也是转折关系，即“可是、但是”。<br>
-                - D选项中，“俄而雪骤”的“而”是助词，与其他表示转折关系的“而”不同。
-            </div>
-        </label>
-        <label>
-            5. 内容理解：下列对课文内容理解正确的一项是（  ）<br>
-            <input type="radio" name="q5" value="A"> A.<br>
-            文章主要告诉我们，对待狼一样的恶势力，我们先作让步，如果其得寸进尺，贪得无厌，就应该勇敢地进行斗争。 <br>
-            <input type="radio" name="q5" value="B"> B.<br>
-            文章的基本情节依次是：遇狼——御狼——惧狼——杀狼。 <br>
-            <input type="radio" name="q5" value="C"> C.<br>
-            “投以骨”和“复投之”表现了屠户对狼的怜悯和抱希望。 <br>
-            <input type="radio" name="q5" value="D"> D.<br>
-            “狼不敢前，眈眈相向”和“一狼径去，其一犬坐于前”表现了狼的狡猾。 <br>
-            <span class="answer-tip">（正确答案：D）</span>
-            <div class="explanation-text">
-                - A选项错误，文章主要告诉我们对待像狼一样的恶势力要敢于斗争，不能让步。<br>
-                - B选项错误，文章基本情节依次是遇狼——惧狼——御狼——杀狼。<br>
-                - C选项错误，“投以骨”和“复投之”是屠户害怕狼，想通过给骨头让狼离开，并非是怜悯。<br>
-                - D选项正确，“狼不敢前，眈眈相向”和“一狼径去，其一犬坐于前”确实体现了狼的狡猾。
-            </div>
-        </label>
-        <button id="nextPageButton" type="button" onclick="goToNextPage()">下一页</button>
-    </form>
-    <div id="result"></div>
-
-    <div id="essayQuestions" style="display:none;">
-        <div class="essay-question">
-            <h3>简答题1：请简要概括《狼》这篇文章的主要情节。（每个要点0.5分，满分2分）</h3>
-            <textarea id="essayAnswer1"></textarea>
-            <span id="essayScore1"></span>
-        </div>
-        <div class="essay-question">
-            <h3>简答题2：分析文中屠户的心理变化过程。（每个要点0.5分，满分2分）</h3>
-            <textarea id="essayAnswer2"></textarea>
-            <span id="essayScore2"></span>
-        </div>
-        <div class="essay-question">
-            <h3>简答题3：谈谈《狼》这篇文章给你的启示。（每个要点0.5分，满分2分）</h3>
-            <textarea id="essayAnswer3"></textarea>
-            <span id="essayScore3"></span>
-        </div>
-        <button id="finishButton" type="button" onclick="finishAndSubmit()">完成</button>
-    </div>
-
-    <button id="explanationButton" type="button" onclick="showExplanation()">显示解析</button>
-    <button id="redoButton" type="button" style="display:none;" onclick="redoQuiz()">再做一遍</button>
-
-    <script>
-        function goToNextPage() {
-            const quizForm = document.getElementById('quizForm');
-            const essayQuestions = document.getElementById('essayQuestions');
-            quizForm.style.display = 'none';
-            essayQuestions.style.display = 'block';
-        }
-
-        function finishAndSubmit() {
-            const question1Keywords = ["遇狼", "惧狼", "御狼", "杀狼"];
-            const question2Keywords = ["惧", "窘", "御", "自信"];
-            const question3Keywords = ["恶势力", "敢于斗争", "机智", "果敢"];
-
-            let essayScore = 0;
-            essayScore += countMatches(document.getElementById('essayAnswer1').value, question1Keywords);
-            document.getElementById('essayScore1').innerHTML = `（本题得分：${essayScore}分，你答对了 ${essayScore} 个点/总共4点，要点：${question1Keywords}）`;
-            essayScore += countMatches(document.getElementById('essayAnswer2').value, question2Keywords);
-            document.getElementById('essayScore2').innerHTML = `（本题得分：${essayScore - document.getElementById('essayScore1').innerHTML.match(/\d+(?:\.\d+)?/)[0]}分，你答对了 ${essayScore - document.getElementById('essayScore1').innerHTML.match(/\d+(?:\.\d+)?/)[0]} 个点/总共4点，要点：${question2Keywords}）`;
-            essayScore += countMatches(document.getElementById('essayAnswer3').value, question3Keywords);
-            document.getElementById('essayScore3').innerHTML = `（本题得分：${essayScore - (parseFloat(document.getElementById('essayScore1').innerHTML.match(/\d+(?:\.\d+)?/)[0]) + parseFloat(document.getElementById('essayScore2').innerHTML.match(/\d+(?:\.\d+)?/)[0]))}分，你答对了 ${essayScore - (parseFloat(document.getElementById('essayScore1').innerHTML.match(/\d+(?:\.\d+)?/)[0]) + parseFloat(document.getElementById('essayScore2').innerHTML.match(/\d+(?:\.\d+)?/)[0]))} 个点/总共4点，要点：${question3Keywords}）`;
-
-            const quizScore = checkQuizAnswers();
-            const totalScore = quizScore + essayScore;
-
-            const resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = `你的总得分是：${totalScore}分`;
-
-            document.getElementById('finishButton').style.display = 'none';
-            document.getElementById('explanationButton').style.display = 'block';
-            document.getElementById('redoButton').style.display = 'block';
-        }
-
-        function checkQuizAnswers() {
-            const answers = ["A", "C", "B", "D", "D"];
-            let score = 0;
-            for (let i = 1; i <= 5; i++) {
-                const selectedAnswer = document.querySelector(`input[name="q${i}"]:checked`);
-                if (selectedAnswer && selectedAnswer.value === answers[i - 1]) {
-                    score++;
-                }
-            }
-            return score;
-        }
-
-        function countMatches(answer, keywords) {
-            let count = 0;
-            keywords.forEach(keyword => {
-                if (answer.includes(keyword)) {
-                    count += 0.5;
-                }
-            });
-            return count;
-        }
-
-        function showExplanation() {
-            const answerTips = document.querySelectorAll('.answer-tip');
-            const explanationTexts = document.querySelectorAll('.explanation-text');
-            answerTips.forEach((tip, index) => {
-                tip.style.display = 'inline';
-                explanationTexts[index].style.display = 'block';
-            });
-
-            const essayScores = document.querySelectorAll('.essay-question span');
-            essayScores.forEach(span => span.style.display = 'block');
-        }
-
-        function redoQuiz() {
-            window.location.href = "quiz.html";
-        }
-    </script>
+    <div class="text-on-top">《狼》课文测试</div>
+    <button class="download-button" style="left:40%; top: 30%;" onclick="window.location.href='quiz1.html'">选择题</button>
+    <button class="download-button" style="left: 40%; top: 60%;" onclick="window.location.href='quiz2.html'">简答题</button>
 </body>
 
 </html>
