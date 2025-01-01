@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>《狼》课文测试</title>
+    <title>文言文《狼》简答题测试与解析</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
             background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
         }
 
         h1 {
@@ -18,9 +19,10 @@
 
         form {
             background-color: white;
-            padding: 20px;
+            border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             width: 400px;
             margin: 0 auto;
         }
@@ -31,8 +33,13 @@
             text-align: left;
         }
 
-        input[type="radio"] {
-            margin-right: 5px;
+        textarea {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            resize: none;
         }
 
         button {
@@ -42,6 +49,7 @@
             padding: 10px 20px;
             border-radius: 3px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
@@ -52,255 +60,93 @@
             margin-top: 20px;
             font-weight: bold;
             color: green;
-        }
-
-      .essay-question {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        textarea {
-            width: 100%;
+            background-color: white;
             padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
         }
 
-        #finishButton {
-            margin-top: 20px;
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
         }
 
-        #explanationButton {
-            margin-top: 20px;
-            background-color: #FF9800;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        #explanationButton:hover {
-            background-color: #F57C00;
-        }
-
-      .answer-tip {
-            color: #007BFF;
-            font-style: italic;
+       .answer-paragraph {
+            color: blue;
             display: none;
-        }
-
-      .explanation-text {
-            display: none;
+            margin-top: 10px;
             text-align: left;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-
-      .fade-out {
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-        }
-
-      .fade-in {
-            opacity: 1;
-            transition: opacity 0.5s ease-in;
         }
     </style>
 </head>
 
 <body>
-    <h1>《狼》课文知识测试</h1>
+    <h1>文言文《狼》简答题测试</h1>
     <form id="quizForm">
-        <label>
-            1. 字词理解：下列句中加点词意思完全相同的一组是（  ）<br>
-            <input type="radio" name="q1" value="A"> A.<br>
-            屠自后断其股 <br>
-            <input type="radio" name="q1" value="B"> B.<br>
-            乃悟前狼假寐 <br>
-            <input type="radio" name="q1" value="C"> C.<br>
-            其一犬坐于前 <br>
-            <input type="radio" name="q1" value="D"> D.<br>
-            以刀劈狼首 <br>
-            <span class="answer-tip">（正确答案：A）</span>
-            <div class="explanation-text">
-                - A选项中，“屠自后断其股”和“两股战战”中的“股”都意为大腿。<br>
-                - B选项里，“乃悟前狼假寐”中“乃”是“才”的意思，“去后乃至”中“乃”是“才、于是”的意思，二者不同。<br>
-                - C选项中，“其一犬坐于前”的“于”是“在”的意思，“皆以美于徐公”的“于”是“比”的意思，含义不一样。<br>
-                - D选项中，“以刀劈狼首”的“以”是“用”的意思，“意将隧入以攻其后也”的“以”是“来”的意思，用法有别。
-            </div>
-        </label>
-        <label>
-            2. 一词多义：下列各组句中加点词的意义和用法相同的一项是（  ）<br>
-            <input type="radio" name="q2" value="A"> A.<br>
-            以刀劈狼首 <br>
-            <input type="radio" name="q2" value="B"> B.<br>
-            其一犬坐于前 <br>
-            <input type="radio" name="q2" value="C"> C.<br>
-            而两狼之并驱如故 <br>
-            <input type="radio" name="q2" value="D"> D.<br>
-            屠乃奔倚其下 <br>
-            <span class="answer-tip">（正确答案：C）</span>
-            <div class="explanation-text">
-                - A选项中，“以刀劈狼首”的“以”是“用”的意思，“先帝不以臣卑鄙”的“以”是“因为”的意思，意义不同。<br>
-                - B选项里，“其一犬坐于前”的“于”是“在”的意思，“皆以美于徐公”的“于”是“比”的意思，解释不一样。<br>
-                - C选项中，两个“而”都表示转折关系，用法相同。<br>
-                - D选项中，“屠乃奔倚其下”的“其”是代词，指代柴草堆，“安陵君其许寡人”的“其”是语气副词，表祈使语气，二者不同。
-            </div>
-        </label>
-        <label>
-            3. 古今异义：下列句中加点词不是古今异义的一项是（  ）<br>
-            <input type="radio" name="q3" value="A"> A.<br>
-            一狼径去 <br>
-            <input type="radio" name="q3" value="B"> B.<br>
-            屠乃奔倚其下 <br>
-            <input type="radio" name="q3" value="C"> C.<br>
-            屠自后断其股 <br>
-            <input type="radio" name="q3" value="D"> D.<br>
-            身亡所寄 <br>
-            <span class="answer-tip">（正确答案：B）</span>
-            <div class="explanation-text">
-                - A选项中，“径去”里的“去”在古文中是“离开”的意思，现在常表示“到……去”，属于古今异义。<br>
-                - B选项里，“屠乃奔倚其下”中字词意思古今变化不大，不是古今异义的情况。<br>
-                - C选项中，“股”在古文中指“大腿”，现在多表示量词等其他含义，是古今异义词汇。<br>
-                - D选项中，“亡”在古文中有“无”的意思，现在多表示“死亡”等意思，存在古今差异。
-            </div>
-        </label>
-        <label>
-            4. 虚词“而”的用法：下列句子中的“而”与其他几句不同的一项是（  ）<br>
-            <input type="radio" name="q4" value="A"> A.<br>
-            后狼止而前狼又至 <br>
-            <input type="radio" name="q4" value="B"> B.<br>
-            骨已尽矣，而两狼之并驱如故 <br>
-            <input type="radio" name="q4" value="C"> C.<br>
-            狼亦黠矣，而顷刻两毙 <br>
-            <input type="radio" name="q4" value="D"> D.<br>
-            俄而雪骤 <br>
-            <span class="answer-tip">（正确答案：D）</span>
-            <div class="explanation-text">
-                - A选项中，“后狼止而前狼又至”里的“而”表示转折关系，意为“可是、但是”。<br>
-                - B选项里，“骨已尽矣，而两狼之并驱如故”中的“而”同样表示转折关系，意思是“可是、但是”。<br>
-                - C选项中，“狼亦黠矣，而顷刻两毙”中的“而”也是转折关系，即“可是、但是”。<br>
-                - D选项中，“俄而雪骤”的“而”是助词，与其他表示转折关系的“而”不同。
-            </div>
-        </label>
-        <label>
-            5. 内容理解：下列对课文内容理解正确的一项是（  ）<br>
-            <input type="radio" name="q5" value="A"> A.<br>
-            文章主要告诉我们，对待狼一样的恶势力，我们先作让步，如果其得寸进尺，贪得无厌，就应该勇敢地进行斗争。 <br>
-            <input type="radio" name="q5" value="B"> B.<br>
-            文章的基本情节依次是：遇狼——御狼——惧狼——杀狼。 <br>
-            <input type="radio" name="q5" value="C"> C.<br>
-            “投以骨”和“复投之”表现了屠户对狼的怜悯和抱希望。 <br>
-            <input type="radio" name="q5" value="D"> D.<br>
-            “狼不敢前，眈眈相向”和“一狼径去，其一犬坐于前”表现了狼的狡猾。 <br>
-            <span class="answer-tip">（正确答案：D）</span>
-            <div class="explanation-text">
-                - A选项错误，文章主要告诉我们对待像狼一样的恶势力要敢于斗争，不能让步。<br>
-                - B选项错误，文章基本情节依次是遇狼——惧狼——御狼——杀狼。<br>
-                - C选项错误，“投以骨”和“复投之”是屠户害怕狼，想通过给骨头让狼离开，并非是怜悯。<br>
-                - D选项正确，“狼不敢前，眈眈相向”和“一狼径去，其一犬坐于前”确实体现了狼的狡猾。
-            </div>
-        </label>
-        <button id="nextPageButton" type="button" onclick="goToNextPage()">下一页</button>
+        <div class="question-container">
+            <h3>简答题1：请简要概括《狼》这篇文章的主要情节。（每个要点0.5分，满分2分）</h3>
+            <textarea id="essayAnswer1"></textarea>
+            <p class="answer-paragraph">《狼》这篇文章主要情节为，屠户在傍晚回家途中遇狼，这是故事的开端，引发了后续一系列事件。接着屠户因狼的跟随而惧狼，内心产生恐惧并采取了如倚靠柴堆等防御姿态。随后屠户御狼，利用身边物品如刀等试图抵御狼的攻击，展现出了其在危险中的应对行为。最后屠户杀狼，凭借着自己的果敢和机智成功将两只狼杀死，整个情节跌宕起伏，生动地展现了屠户与狼之间的惊险故事。</p>
+        </div>
+        <div class="question-container">
+            <h3>简答题2：赏析《狼》这篇文章的语言特色。（每个要点0.5分，满分2分）</h3>
+            <textarea id="essayAnswer2"></textarea>
+            <p class="answer-paragraph">《狼》的语言特色显著，首先是简洁生动，作者用简洁明了的文字就将故事发生的场景如荒野中、柴堆旁，人物屠户的神态动作以及狼的凶狠狡猾表现等描绘得栩栩如生，使读者仿若身临其境。其次，对屠户和狼的形象刻画入微，通过细致的描写让两者的性格特点跃然纸上，比如屠户的起初的怯懦到后来的勇敢机智，狼的贪婪狡黠等。再者，节奏紧凑，情节一环扣一环，从遇狼时的紧张氛围营造，到中间御狼过程的激烈交锋，再到杀狼结局的干脆利落，毫无拖沓之感，引人入胜，紧紧抓住读者的注意力，让读者的情绪随着情节起伏而波动，沉浸于故事之中，整体上呈现出很强的艺术感染力。</p>
+        </div>
+        <div class="question-container">
+            <h3>简答题3：谈谈《狼》这篇文章给你的启示。（每个要点0.5分，满分2分）</h3>
+            <textarea id="essayAnswer3"></textarea>
+            <p class="answer-paragraph">《狼》这篇文章给我们带来诸多启示，文中的狼象征着生活中的恶势力，它们贪婪、凶狠且狡诈，而屠户面对这样的“恶势力”时，没有选择退缩，而是积极应对。他首先在心理上克服了恐惧，敢于斗争，这种精神是面对困难和邪恶时的重要支撑。同时，屠户在御狼和杀狼过程中运用了“机智”的方法，比如利用狼的贪婪本性诱其放松警惕，抓住时机果断出击，展现出了果敢的决断力，这启示我们在生活中遭遇类似困境时，不仅要有斗争的勇气，还要善于运用智慧，把握时机，采取果断行动，如此才能战胜困难和邪恶，以正确的态度和方法去应对生活中的挑战，从故事中汲取有益的人生经验和处世智慧。</p>
+        </div>
+        <button id="finishButton" type="button" onclick="finishAndSubmit()">提交</button>
     </form>
     <div id="result"></div>
 
-    <div id="essayQuestions" style="display:none;">
-        <div class="essay-question">
-            <h3>简答题1：请简要概括《狼》这篇文章的主要情节。（每个要点0.5分，满分2分）</h3>
-            <textarea id="essayAnswer1"></textarea>
-            <span id="essayScore1"></span>
-        </div>
-        <div class="essay-question">
-            <h3>简答题2：分析文中屠户的心理变化过程。（每个要点0.5分，满分2分）</h3>
-            <textarea id="essayAnswer2"></textarea>
-            <span id="essayScore2"></span>
-        </div>
-        <div class="essay-question">
-            <h3>简答题3：谈谈《狼》这篇文章给你的启示。（每个要点0.5分，满分2分）</h3>
-            <textarea id="essayAnswer3"></textarea>
-            <span id="essayScore3"></span>
-        </div>
-        <button id="finishButton" type="button" onclick="finishAndSubmit()">完成</button>
-    </div>
-
-    <button id="explanationButton" type="button" onclick="showExplanation()">显示解析</button>
-    <button id="redoButton" type="button" style="display:none;" onclick="redoQuiz()">再做一遍</button>
-
     <script>
-        function goToNextPage() {
-            const quizForm = document.getElementById('quizForm');
-            const essayQuestions = document.getElementById('essayQuestions');
-            quizForm.style.display = 'none';
-            essayQuestions.style.display = 'block';
-        }
-
         function finishAndSubmit() {
             const question1Keywords = ["遇狼", "惧狼", "御狼", "杀狼"];
-            const question2Keywords = ["惧", "窘", "御", "自信"];
+            const question2Keywords = ["简洁生动", "刻画形象", "节奏紧凑", "跌宕起伏"];
             const question3Keywords = ["恶势力", "敢于斗争", "机智", "果敢"];
 
-            let essayScore = 0;
-            essayScore = updateEssayScore('essayScore1', document.getElementById('essayAnswer1').value, question1Keywords, essayScore);
-            essayScore = updateEssayScore('essayScore2', document.getElementById('essayAnswer2').value, question2Keywords, essayScore);
-            essayScore = updateEssayScore('essayScore3', document.getElementById('essayAnswer3').value, question3Keywords, essayScore);
+            const answer1 = document.getElementById('essayAnswer1').value.toLowerCase();
+            const answer2 = document.getElementById('essayAnswer2').value.toLowerCase();
+            const answer3 = document.getElementById('essayAnswer3').value.toLowerCase();
 
-            const quizScore = checkQuizAnswers();
-            const totalScore = quizScore + essayScore;
-
-            const resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = `你的总得分是：${totalScore}分`;
-
-            document.getElementById('finishButton').style.display = 'none';
-            document.getElementById('explanationButton').style.display = 'block';
-            document.getElementById('redoButton').style.display = 'block';
-        }
-
-        function checkQuizAnswers() {
-            const answers = ["A", "C", "B", "D", "D"];
-            let score = 0;
-            for (let i = 1; i <= 5; i++) {
-                const selectedAnswer = document.querySelector(`input[name="q${i}"]:checked`);
-                if (selectedAnswer && selectedAnswer.value === answers[i - 1]) {
-                    score++;
-                }
-            }
-            return score;
-        }
-
-        function countMatches(answer, keywords) {
-            let count = 0;
-            keywords.forEach(keyword => {
-                if (answer.includes(keyword)) {
-                    count += 0.5;
+            let count1 = 0;
+            question1Keywords.forEach(keyword => {
+                if (answer1.includes(keyword)) {
+                    count1++;
                 }
             });
-            return count;
-        }
-
-        function updateEssayScore(elementId, answer, keywords, prevTotalScore) {
-            const count = countMatches(answer, keywords);
-            const score = count + prevTotalScore;
-            document.getElementById(elementId).innerHTML = `（本题得分：${count}分，你答对了 ${count} 个点/总共4点，要点：${keywords}）`;
-            return score;
-        }
-
-        function showExplanation() {
-            const answerTips = document.querySelectorAll('.answer-tip');
-            const explanationTexts = document.querySelectorAll('.explanation-text');
-            answerTips.forEach((tip, index) => {
-                tip.style.display = 'inline';
-                explanationTexts[index].style.display = 'block';
+            let count2 = 0;
+            question2Keywords.forEach(keyword => {
+                if (answer2.includes(keyword)) {
+                    count2++;
+                }
+            });
+            let count3 = 0;
+            question3Keywords.forEach(keyword => {
+                if (answer3.includes(keyword)) {
+                    count3++;
+                }
             });
 
-            const essayScores = document.querySelectorAll('.essay-question span');
-            essayScores.forEach(span => span.style.display = 'block');
-        }
+            const score1 = count1 * 0.5;
+            const score2 = count2 * 0.5;
+            const score3 = count3 * 0.5;
+            const totalScore = score1 + score2 + score3;
 
-        function redoQuiz() {
-            window.location.href = "quiz.html";
+            let resultStr = `简答题1：答对了 ${count1} 个点/总共4点，得分：${score1} 分<br>`;
+            resultStr += `简答题2：答对了 ${count2} 个点/总共4点，得分：${score2} 分<br>`;
+            resultStr += `简答题3：答对了 ${count3} 个点/总共4点，得分：${score3} 分<br>`;
+            resultStr += `总分：${totalScore} 分`;
+
+
+            document.getElementById('result').innerHTML = resultStr;
+
+            const answerParagraphs = document.querySelectorAll('.answer-paragraph');
+            answerParagraphs.forEach(paragraph => {
+                paragraph.style.display = 'block';
+            });
         }
     </script>
 </body>
