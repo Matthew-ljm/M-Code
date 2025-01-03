@@ -71,7 +71,7 @@
             text-align: center;
         }
 
-     .answer-paragraph {
+    .answer-paragraph {
             color: blue;
             display: none;
             margin-top: 10px;
@@ -108,6 +108,7 @@
     </form>
     <div id="result"></div>
 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         function finishAndSubmit() {
             const question1Keywords = ["遇狼", "惧狼", "御狼", "杀狼"];
@@ -162,25 +163,22 @@
 
         function sendToAI(questionIndex, userAnswer, questionText) {
             const apiKey = 'sk-8d131e0918664caaa43e738fa096f50';
-            const apiUrl = 'https://cors-anywhere.herokuapp.com/https://dashscope.aliyuncs.com/api/v1/apps/sk-8d131e0918664caaa43e738fa096f50/completion';
+            const apiUrl = 'https://dashscope.aliyuncs.com/api/v1/apps/sk-8d131e0918664caaa43e738fa096f50/completion';
             const message = `题目：${questionText}，帮我评析这段答案，${userAnswer}，如果满分10分，你打几分`;
 
-            fetch(apiUrl, {
-                method: 'POST',
+            axios.post(apiUrl, {
+                message: message
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    message: message
-                })
-            })
-              .then(response => response.json())
-              .then(data => {
-                    const aiResponseId = `aiResponse${questionIndex}`;
-                    document.getElementById(aiResponseId).innerHTML = data.response;
-                })
-              .catch(error => console.error('Error:', error));
+                }
+            }).then(response => {
+                const aiResponseId = `aiResponse${questionIndex}`;
+                document.getElementById(aiResponseId).innerHTML = response.data.response;
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
 
         document.getElementById('aiButton1').addEventListener('click', () => {
