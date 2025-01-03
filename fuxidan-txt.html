@@ -83,7 +83,7 @@
 
         function fetchText() {
             showLoading();
-            const url = 'https://m-code.top/信息技术七年级知识点总结.txt';
+            const url = 'https://m-code.top/documents/信息技术七年级知识点总结.txt';
             fetch(url)
             .then(response => {
                     if (!response.ok) {
@@ -108,7 +108,7 @@
 
         function saveFile() {
             const link = document.createElement('a');
-            link.href = '信息技术七年级知识点总结.txt';
+            link.href = 'documents/信息技术七年级知识点总结.txt';
             link.download = '信息技术七年级知识点总结.txt';
             document.body.appendChild(link);
             link.click();
