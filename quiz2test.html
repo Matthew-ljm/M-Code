@@ -71,7 +71,7 @@
             text-align: center;
         }
 
-    .answer-paragraph {
+     .answer-paragraph {
             color: blue;
             display: none;
             margin-top: 10px;
@@ -101,14 +101,11 @@
             <h3>简答题3：谈谈《狼》这篇文章给你的启示。(每个要点0.5分，满分2分)</h3>
             <textarea id="essayAnswer3"></textarea>
             <p class="answer-paragraph">《狼》这篇文章给我们带来诸多启示，文中的狼象征着生活中的恶势力，它们贪婪、凶狠且狡诈，而屠户面对这样的“恶势力”时，没有选择退缩，而是积极应对。他首先在心理上克服了恐惧，敢于斗争，这种精神是面对困难和邪恶时的重要支撑。同时，屠户在御狼和杀狼过程中运用了“机智”的方法，比如利用狼的贪婪本性诱其放松警惕，抓住时机果断出击，展现出了果敢的决断力，这启示我们在生活中遭遇类似困境时，不仅要有斗争的勇气，还要善于运用智慧，把握时机，采取果断行动，如此才能战胜困难和邪恶，以正确的态度和方法去应对生活中的挑战，从故事中汲取有益的人生经验和处世智慧。</p>
-            <button id="aiButton3" type="button" style="display:none;">AI评析</button>
-            <p id="aiResponse3"></p>
-        </div>
-        <button id="finishButton" type="button" onclick="finishAndSubmit()">提交</button>
-    </form>
+            <button id="finishButton" type="button" onclick="finishAndSubmit()">提交</button>
+        </form>
     <div id="result"></div>
 
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="axios.min.js"></script>
     <script>
         function finishAndSubmit() {
             const question1Keywords = ["遇狼", "惧狼", "御狼", "杀狼"];
@@ -162,22 +159,28 @@
         }
 
         function sendToAI(questionIndex, userAnswer, questionText) {
-            const apiKey = 'sk-8d131e0918664caaa43e738fa096f50';
-            const apiUrl = 'https://dashscope.aliyuncs.com/api/v1/apps/sk-8d131e0918664caaa43e738fa096f50/completion';
+            const callbackName = `jsonpCallback${questionIndex}`;  // 生成一个唯一的回调函数名
+            const apiUrl = `https://dashscope.aliyuncs.com/api/v1/apps/sk-8d131e0918664caaa43e738fa096f50/completion?callback=${callbackName}`;
             const message = `题目：${questionText}，帮我评析这段答案，${userAnswer}，如果满分10分，你打几分`;
 
-            axios.post(apiUrl, {
-                message: message
-            }, {
+            // 创建axios实例，设置请求头添加api密钥进行鉴权
+            const axiosInstance = axios.create({
+                baseURL: apiUrl,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
+                    'Authorization': 'Bearer sk-8d131e0918664caaa43e738fa096f50'
+                }
+            });
+
+            // 使用axios实例发起请求，这里可以根据DashScope API实际返回的数据格式等进行后续处理
+            axiosInstance.get('', {
+                params: {
+                    // 这里可以添加其他需要的请求参数，如果有的话
                 }
             }).then(response => {
                 const aiResponseId = `aiResponse${questionIndex}`;
-                document.getElementById(aiResponseId).innerHTML = response.data.response;
+                document.getElementById(aiResponseId).innerHTML = response.data;
             }).catch(error => {
-                console.error('Error:', error);
+                console.error(error);
             });
         }
 
