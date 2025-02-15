@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to M-Code</title>
+    <link rel="shortcut icon" href="icon/favicon.ico" type="image/x-icon">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            margin: 0;
+            position: relative;
+            font-family: sans-serif;
+        }
+
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+
+        .text-on-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: yellow;
+            font-size: 4rem;
+            z-index: 2;
+        }
+
+        .subtext {
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .button {
+            position: absolute;
+            top: 30%;
+            padding: 20px 40px;
+            text-decoration: none;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        #downloadButton {
+            left: 70%;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #downloadButton2 {
+            top: 55%;
+            left: 50%;
+            background-color: red;
+            color: white;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        #downloadButton:hover {
+            background-color: #45a049;
+        }
+
+        #infoButton {
+            left: 20%;
+            background-color: yellow;
+            color: black;
+        }
+
+        #infoButton:hover {
+            background-color: #e6d000;
+        }
+
+        #infoBox {
+            position: absolute;
+            top: 37%;
+            left: 10%;
+            width: 30%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 2;
+            border-radius: 15px;
+        }
+
+        #footerText {
+            position: absolute;
+            bottom: 2%;
+            left: 5%;
+            width: 90%;
+            text-align: center;
+            color: yellow;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+
+        #tipButton {
+            top: 52%;
+            right: 34%;
+            position: absolute;
+            background: url('icon/提示.png') no-repeat center center/cover;
+            width: 50px;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        #tipBox {
+            position: absolute;
+            top: 63%;
+            right: 30%;
+            width: 30%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 2;
+            border-radius: 15px;
+        }
+
+        #footerText a {
+            color: yellow;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="icon/background.jpg" alt="Background Image">
+    <div class="text-on-top">M-Code</div>
+    <div class="subtext">Crafting Exquisite Software, Empowering Your Life</div>
+    <a id="infoButton" class="button">网站简介</a>
+    <a id="downloadButton" class="button" href="download.html">软件下载</a>
+    <a id="downloadButton2" class="button" href="fireworks-show.html">2025 年烟花秀展示</a>
+    <div id="infoBox">M-Code，一个由 Matthew 精心创建的软件开发个人项目组，于 2024 年 9 月创建。在这里，您将邂逅各种独具创意的实用软件。每一款软件都凝聚着 Matthew 的智慧与心血，无论是在工作效率提升方面，还是在娱乐体验上，都有着独特的魅力。软件以创新的设计和强大的功能，为您的数字生活带来全新的可能。欢迎大家前来下载和使用，一同感受 M-Code 带来的精彩与便捷！</div>
+    <div id="footerText">如有任何疑问或建议，欢迎发送邮件至 huifeidexiaogougou@126.com，或访问 <a href="feedback">https://m-code.top/feedback</a> 进行反馈</div>
+    <button id="tipButton"></button>
+    <div id="tipBox">该项目为限时展示版，展示截止时间为 2025 年 5 月 31 日。提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！如遇背景音乐无法播放，请单击屏幕任意位置重试</div>
+    <script>
+        document.getElementById('infoButton').addEventListener('click', function () {
+            const infoBox = document.getElementById('infoBox');
+            const currentDisplay = window.getComputedStyle(infoBox).display;
+            infoBox.style.display = currentDisplay === 'none'? 'block' : 'none';
+        });
+
+        document.getElementById('tipButton').addEventListener('click', function () {
+            const tipBox = document.getElementById('tipBox');
+            const currentDisplay = window.getComputedStyle(tipBox).display;
+            tipBox.style.display = currentDisplay === 'none'? 'block' : 'none';
+        });
+    </script>
+</body>
+
+</html>

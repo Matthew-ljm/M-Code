@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>《狼》课文测试</title>
+    <link rel="shortcut icon" href="icon/quiz.ico" type="image/x-icon">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+     .download-button {
+            position: absolute;
+            top: 20%;
+            padding: 15px 30px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            z-index: 3;
+        }
+
+     .download-button:hover {
+            background-color: goldenrod;
+        }
+
+     .text-on-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 3rem;
+            color: black;
+            z-index: 2;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="icon/quiz.jpg" alt="Background Image">
+    <div class="text-on-top">《狼》课文测试</div>
+    <button class="download-button" style="left: 40%; top: 30%;" onclick="window.location.href='quiz1.html'">选择题</button>
+    <button class="download-button" style="left: 40%; top: 60%;" onclick="window.location.href='quiz2.html'">简答题</button>
+</body>
+
+</html>

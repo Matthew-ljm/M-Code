@@ -1,0 +1,132 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>临时文件与测试文件下载区</title>
+    <link rel="shortcut icon" href="icon/download.ico" type="image/x-icon">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+        }
+
+      .download-button {
+            position: absolute;
+            top: 20%;
+            padding: 15px 30px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+      .download-button:hover {
+            background-color: goldenrod;
+        }
+
+      .text-on-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 2.5rem;
+            color: #FFD700;
+            z-index: 2;
+        }
+
+      .page-container {
+            display: none;
+        }
+
+        #password-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 30px;
+            border: 3px solid #ccc;
+            border-radius: 15px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #password-input {
+            padding: 15px;
+            margin-bottom: 20px;
+            width: 300px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        #submit-password {
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #submit-password:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="text-on-top">临时文件与测试文件下载区</div>
+        <img src="icon/background.jpg" alt="Background Image">
+        <button class="download-button" style="left:10%;" onclick="window.location.href='test-file/chouqianzhushou-install-v1.2.1.exe'">抽签助手v1.2.1</button>
+        <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='test-file/chouqianzhushou-install-v1.2.2.exe'">抽签助手v1.2.2</button>
+        <button class="download-button" style="left:70%;top:20%;" onclick="window.location.href='test-file/USB Message-install-v1.0.exe'">USB Message v1.0</button>
+        <button class="download-button" style="left:70%;top:20%;" onclick="window.location.href='fuxidan.html'">信息技术七年级知识点总结</button>
+        <button class="download-button" style="left:10%;top:40%;" onclick="window.location.href='test-file/极域课堂监听系统.exe'">极域课堂监听系统</button>
+    </div>
+
+    <div id="password-container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <input type="password" id="password-input" placeholder="请输入密码">
+        <button id="submit-password">确定</button>
+    </div>
+
+    <script>
+        let password = null;
+        fetch('password')
+          .then(response => response.text())
+          .then(data => {
+                password = data;
+            })
+          .catch(error => {
+                console.error('Error fetching password:', error);
+            });
+
+        function checkPassword() {
+            const inputPassword = document.getElementById('password-input').value;
+            if (inputPassword === password) {
+                document.querySelector('.page-container').style.display = 'block';
+                alert("密码正确！");
+                document.getElementById('password-container').style.display = 'none';
+            } else {
+                alert(`密码错误！请重新输入`);
+            }
+        }
+
+        document.getElementById('submit-password').addEventListener('click', function() {
+            checkPassword();
+        });
+    </script>
+</body>
+</html>

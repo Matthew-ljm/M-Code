@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icon/quiz.ico" type="image/x-icon">
+    <title>文言文《狼》简答题测试与解析</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        textarea {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            resize: none;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+            background-color: white;
+            padding: 10px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+       .answer-paragraph {
+            color: blue;
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>文言文《狼》简答题测试</h1>
+    <form id="quizForm">
+        <div class="question-container">
+            <h3>简答题1：请简要概括《狼》这篇文章的主要情节。（每个要点0.5分，满分2分）</h3>
+            <textarea id="essayAnswer1"></textarea>
+            <p class="answer-paragraph">《狼》这篇文章主要情节为，屠户在傍晚回家途中遇狼，这是故事的开端，引发了后续一系列事件。接着屠户因狼的跟随而惧狼，内心产生恐惧并采取了如倚靠柴堆等防御姿态。随后屠户御狼，利用身边物品如刀等试图抵御狼的攻击，展现出了其在危险中的应对行为。最后屠户杀狼，凭借着自己的果敢和机智成功将两只狼杀死，整个情节跌宕起伏，生动地展现了屠户与狼之间的惊险故事。</p>
+        </div>
+        <div class="question-container">
+            <h3>简答题2：赏析《狼》这篇文章的语言特色。（每个要点0.5分，满分2分）</h3>
+            <textarea id="essayAnswer2"></textarea>
+            <p class="answer-paragraph">《狼》的语言特色显著，首先是简洁生动，作者用简洁明了的文字就将故事发生的场景如荒野中、柴堆旁，人物屠户的神态动作以及狼的凶狠狡猾表现等描绘得栩栩如生，使读者仿若身临其境。其次，对屠户和狼的形象刻画入微，通过细致的描写让两者的性格特点跃然纸上，比如屠户的起初的怯懦到后来的勇敢机智，狼的贪婪狡黠等。再者，节奏紧凑，情节一环扣一环，从遇狼时的紧张氛围营造，到中间御狼过程的激烈交锋，再到杀狼结局的干脆利落，毫无拖沓之感，引人入胜，紧紧抓住读者的注意力，让读者的情绪随着情节跌宕起伏而波动，沉浸于故事之中，整体上呈现出很强的艺术感染力。</p>
+        </div>
+        <div class="question-container">
+            <h3>简答题3：谈谈《狼》这篇文章给你的启示。（每个要点0.5分，满分2分）</h3>
+            <textarea id="essayAnswer3"></textarea>
+            <p class="answer-paragraph">《狼》这篇文章给我们带来诸多启示，文中的狼象征着生活中的恶势力，它们贪婪、凶狠且狡诈，而屠户面对这样的“恶势力”时，没有选择退缩，而是积极应对。他首先在心理上克服了恐惧，敢于斗争，这种精神是面对困难和邪恶时的重要支撑。同时，屠户在御狼和杀狼过程中运用了“机智”的方法，比如利用狼的贪婪本性诱其放松警惕，抓住时机果断出击，展现出了果敢的决断力，这启示我们在生活中遭遇类似困境时，不仅要有斗争的勇气，还要善于运用智慧，把握时机，采取果断行动，如此才能战胜困难和邪恶，以正确的态度和方法去应对生活中的挑战，从故事中汲取有益的人生经验和处世智慧。</p>
+        </div>
+        <button id="finishButton" type="button" onclick="finishAndSubmit()">提交</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function finishAndSubmit() {
+            const question1Keywords = ["遇狼", "惧狼", "御狼", "杀狼"];
+            const question2Keywords = ["简洁生动", "形象", "节奏紧凑", "跌宕起伏"];
+            const question3Keywords = ["恶势力", "敢于斗争", "机智", "果敢"];
+
+            const answer1 = document.getElementById('essayAnswer1').value.toLowerCase();
+            const answer2 = document.getElementById('essayAnswer2').value.toLowerCase();
+            const answer3 = document.getElementById('essayAnswer3').value.toLowerCase();
+
+            let count1 = 0;
+            question1Keywords.forEach(keyword => {
+                if (answer1.includes(keyword)) {
+                    count1++;
+                }
+            });
+            let count2 = 0;
+            question2Keywords.forEach(keyword => {
+                if (answer2.includes(keyword)) {
+                    count2++;
+                }
+            });
+            let count3 = 0;
+            question3Keywords.forEach(keyword => {
+                if (answer3.includes(keyword)) {
+                    count3++;
+                }
+            });
+
+            const score1 = count1 * 0.5;
+            const score2 = count2 * 0.5;
+            const score3 = count3 * 0.5;
+            const totalScore = score1 + score2 + score3;
+
+            let resultStr = `简答题1：答对了 ${count1} 个点/总共4点，得分：${score1} 分<br>`;
+            resultStr += `简答题2：答对了 ${count2} 个点/总共4点，得分：${score2} 分<br>`;
+            resultStr += `简答题3：答对了 ${count3} 个点/总共4点，得分：${score3} 分<br>`;
+            resultStr += `总分：${totalScore} 分`;
+
+
+            document.getElementById('result').innerHTML = resultStr;
+
+            const answerParagraphs = document.querySelectorAll('.answer-paragraph');
+            answerParagraphs.forEach(paragraph => {
+                paragraph.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+
+</html>
