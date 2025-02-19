@@ -1,0 +1,2863 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <title>【刘俊铭】-【语文】学生成绩分析报告</title>
+    <!-- 图标主题信息 -->
+    <script type="text/javascript" src="stu_ameqp_report.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript">
+
+        //清空数据表格下拉框数据
+        function CleargridDll(id) {
+            $(id).combogrid('setValues', []);
+            $(id).combogrid('setValue', '');
+
+        }
+
+
+        var scoCenterAvg = false;
+        var scoCenterAvg = false;
+        //var scoCenterRanking = false;
+        var scoCenterRankingCla = false;
+        var scoCenterRankingSch = false;
+        var scoCenterRankingExa = false;
+
+        var exaOrganizeRange = "A";
+        var exaMark = "A";
+        var subSN = 0;
+
+        //var ImageData = null;
+        ////获取学生答卷图像
+        //function GetImageData() {
+        //    if (ImageData == null) {
+        //        ImageData = eval('({学生答卷图像信息})');
+        //    }
+        //    return ImageData;
+
+        //}
+
+        //获取学生答卷图像目录
+        function GetBasePath() {
+            return '语文';
+        }
+
+        //获取学生答卷图像目录
+        function GetAdvisePath() {
+            return '';
+        }
+
+        function goTopEx() {
+            var obj = document.getElementById("goTopBtn");
+            function getScrollTop() {
+                return document.documentElement.scrollTop;
+            }
+            function setScrollTop(value) {
+                document.documentElement.scrollTop = value;
+            }
+
+            window.onscroll = function () { getScrollTop() > 0 ? obj.style.display = "" : obj.style.display = "none"; };
+            obj.onclick = function () {
+                var goTop = setInterval(scrollMove, 10);
+
+                function scrollMove() {
+                    setScrollTop(getScrollTop() / 1.1);
+                    if (getScrollTop() < 1) clearInterval(goTop);
+                }
+            };
+        }
+
+        $(function () {
+
+            goTopEx();
+
+            exaOrganizeRange = 'D';
+            exaMark = 'A';
+            subSN = '0';
+            scoCenterAvg = 'True'.toLocaleLowerCase() == "true";
+            //scoCenterRanking = '{scoCenterRanking}'.toLocaleLowerCase() == "true";
+            scoCenterRankingCla = 'False'.toLocaleLowerCase() == "true";
+            scoCenterRankingSch = 'False'.toLocaleLowerCase() == "true";
+            scoCenterRankingExa = 'False'.toLocaleLowerCase() == "true";
+            var isShowImage = ''.toLocaleLowerCase() == "true";;
+            if (isShowImage == false) {
+                $("#div_img_info").css("display", "none");
+                $("#div_img_info").hide();
+            } else {
+                $("#Ifr_img").attr("src", GetBasePath() + "//Sco_ImgShow.html");
+            }
+            AddRepStu(null);
+            AddRepDif(null);
+            AddRepSubOffer(null);
+            AddRepRadar(null);
+            LoadStuData();
+
+        });
+
+        function GetImgShowOmrUrl(exaSubSn, exaOmrNo, exaOmrSN) {
+            return '<a href=\"javascript:void(0);\" onclick=\"ImgOmrShow(' + exaOmrSN + ')\" >' + exaOmrNo + '</a>';
+
+        }
+        ///GetShowQueNo(item[i].exaQueNo) + '</td><td>'//题号
+        //题号
+        function GetShowQueNo(exaSubSn, exaQueNo, exaQueSN) {
+            if (exaSubSn > 0) {
+                //if (exaQueNo.indexOf("_") == -1) {
+                //return GetImgShowUrl(exaSubSn, exaQueNo, exaQueSN);
+                //}
+            }
+            return exaQueNo;
+        }
+
+
+        function GetShowOmrNo(exaSubSn, exaOmrNo, exaOmrSN) {
+            if (exaSubSn > 0) {
+
+                //return GetImgShowOmrUrl(exaSubSn, exaOmrNo, exaOmrSN);
+
+            }
+            return exaOmrNo;
+        }
+
+        //巩固题
+        function GetAdvise1(exaQueNo) {
+            return '<a style="text-decoration:underline" href=\"javascript:void(0);\" onclick=\"ShowAdvise1(\'' + exaQueNo + '\')\" >本地</a>';
+        }
+
+        //巩固题
+        function ShowAdvise1(exaQueNo) {
+            var exaName = '202501初一期末考试';
+            var exaSubName = '语文';
+            var url = "巩固练习/" + exaName + "/" + exaSubName + "/" + exaQueNo + ".pdf";
+            window.open(url);
+        }
+
+        //巩固题
+        function GetAdvise2(exaQueNo) {
+            return '<a style="text-decoration:underline" href=\"javascript:void(0);\" onclick=\"ShowAdvise2(\'' + exaQueNo + '\')\" >云端</a>';
+        }
+
+        //巩固题
+        function ShowAdvise2(exaQueNo) {
+            var System_RootURL = 'http://localhost/AMEQP';
+            if (System_RootURL.indexOf("/AMEQP") != -1) {
+                System_RootURL = System_RootURL.replace("/AMEQP", "");
+            }
+            var exaName = '202501初一期末考试';
+            var exaSubName = '语文';
+            var url = System_RootURL + "/ameqp_webimg/sco_exercise/" + exaName + "/" + exaSubName + "/" + exaQueNo + ".pdf";
+            window.open(url);
+        }
+        //加载学生信息记录
+        function LoadStuData() {
+            var data = eval('({"Data":{"difficulty":[{"ND":"容易","ExaAvg":10.1,"ExaMax":12.0,"stuFZ":12.0},{"ND":"偏易","ExaAvg":49.1,"ExaMax":71.0,"stuFZ":56.0},{"ND":"中等","ExaAvg":3.9,"ExaMax":8.0,"stuFZ":6.0},{"ND":"偏难","ExaAvg":3.3,"ExaMax":9.0,"stuFZ":6.0},{"ND":"较难","ExaAvg":0.0,"ExaMax":0.0,"stuFZ":0.0}],"tab":{"ds":[{"exaSubSN":253,"exaSubScore":100.0,"exaSubScore1":16.0,"exaSubScore2":84.0,"exaSubName":"语文","scoScore":80.0,"scoScore1":14.0,"scoScore2":66.0,"scoNotice":null,"scoRScore":80.00,"scoExaDifficulty":0.7,"scoExaProportion1":79.0,"scoExaProportion2":71.0,"scoExaProportion3":65.0,"scoExaProportion4":63.0,"scoExaProportion5":60.0,"scoOffer1":1.0,"scoOffer2":9.0,"scoOffer3":15.0,"scoOffer4":17.0,"scoOffer5":20.0,"scoExaMax":94.0,"scoSchMax":90.0,"scoClaMax":90.0,"scoExaAvg":66.20,"scoSchAvg":68.80,"scoClaAvg":79.30,"scoExaMaxProportion":-14.0,"scoSchMaxProportion":-10.0,"scoClaMaxProportion":-10.0,"scoExaAvgProportion":13.80,"scoSchAvgProportion":11.20,"scoClaAvgProportion":0.70,"scoPosClass":null,"scoPosSchool":null,"scoPosArea":null,"scoPosExam":null,"scoPosType":null,"scoClaCount":42,"scoSchCount":357,"scoExaCount":3137,"scoTypCount":null,"scoStdScore":614.0,"scoPerExam":0.8728084157,"scoZExam":1.08,"scoRank":"良好","scoSAvgExam":20.86,"scoBAvgExam":120.86,"scoExaAvg1":10.46,"scoSchAvg1":11.18,"scoClaAvg1":13.24,"scoExaMax1":16.0,"scoExaAvg2":55.73,"scoSchAvg2":57.66,"scoClaAvg2":66.10,"scoExaMax2":78.0}],"ds1":[{"knoSN":29,"knoScore":14.0,"knoStuScore":14.0,"knoStuRScore":100.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"01基础运用","knoClaAvg":11.57,"knoSchAvg":9.72,"knoAreAvg":null,"knoExaAvg":9.11,"knoExaMax":14.0,"knoClaRScore":82.65,"knoSchRScore":69.43,"knoAreRScore":null,"knoExaRScore":65.05,"ND":"偏易","knoStuZExam":1.79,"knoStandardAvg":11.11,"itemName":"【单选2】【单选4】【单选6】【单选7】【单选8】【1】【3】【5】"},{"knoSN":30,"knoScore":17.0,"knoStuScore":12.0,"knoStuRScore":70.59,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"02古诗文阅读","knoClaAvg":13.14,"knoSchAvg":10.94,"knoAreAvg":null,"knoExaAvg":10.48,"knoExaMax":17.0,"knoClaRScore":77.31,"knoSchRScore":64.33,"knoAreRScore":null,"knoExaRScore":61.66,"ND":"偏易","knoStuZExam":0.49,"knoStandardAvg":12.99,"itemName":"【单选14】【单选15】【9】【10】【11】【12】【13】【16】"},{"knoSN":31,"knoScore":4.0,"knoStuScore":4.0,"knoStuRScore":100.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"03古诗词积累","knoClaAvg":3.76,"knoSchAvg":3.23,"knoAreAvg":null,"knoExaAvg":3.16,"knoExaMax":4.0,"knoClaRScore":94.05,"knoSchRScore":80.74,"knoAreRScore":null,"knoExaRScore":79.01,"ND":"偏易","knoStuZExam":0.78,"knoStandardAvg":3.73,"itemName":"【9】【10】【11】"},{"knoSN":32,"knoScore":5.0,"knoStuScore":3.0,"knoStuRScore":60.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"04古诗词阅读","knoClaAvg":4.38,"knoSchAvg":3.46,"knoAreAvg":null,"knoExaAvg":3.22,"knoExaMax":5.0,"knoClaRScore":87.62,"knoSchRScore":69.19,"knoAreRScore":null,"knoExaRScore":64.44,"ND":"偏易","knoStuZExam":-0.17,"knoStandardAvg":4.01,"itemName":"【12】【13】"},{"knoSN":33,"knoScore":8.0,"knoStuScore":5.0,"knoStuRScore":62.50,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"05文言文阅读","knoClaAvg":5.00,"knoSchAvg":4.25,"knoAreAvg":null,"knoExaAvg":4.10,"knoExaMax":8.0,"knoClaRScore":62.50,"knoSchRScore":53.08,"knoAreRScore":null,"knoExaRScore":51.25,"ND":"中等","knoStuZExam":0.52,"knoStandardAvg":5.25,"itemName":"【单选14】【单选15】【16】"},{"knoSN":34,"knoScore":19.0,"knoStuScore":16.0,"knoStuRScore":84.21,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"06现代文阅读","knoClaAvg":15.21,"knoSchAvg":12.31,"knoAreAvg":null,"knoExaAvg":11.62,"knoExaMax":19.0,"knoClaRScore":80.08,"knoSchRScore":64.79,"knoAreRScore":null,"knoExaRScore":61.17,"ND":"偏易","knoStuZExam":1.17,"knoStandardAvg":14.86,"itemName":"【单选18】【19】【20】【21】【22】【23】【24】"},{"knoSN":35,"knoScore":7.0,"knoStuScore":6.0,"knoStuRScore":85.71,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"07多文本阅读","knoClaAvg":6.02,"knoSchAvg":4.85,"knoAreAvg":null,"knoExaAvg":4.72,"knoExaMax":7.0,"knoClaRScore":86.05,"knoSchRScore":69.31,"knoAreRScore":null,"knoExaRScore":67.45,"ND":"偏易","knoStuZExam":0.70,"knoStandardAvg":6.00,"itemName":"【单选18】【19】【20】"},{"knoSN":36,"knoScore":12.0,"knoStuScore":10.0,"knoStuRScore":83.33,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"08记叙文阅读","knoClaAvg":9.19,"knoSchAvg":7.46,"knoAreAvg":null,"knoExaAvg":6.90,"knoExaMax":12.0,"knoClaRScore":76.59,"knoSchRScore":62.16,"knoAreRScore":null,"knoExaRScore":57.51,"ND":"中等","knoStuZExam":1.26,"knoStandardAvg":8.86,"itemName":"【21】【22】【23】【24】"},{"knoSN":37,"knoScore":5.0,"knoStuScore":3.0,"knoStuRScore":60.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"09名著阅读","knoClaAvg":4.05,"knoSchAvg":3.36,"knoAreAvg":null,"knoExaAvg":3.23,"knoExaMax":5.0,"knoClaRScore":80.95,"knoSchRScore":67.11,"knoAreRScore":null,"knoExaRScore":64.67,"ND":"偏易","knoStuZExam":-0.17,"knoStandardAvg":3.92,"itemName":"【17】"},{"knoSN":38,"knoScore":45.0,"knoStuScore":35.0,"knoStuRScore":77.78,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"10作文251","knoClaAvg":35.51,"knoSchAvg":32.56,"knoAreAvg":null,"knoExaAvg":31.90,"knoExaMax":44.0,"knoClaRScore":78.92,"knoSchRScore":72.37,"knoAreRScore":null,"knoExaRScore":70.89,"ND":"偏易","knoStuZExam":0.57,"knoStandardAvg":36.11,"itemName":"【25-1_提纲】【25-1_作文】"},{"knoSN":40,"knoScore":14.0,"knoStuScore":14.0,"knoStuRScore":100.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"11语文基础","knoClaAvg":11.57,"knoSchAvg":9.72,"knoAreAvg":null,"knoExaAvg":9.11,"knoExaMax":14.0,"knoClaRScore":82.65,"knoSchRScore":69.43,"knoAreRScore":null,"knoExaRScore":65.05,"ND":"偏易","knoStuZExam":1.79,"knoStandardAvg":11.11,"itemName":"【单选2】【单选4】【单选6】【单选7】【单选8】【1】【3】【5】"},{"knoSN":41,"knoScore":6.0,"knoStuScore":6.0,"knoStuRScore":100.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"12古诗文积累","knoClaAvg":5.62,"knoSchAvg":4.89,"knoAreAvg":null,"knoExaAvg":4.72,"knoExaMax":6.0,"knoClaRScore":93.65,"knoSchRScore":81.56,"knoAreRScore":null,"knoExaRScore":78.72,"ND":"偏易","knoStuZExam":0.86,"knoStandardAvg":5.62,"itemName":"【单选14】【9】【10】【11】"},{"knoSN":42,"knoScore":10.0,"knoStuScore":9.0,"knoStuRScore":90.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"13文本内容","knoClaAvg":7.57,"knoSchAvg":6.00,"knoAreAvg":null,"knoExaAvg":5.79,"knoExaMax":10.0,"knoClaRScore":75.71,"knoSchRScore":60.03,"knoAreRScore":null,"knoExaRScore":57.93,"ND":"中等","knoStuZExam":1.65,"knoStandardAvg":7.21,"itemName":"【单选18】【12】【16】【19】"},{"knoSN":43,"knoScore":8.0,"knoStuScore":5.0,"knoStuRScore":62.50,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"14文本中心","knoClaAvg":5.57,"knoSchAvg":4.53,"knoAreAvg":null,"knoExaAvg":4.28,"knoExaMax":8.0,"knoClaRScore":69.64,"knoSchRScore":56.62,"knoAreRScore":null,"knoExaRScore":53.55,"ND":"中等","knoStuZExam":0.37,"knoStandardAvg":5.78,"itemName":"【单选15】【20】【24】"},{"knoSN":44,"knoScore":3.0,"knoStuScore":3.0,"knoStuRScore":100.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"15文本思路","knoClaAvg":2.83,"knoSchAvg":2.56,"knoAreAvg":null,"knoExaAvg":2.48,"knoExaMax":3.0,"knoClaRScore":94.44,"knoSchRScore":85.34,"knoAreRScore":null,"knoExaRScore":82.76,"ND":"容易","knoStuZExam":0.68,"knoStandardAvg":2.83,"itemName":"【21】"},{"knoSN":45,"knoScore":6.0,"knoStuScore":4.0,"knoStuRScore":66.67,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"16文本语言","knoClaAvg":4.10,"knoSchAvg":3.25,"knoAreAvg":null,"knoExaAvg":2.99,"knoExaMax":6.0,"knoClaRScore":68.25,"knoSchRScore":54.25,"knoAreRScore":null,"knoExaRScore":49.80,"ND":"中等","knoStuZExam":0.70,"knoStandardAvg":3.99,"itemName":"【22】【23】"},{"knoSN":46,"knoScore":3.0,"knoStuScore":1.0,"knoStuRScore":33.33,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"17文本写法","knoClaAvg":2.67,"knoSchAvg":2.01,"knoAreAvg":null,"knoExaAvg":1.83,"knoExaMax":3.0,"knoClaRScore":88.89,"knoSchRScore":66.85,"knoAreRScore":null,"knoExaRScore":61.14,"ND":"偏易","knoStuZExam":-0.85,"knoStandardAvg":2.42,"itemName":"【13】"},{"knoSN":47,"knoScore":5.0,"knoStuScore":3.0,"knoStuRScore":60.00,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"18整本书阅读","knoClaAvg":4.05,"knoSchAvg":3.36,"knoAreAvg":null,"knoExaAvg":3.23,"knoExaMax":5.0,"knoClaRScore":80.95,"knoSchRScore":67.11,"knoAreRScore":null,"knoExaRScore":64.67,"ND":"偏易","knoStuZExam":-0.17,"knoStandardAvg":3.92,"itemName":"【17】"},{"knoSN":48,"knoScore":45.0,"knoStuScore":35.0,"knoStuRScore":77.78,"knoStuPosExam":null,"knoStuPosClass":null,"knoName":"19作文251","knoClaAvg":35.51,"knoSchAvg":32.56,"knoAreAvg":null,"knoExaAvg":31.90,"knoExaMax":44.0,"knoClaRScore":78.92,"knoSchRScore":72.37,"knoAreRScore":null,"knoExaRScore":70.89,"ND":"偏易","knoStuZExam":0.57,"knoStandardAvg":36.11,"itemName":"【25-1_提纲】【25-1_作文】"}],"ds2":[{"exaOmrNo":"单选2","exaOmrSolution":"D","exaOmrScore":2.0,"omrStuAnswer":"D","omrStuScore":2.0,"omrClaAvg":2.00,"omrSchAvg":1.60,"omrExaAvg":1.47,"omrExaMax":2.0,"exaOmrSN":1,"omrStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"偏易","ZW":"较好","omrStandardAvg":1.84},{"exaOmrNo":"单选4","exaOmrSolution":"A","exaOmrScore":2.0,"omrStuAnswer":"A","omrStuScore":2.0,"omrClaAvg":1.86,"omrSchAvg":1.68,"omrExaAvg":1.61,"omrExaMax":2.0,"exaOmrSN":2,"omrStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"容易","ZW":"较好","omrStandardAvg":1.84},{"exaOmrNo":"单选6","exaOmrSolution":"C","exaOmrScore":2.0,"omrStuAnswer":"C","omrStuScore":2.0,"omrClaAvg":1.76,"omrSchAvg":1.66,"omrExaAvg":1.62,"omrExaMax":2.0,"exaOmrSN":3,"omrStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"容易","ZW":"较好","omrStandardAvg":1.89},{"exaOmrNo":"单选7","exaOmrSolution":"B","exaOmrScore":2.0,"omrStuAnswer":"B","omrStuScore":2.0,"omrClaAvg":1.62,"omrSchAvg":1.31,"omrExaAvg":1.26,"omrExaMax":2.0,"exaOmrSN":4,"omrStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"偏易","ZW":"较好","omrStandardAvg":1.60},{"exaOmrNo":"单选8","exaOmrSolution":"C","exaOmrScore":2.0,"omrStuAnswer":"C","omrStuScore":2.0,"omrClaAvg":1.19,"omrSchAvg":0.89,"omrExaAvg":0.70,"omrExaMax":2.0,"exaOmrSN":5,"omrStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"偏难","ZW":"较好","omrStandardAvg":1.00},{"exaOmrNo":"单选14","exaOmrSolution":"C","exaOmrScore":2.0,"omrStuAnswer":"C","omrStuScore":2.0,"omrClaAvg":1.86,"omrSchAvg":1.66,"omrExaAvg":1.56,"omrExaMax":2.0,"exaOmrSN":6,"omrStuNotice":false,"knoName":"【02古诗文阅读】【05文言文阅读】【12古诗文积累】","ND":"偏易","ZW":"较好","omrStandardAvg":1.89},{"exaOmrNo":"单选15","exaOmrSolution":"A","exaOmrScore":2.0,"omrStuAnswer":"C","omrStuScore":0.0,"omrClaAvg":1.10,"omrSchAvg":1.08,"omrExaAvg":1.04,"omrExaMax":2.0,"exaOmrSN":7,"omrStuNotice":false,"knoName":"【02古诗文阅读】【05文言文阅读】【14文本中心】","ND":"中等","ZW":"未掌握","omrStandardAvg":1.37},{"exaOmrNo":"单选18","exaOmrSolution":"D","exaOmrScore":2.0,"omrStuAnswer":"D","omrStuScore":2.0,"omrClaAvg":1.86,"omrSchAvg":1.31,"omrExaAvg":1.20,"omrExaMax":2.0,"exaOmrSN":8,"omrStuNotice":false,"knoName":"【06现代文阅读】【07多文本阅读】【13文本内容】","ND":"偏易","ZW":"较好","omrStandardAvg":1.70}],"ds3":[{"exaQueNo":"1","exaQueSN":1,"exaPoiNo":null,"exaQueScore":1.0,"queExaMax":1.0,"queStuScore":1.0,"queClaAvg":0.98,"queSchAvg":0.96,"queExaAvg":0.95,"queStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"容易","ZW":"较好","queStandardAvg":0.98},{"exaQueNo":"3","exaQueSN":2,"exaPoiNo":null,"exaQueScore":1.0,"queExaMax":1.0,"queStuScore":1.0,"queClaAvg":0.57,"queSchAvg":0.43,"queExaAvg":0.43,"queStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"中等","ZW":"较好","queStandardAvg":0.55},{"exaQueNo":"5","exaQueSN":3,"exaPoiNo":null,"exaQueScore":2.0,"queExaMax":2.0,"queStuScore":2.0,"queClaAvg":1.60,"queSchAvg":1.20,"queExaAvg":1.06,"queStuNotice":false,"knoName":"【01基础运用】【11语文基础】","ND":"中等","ZW":"较好","queStandardAvg":1.40},{"exaQueNo":"9","exaQueSN":4,"exaPoiNo":null,"exaQueScore":1.0,"queExaMax":1.0,"queStuScore":1.0,"queClaAvg":0.95,"queSchAvg":0.79,"queExaAvg":0.79,"queStuNotice":false,"knoName":"【02古诗文阅读】【03古诗词积累】【12古诗文积累】","ND":"偏易","ZW":"较好","queStandardAvg":0.94},{"exaQueNo":"10","exaQueSN":5,"exaPoiNo":null,"exaQueScore":1.0,"queExaMax":1.0,"queStuScore":1.0,"queClaAvg":0.93,"queSchAvg":0.75,"queExaAvg":0.70,"queStuNotice":false,"knoName":"【02古诗文阅读】【03古诗词积累】【12古诗文积累】","ND":"偏易","ZW":"较好","queStandardAvg":0.89},{"exaQueNo":"11","exaQueSN":6,"exaPoiNo":null,"exaQueScore":2.0,"queExaMax":2.0,"queStuScore":2.0,"queClaAvg":1.88,"queSchAvg":1.69,"queExaAvg":1.67,"queStuNotice":false,"knoName":"【02古诗文阅读】【03古诗词积累】【12古诗文积累】","ND":"容易","ZW":"较好","queStandardAvg":1.90},{"exaQueNo":"12","exaQueSN":7,"exaPoiNo":null,"exaQueScore":2.0,"queExaMax":2.0,"queStuScore":2.0,"queClaAvg":1.71,"queSchAvg":1.45,"queExaAvg":1.39,"queStuNotice":false,"knoName":"【02古诗文阅读】【04古诗词阅读】【13文本内容】","ND":"偏易","ZW":"较好","queStandardAvg":1.59},{"exaQueNo":"13","exaQueSN":8,"exaPoiNo":null,"exaQueScore":3.0,"queExaMax":3.0,"queStuScore":1.0,"queClaAvg":2.67,"queSchAvg":2.01,"queExaAvg":1.83,"queStuNotice":false,"knoName":"【02古诗文阅读】【04古诗词阅读】【17文本写法】","ND":"偏易","ZW":"需努力","queStandardAvg":2.42},{"exaQueNo":"16","exaQueSN":9,"exaPoiNo":null,"exaQueScore":4.0,"queExaMax":4.0,"queStuScore":3.0,"queClaAvg":2.05,"queSchAvg":1.50,"queExaAvg":1.50,"queStuNotice":false,"knoName":"【02古诗文阅读】【05文言文阅读】【13文本内容】","ND":"偏难","ZW":"一般","queStandardAvg":1.99},{"exaQueNo":"17","exaQueSN":10,"exaPoiNo":null,"exaQueScore":5.0,"queExaMax":5.0,"queStuScore":3.0,"queClaAvg":4.05,"queSchAvg":3.36,"queExaAvg":3.23,"queStuNotice":false,"knoName":"【09名著阅读】【18整本书阅读】","ND":"偏易","ZW":"一般","queStandardAvg":3.92},{"exaQueNo":"19","exaQueSN":11,"exaPoiNo":null,"exaQueScore":2.0,"queExaMax":2.0,"queStuScore":2.0,"queClaAvg":1.95,"queSchAvg":1.74,"queExaAvg":1.70,"queStuNotice":false,"knoName":"【06现代文阅读】【07多文本阅读】【13文本内容】","ND":"容易","ZW":"较好","queStandardAvg":1.93},{"exaQueNo":"20","exaQueSN":12,"exaPoiNo":null,"exaQueScore":3.0,"queExaMax":3.0,"queStuScore":2.0,"queClaAvg":2.21,"queSchAvg":1.80,"queExaAvg":1.82,"queStuNotice":false,"knoName":"【06现代文阅读】【07多文本阅读】【14文本中心】","ND":"偏易","ZW":"一般","queStandardAvg":2.37},{"exaQueNo":"21","exaQueSN":13,"exaPoiNo":null,"exaQueScore":3.0,"queExaMax":3.0,"queStuScore":3.0,"queClaAvg":2.83,"queSchAvg":2.56,"queExaAvg":2.48,"queStuNotice":false,"knoName":"【06现代文阅读】【08记叙文阅读】【15文本思路】","ND":"容易","ZW":"较好","queStandardAvg":2.83},{"exaQueNo":"22","exaQueSN":14,"exaPoiNo":null,"exaQueScore":3.0,"queExaMax":3.0,"queStuScore":3.0,"queClaAvg":2.36,"queSchAvg":1.96,"queExaAvg":1.85,"queStuNotice":false,"knoName":"【06现代文阅读】【08记叙文阅读】【16文本语言】","ND":"偏易","ZW":"较好","queStandardAvg":2.28},{"exaQueNo":"23","exaQueSN":15,"exaPoiNo":null,"exaQueScore":3.0,"queExaMax":3.0,"queStuScore":1.0,"queClaAvg":1.74,"queSchAvg":1.29,"queExaAvg":1.14,"queStuNotice":false,"knoName":"【06现代文阅读】【08记叙文阅读】【16文本语言】","ND":"偏难","ZW":"需努力","queStandardAvg":1.71},{"exaQueNo":"24","exaQueSN":16,"exaPoiNo":null,"exaQueScore":3.0,"queExaMax":3.0,"queStuScore":3.0,"queClaAvg":2.26,"queSchAvg":1.64,"queExaAvg":1.43,"queStuNotice":false,"knoName":"【06现代文阅读】【08记叙文阅读】【14文本中心】","ND":"中等","ZW":"较好","queStandardAvg":2.04},{"exaQueNo":"25-1_提纲","exaQueSN":17,"exaPoiNo":"提纲","exaQueScore":5.0,"queExaMax":5.0,"queStuScore":4.0,"queClaAvg":4.73,"queSchAvg":4.06,"queExaAvg":3.66,"queStuNotice":null,"knoName":"【10作文251】【19作文251】","ND":"偏易","ZW":"较好","queStandardAvg":4.50},{"exaQueNo":"25-1_作文","exaQueSN":17,"exaPoiNo":"作文","exaQueScore":40.0,"queExaMax":39.0,"queStuScore":31.0,"queClaAvg":30.78,"queSchAvg":28.50,"queExaAvg":28.25,"queStuNotice":null,"knoName":"【10作文251】【19作文251】","ND":"偏易","ZW":"一般","queStandardAvg":31.62},{"exaQueNo":"25-1","exaQueSN":17,"exaPoiNo":null,"exaQueScore":45.0,"queExaMax":44.0,"queStuScore":35.0,"queClaAvg":35.51,"queSchAvg":32.56,"queExaAvg":31.90,"queStuNotice":false,"knoName":null,"ND":"偏易","ZW":"一般","queStandardAvg":36.11}],"ds4":[{"modSN":1,"modScore":1.0,"modStuScore":1.0,"modStuRScore":100.00,"modStuPosExam":null,"modStuPosClass":null,"modName":"01书写","modClaAvg":0.98,"modSchAvg":0.96,"modAreAvg":null,"modExaAvg":0.95,"modExaMax":1.0,"modClaRScore":97.62,"modSchRScore":95.80,"modAreRScore":null,"modExaRScore":95.09,"ND":"容易","modStuZExam":0.23,"modStandardAvg":0,"itemName":"【1】"},{"modSN":2,"modScore":2.0,"modStuScore":2.0,"modStuRScore":100.00,"modStuPosExam":null,"modStuPosClass":null,"modName":"02识记","modClaAvg":1.88,"modSchAvg":1.54,"modAreAvg":null,"modExaAvg":1.50,"modExaMax":2.0,"modClaRScore":94.05,"modSchRScore":77.17,"modAreRScore":null,"modExaRScore":74.75,"ND":"偏易","modStuZExam":0.72,"modStandardAvg":0,"itemName":"【9】【10】"},{"modSN":3,"modScore":12.0,"modStuScore":10.0,"modStuRScore":83.33,"modStuPosExam":null,"modStuPosClass":null,"modName":"03理解","modClaAvg":10.29,"modSchAvg":9.13,"modAreAvg":null,"modExaAvg":8.69,"modExaMax":12.0,"modClaRScore":85.71,"modSchRScore":76.12,"modAreRScore":null,"modExaRScore":72.40,"ND":"偏易","modStuZExam":0.52,"modStandardAvg":0,"itemName":"【单选2】【单选4】【单选6】【单选14】【单选15】【12】"},{"modSN":4,"modScore":9.0,"modStuScore":9.0,"modStuRScore":100.00,"modStuPosExam":null,"modStuPosClass":null,"modName":"04运用","modClaAvg":6.86,"modSchAvg":5.51,"modAreAvg":null,"modExaAvg":5.12,"modExaMax":9.0,"modClaRScore":76.19,"modSchRScore":61.25,"modAreRScore":null,"modExaRScore":56.90,"ND":"中等","modStuZExam":1.94,"modStandardAvg":0,"itemName":"【单选7】【单选8】【3】【5】【11】"},{"modSN":5,"modScore":3.0,"modStuScore":3.0,"modStuRScore":100.00,"modStuPosExam":null,"modStuPosClass":null,"modName":"05整体感知","modClaAvg":2.83,"modSchAvg":2.56,"modAreAvg":null,"modExaAvg":2.48,"modExaMax":3.0,"modClaRScore":94.44,"modSchRScore":85.34,"modAreRScore":null,"modExaRScore":82.76,"ND":"容易","modStuZExam":0.68,"modStandardAvg":0,"itemName":"【21】"},{"modSN":6,"modScore":8.0,"modStuScore":7.0,"modStuRScore":87.50,"modStuPosExam":null,"modStuPosClass":null,"modName":"06提取信息","modClaAvg":5.86,"modSchAvg":4.55,"modAreAvg":null,"modExaAvg":4.41,"modExaMax":8.0,"modClaRScore":73.21,"modSchRScore":56.86,"modAreRScore":null,"modExaRScore":55.06,"ND":"中等","modStuZExam":1.54,"modStandardAvg":0,"itemName":"【单选18】【16】【19】"},{"modSN":7,"modScore":6.0,"modStuScore":5.0,"modStuRScore":83.33,"modStuPosExam":null,"modStuPosClass":null,"modName":"07归纳概括","modClaAvg":4.48,"modSchAvg":3.45,"modAreAvg":null,"modExaAvg":3.25,"modExaMax":6.0,"modClaRScore":74.60,"modSchRScore":57.47,"modAreRScore":null,"modExaRScore":54.12,"ND":"中等","modStuZExam":1.16,"modStandardAvg":0,"itemName":"【20】【24】"},{"modSN":8,"modScore":5.0,"modStuScore":3.0,"modStuRScore":60.00,"modStuPosExam":null,"modStuPosClass":null,"modName":"08形成解释","modClaAvg":4.05,"modSchAvg":3.36,"modAreAvg":null,"modExaAvg":3.23,"modExaMax":5.0,"modClaRScore":80.95,"modSchRScore":67.11,"modAreRScore":null,"modExaRScore":64.67,"ND":"偏易","modStuZExam":-0.17,"modStandardAvg":0,"itemName":"【17】"},{"modSN":9,"modScore":9.0,"modStuScore":5.0,"modStuRScore":55.56,"modStuPosExam":null,"modStuPosClass":null,"modName":"09评价鉴赏","modClaAvg":6.76,"modSchAvg":5.26,"modAreAvg":null,"modExaAvg":4.82,"modExaMax":9.0,"modClaRScore":75.13,"modSchRScore":58.45,"modAreRScore":null,"modExaRScore":53.58,"ND":"中等","modStuZExam":0.09,"modStandardAvg":0,"itemName":"【13】【22】【23】"},{"modSN":10,"modScore":45.0,"modStuScore":35.0,"modStuRScore":77.78,"modStuPosExam":null,"modStuPosClass":null,"modName":"10综合表达251","modClaAvg":35.51,"modSchAvg":32.56,"modAreAvg":null,"modExaAvg":31.90,"modExaMax":44.0,"modClaRScore":78.92,"modSchRScore":72.37,"modAreRScore":null,"modExaRScore":70.89,"ND":"偏易","modStuZExam":0.57,"modStandardAvg":0,"itemName":"【25-1_提纲】【25-1_作文】"},{"modSN":12,"modScore":129.0,"modStuScore":66.0,"modStuRScore":51.16,"modStuPosExam":null,"modStuPosClass":null,"modName":"非选择题","modClaAvg":66.10,"modSchAvg":57.66,"modAreAvg":null,"modExaAvg":55.73,"modExaMax":78.0,"modClaRScore":51.24,"modSchRScore":44.70,"modAreRScore":null,"modExaRScore":43.20,"ND":"中等","modStuZExam":0.95,"modStandardAvg":0,"itemName":"【1】【3】【5】【9】【10】【11】【12】【13】【16】【17】【19】【20】【21】【22】【23】【24】【25-1_提纲】【25-1_作文】【25-2_提纲】【25-2_作文】"},{"modSN":13,"modScore":16.0,"modStuScore":14.0,"modStuRScore":87.50,"modStuPosExam":null,"modStuPosClass":null,"modName":"选择题","modClaAvg":13.24,"modSchAvg":11.18,"modAreAvg":null,"modExaAvg":10.46,"modExaMax":16.0,"modClaRScore":82.74,"modSchRScore":69.89,"modAreRScore":null,"modExaRScore":65.38,"ND":"偏易","modStuZExam":1.09,"modStandardAvg":0,"itemName":"【单选2】【单选4】【单选6】【单选7】【单选8】【单选14】【单选15】【单选18】"}]},"sec":[{"exaSubSN":253,"secTitle":"[0,5)","secValueL":0.0,"secValueH":5.0,"secCount":0,"sumCount":0},{"exaSubSN":253,"secTitle":"(*,0)","secValueL":0.0,"secValueH":0.0,"secCount":0,"sumCount":0},{"exaSubSN":253,"secTitle":"[5,10)","secValueL":5.0,"secValueH":10.0,"secCount":11,"sumCount":11},{"exaSubSN":253,"secTitle":"[10,15)","secValueL":10.0,"secValueH":15.0,"secCount":2,"sumCount":2},{"exaSubSN":253,"secTitle":"[15,20)","secValueL":15.0,"secValueH":20.0,"secCount":7,"sumCount":7},{"exaSubSN":253,"secTitle":"[20,25)","secValueL":20.0,"secValueH":25.0,"secCount":17,"sumCount":17},{"exaSubSN":253,"secTitle":"[25,30)","secValueL":25.0,"secValueH":30.0,"secCount":16,"sumCount":16},{"exaSubSN":253,"secTitle":"[30,35)","secValueL":30.0,"secValueH":35.0,"secCount":18,"sumCount":18},{"exaSubSN":253,"secTitle":"[35,40)","secValueL":35.0,"secValueH":40.0,"secCount":33,"sumCount":33},{"exaSubSN":253,"secTitle":"[40,45)","secValueL":40.0,"secValueH":45.0,"secCount":72,"sumCount":72},{"exaSubSN":253,"secTitle":"[45,50)","secValueL":45.0,"secValueH":50.0,"secCount":134,"sumCount":134},{"exaSubSN":253,"secTitle":"[50,55)","secValueL":50.0,"secValueH":55.0,"secCount":177,"sumCount":177},{"exaSubSN":253,"secTitle":"[55,60)","secValueL":55.0,"secValueH":60.0,"secCount":293,"sumCount":293},{"exaSubSN":253,"secTitle":"[60,65)","secValueL":60.0,"secValueH":65.0,"secCount":394,"sumCount":394},{"exaSubSN":253,"secTitle":"[65,70)","secValueL":65.0,"secValueH":70.0,"secCount":563,"sumCount":563},{"exaSubSN":253,"secTitle":"[70,75)","secValueL":70.0,"secValueH":75.0,"secCount":570,"sumCount":570},{"exaSubSN":253,"secTitle":"[75,80)","secValueL":75.0,"secValueH":80.0,"secCount":431,"sumCount":431},{"exaSubSN":253,"secTitle":"[80,85)","secValueL":80.0,"secValueH":85.0,"secCount":305,"sumCount":305},{"exaSubSN":253,"secTitle":"[85,90)","secValueL":85.0,"secValueH":90.0,"secCount":82,"sumCount":82},{"exaSubSN":253,"secTitle":"[90,95)","secValueL":90.0,"secValueH":95.0,"secCount":12,"sumCount":12},{"exaSubSN":253,"secTitle":"[95,100)","secValueL":95.0,"secValueH":100.0,"secCount":0,"sumCount":0},{"exaSubSN":253,"secTitle":"[100,*]","secValueL":100.0,"secValueH":null,"secCount":0,"sumCount":0}],"radar":[{"exaSubSN":256,"exaSubScore":60.0,"scoStdScore":577.0,"scoZExam":0.92,"exaSubName":"生物"},{"exaSubSN":254,"exaSubScore":100.0,"scoStdScore":702.0,"scoZExam":1.23,"exaSubName":"数学"},{"exaSubSN":253,"exaSubScore":100.0,"scoStdScore":614.0,"scoZExam":1.08,"exaSubName":"语文"},{"exaSubSN":257,"exaSubScore":60.0,"scoStdScore":505.0,"scoZExam":0.28,"exaSubName":"历史"},{"exaSubSN":259,"exaSubScore":70.0,"scoStdScore":737.0,"scoZExam":1.49,"exaSubName":"道德与法治"},{"exaSubSN":258,"exaSubScore":60.0,"scoStdScore":601.0,"scoZExam":1.02,"exaSubName":"地理"},{"exaSubSN":255,"exaSubScore":60.0,"scoStdScore":704.0,"scoZExam":1.47,"exaSubName":"英语"}]},"NextUrl":null,"Msg":null,"State":"OK"})');
+            LoadStuDataOK(data);
+        }
+
+        //加载学生信息记录
+        function LoadStuDataOK(data) {
+            ClearStuData();
+            if (!data) {
+                return;
+            }
+
+            //备注说明
+            //SetTip(data.Data.scoClassification);
+
+            var tab = data.Data.tab;
+
+            var scoRank = "A";
+            var scoConclusion = "学习良好稳定性高";
+            var subInfo = tab.ds;
+            if (subInfo.length <= 0) {
+                data = null;
+                return;
+            }
+            var subInfoCurrent = subInfo[subInfo.length - 1];
+
+            //根据查询的科目判断是否显示
+            if (subInfoCurrent.exaSubSN == 0) {
+
+                //总体评价 小考小测项目隐藏
+                if (exaMark == "A") {//网上阅卷
+                    $("#div_all").css("display", "");
+                } else {
+                    $("#div_all").css("display", "none");
+                }
+
+                //隐藏 知识点、客观题、主观题
+                $("#div_kno").css("display", "none");
+                $("#div_kno_chart").css("display", "none");
+                $("#div_kno_chart2").css("display", "none");
+                $("#tab_kno").css("display", "none");
+                $("#div_mod").css("display", "none");
+                $("#div_mod_chart").css("display", "none");
+                $("#div_mod_chart2").css("display", "none");
+                $("#tab_mod").css("display", "none");
+                $("#div_difficulty").css("display", "none");
+                $("#rep_dif_abi_div").css("display", "none");
+                $("#div_que_omr").css("display", "none");
+                $("#tab_que_omr").css("display", "none");
+                $("#div_que_item").css("display", "none");
+                $("#tab_que_item").css("display", "none");
+
+                $("#div_kno_tips").css("display", "none");
+                $("#div_mod_tips").css("display", "none");
+                $("#div_omr_tips").css("display", "none");
+                $("#div_item_tips").css("display", "none");
+
+            } else {
+
+                //总体评价
+                $("#div_all").css("display", "");
+
+                //显示 知识点、客观题、主观题
+                $("#div_kno").css("display", "");
+                $("#div_kno_chart").css("display", "");
+                $("#div_kno_chart2").css("display", "");
+                $("#tab_kno").css("display", "");
+                $("#div_mod").css("display", "");
+                $("#div_mod_chart").css("display", "");
+                $("#div_mod_chart2").css("display", "");
+                $("#tab_mod").css("display", "");
+                $("#div_difficulty").css("display", "");
+                $("#rep_dif_abi_div").css("display", "");
+                $("#div_que_omr").css("display", "");
+                $("#tab_que_omr").css("display", "");
+                $("#div_que_item").css("display", "");
+                $("#tab_que_item").css("display", "");
+
+                $("#div_kno_tips").css("display", "");
+                $("#div_mod_tips").css("display", "");
+                $("#div_omr_tips").css("display", "");
+                $("#div_item_tips").css("display", "");
+
+            }
+
+            var stuScore = subInfoCurrent.scoScore;//学生得分
+            var exaSubScore = subInfoCurrent.exaSubScore;//满分值
+            var scoNotice = subInfoCurrent.scoNotice;//注意系数
+            var scoRScore = subInfoCurrent.scoRScore;//学生科目得分率
+            if (!scoRScore) {
+                scoRScore = 0;
+            }
+            if (scoRScore > 75) {
+                if (scoNotice) {
+                    scoRank = "A'";
+                    scoConclusion = "粗心大意，不细心造成错误";
+                }
+            } else if (scoRScore > 50) {
+                if (scoNotice) {
+                    scoRank = "B'";
+                    scoConclusion = "偶尔粗心，准备不充分，需要再努力";
+                } else {
+                    scoRank = "B";
+                    scoConclusion = "学习尚稳定，需要再用功一点";
+                }
+
+            } else {
+                if (scoNotice) {
+                    scoRank = "C'";
+                    scoConclusion = "学习很不稳定，对考试内容没有准备";
+                } else {
+                    scoRank = "C";
+                    scoConclusion = "学历不足，学习不够充分，需要更加努力用功";
+                }
+            }
+
+            if (subInfoCurrent.exaSubSN == 0) {
+                $('#sp_eva').html("【 学生得分：" + stuScore + "分&nbsp;&nbsp;总结：" + scoConclusion + " 】");
+
+            } else {
+                $('#sp_eva').html("【 学生得分：" + stuScore + "分&nbsp;&nbsp;等级：" + subInfoCurrent.scoRank + "&nbsp;&nbsp;总结：" + scoConclusion + " 】");
+
+            }
+
+            var subTitle = "";
+            if (subInfoCurrent.exaSubSN > 0 || exaMark == "A") {
+                subTitle = "【 学生得分：" + stuScore + "分&nbsp;&nbsp;满分值：" + exaSubScore + "分 】";
+            }
+            $("#div_sub_t").html(subTitle);
+
+            var isShowEva = false;//是否显示总体评价
+            /*学生位置*****************************/
+            var sec = data.Data.sec;
+            if (sec && sec.length > 0) {
+                isShowEva = true;
+                $("#rep_stu_place_div").css("display", "");
+
+                var sceMyData = { xAxis_data: [], series_stu: [], markPoint: { xAxis: 0, yAxis: 0, value: "" } };
+                for (var i = 0; i < sec.length; i++) {
+                    sceMyData.series_stu[i] = sec[i].sumCount;
+                    var secValueH = sec[i].secValueH;
+                    var secTitle = sec[i].secTitle;
+                    if (!secValueH) {
+                        secValueH = exaSubScore;
+                    }
+                    sceMyData.xAxis_data[i] = secTitle;
+                    if (stuScore >= sec[i].secValueL && stuScore <= secValueH) {
+                        sceMyData.markPoint.xAxis = i;
+                        sceMyData.markPoint.yAxis = sec[i].sumCount;
+                        //sceMyData.markPoint.value = stuScore;
+                    }
+                }
+                sceMyData.markPoint.value = (scoCenterRankingExa ? (subInfoCurrent.scoPosExam ? subInfoCurrent.scoPosExam + " / " + subInfoCurrent.scoExaCount : "") : "");
+
+                AddRepStu(sceMyData);
+            } else {
+                $("#rep_stu_place_div").css("display", "none");
+            }
+            /*学生位置*****************************/
+
+            /*难度能力*****************************/
+
+            if (subInfoCurrent.exaSubSN > 0) {
+                var difficulty = data.Data.difficulty;
+                if (difficulty && difficulty.length > 0) {
+                    isShowEva = true;
+                    $("#rep_dif_abi_div").css("display", "");
+                    var def_myData = { xAxis_data: [], series_stu: [], series_difficulty: [], series_max: [] };
+                    for (var i = 0; i < difficulty.length; i++) {
+                        def_myData.xAxis_data[i] = difficulty[i].ND;
+                        def_myData.series_difficulty[i] = difficulty[i].ExaAvg;
+                        def_myData.series_stu[i] = difficulty[i].stuFZ;
+                        def_myData.series_max[i] = difficulty[i].ExaMax;
+                    }
+                    AddRepDif(def_myData);
+                } else {
+                    $("#rep_dif_abi_div").css("display", "none");
+                }
+            }
+            /*难度能力*****************************/
+
+            /*达标情况*****************************/
+            var scoOffer1 = subInfoCurrent.scoOffer1;
+            var scoOffer2 = subInfoCurrent.scoOffer2;
+            var scoOffer3 = subInfoCurrent.scoOffer3;
+            var scoOffer4 = subInfoCurrent.scoOffer4;
+            var scoOffer5 = subInfoCurrent.scoOffer5;
+            var exaOrganizeRange = 'D';
+
+            if (scoOffer1 != null) {
+                isShowEva = true;
+                $("#rep_sub_offer_div").css("display", "");
+                var subConMyData = { xAxis_data: [], title_text: "", series_offer: [], series_Proportion: [], "stuScore": stuScore };
+                var i = 0;
+                //全体
+                subConMyData.series_Proportion[i] = subInfoCurrent.scoExaMax;//达标分
+                subConMyData.series_offer[i] = subInfoCurrent.scoExaMaxProportion;//贡献值
+                subConMyData.xAxis_data[i] = "全体最高分";
+                i++;
+                if (exaOrganizeRange != 'E') {//学校
+                    subConMyData.series_Proportion[i] = subInfoCurrent.scoSchMax;//达标分
+                    subConMyData.series_offer[i] = subInfoCurrent.scoSchMaxProportion;//贡献值
+                    subConMyData.xAxis_data[i] = "学校最高分";
+                    i++;
+                }
+
+                if (exaOrganizeRange == 'A' || exaOrganizeRange == 'D' || exaOrganizeRange == 'E') { //班级
+                    subConMyData.series_Proportion[i] = subInfoCurrent.scoClaMax;//达标分
+                    subConMyData.series_offer[i] = subInfoCurrent.scoClaMaxProportion;//贡献值
+                    subConMyData.xAxis_data[i] = "班级最高分";
+                    i++;
+                }
+                if (scoCenterAvg) {
+                    //全体
+                    subConMyData.series_Proportion[i] = subInfoCurrent.scoExaAvg; //达标分
+                    subConMyData.series_offer[i] = subInfoCurrent.scoExaAvgProportion; //贡献值
+                    subConMyData.xAxis_data[i] = "全体均分";
+                    i++;
+                    if (exaOrganizeRange != 'E') { //学校
+                        subConMyData.series_Proportion[i] = subInfoCurrent.scoSchAvg; //达标分
+                        subConMyData.series_offer[i] = subInfoCurrent.scoSchAvgProportion; //贡献值
+                        subConMyData.xAxis_data[i] = "学校均分";
+                        i++;
+                    }
+
+                    if (exaOrganizeRange == 'A' || exaOrganizeRange == 'D' || exaOrganizeRange == 'E') { //班级
+                        subConMyData.series_Proportion[i] = subInfoCurrent.scoClaAvg; //达标分
+                        subConMyData.series_offer[i] = subInfoCurrent.scoClaAvgProportion; //贡献值
+                        subConMyData.xAxis_data[i] = "班级均分";
+                        i++;
+                    }
+                }
+                subConMyData.series_Proportion[i] = subInfoCurrent.scoExaProportion1;//达标分
+                subConMyData.series_offer[i] = scoOffer1;//贡献值
+                subConMyData.xAxis_data[i] = "目标1";//描述
+                i++;
+                subConMyData.series_Proportion[i] = subInfoCurrent.scoExaProportion2;
+                subConMyData.series_offer[i] = scoOffer2;
+                subConMyData.xAxis_data[i] = "目标2";
+                i++;
+                subConMyData.series_Proportion[i] = subInfoCurrent.scoExaProportion3;
+                subConMyData.series_offer[i] = scoOffer3;
+                subConMyData.xAxis_data[i] = "目标3";
+                i++;
+                subConMyData.series_Proportion[i] = subInfoCurrent.scoExaProportion4;
+                subConMyData.series_offer[i] = scoOffer4;
+                subConMyData.xAxis_data[i] = "目标4";
+                i++;
+                subConMyData.series_Proportion[i] = subInfoCurrent.scoExaProportion5;
+                subConMyData.series_offer[i] = scoOffer5;
+                subConMyData.xAxis_data[i] = "目标5";
+                subConMyData.title_text = subInfoCurrent.exaSubName;
+                AddRepSubOffer(subConMyData);
+            } else {
+                $("#rep_sub_offer_div").css("display", "none");
+                AddRepSubOffer(null);
+            }
+            /*达标情况*****************************/
+
+            /*学科均衡*****************************/
+            var radar = data.Data.radar;
+            if (radar && radar.length > 0) {
+                isShowEva = true;
+                $("#rep_sub_radar_div").css("display", "");
+                var radarMyData = { polar_indicator: [], series_z: [], series_avg: [] };
+                for (var j = 0; j < radar.length; j++) {
+                    radarMyData.polar_indicator[j] = { text: radar[j].exaSubName, min: -4, max: 4 };//, min: -4, max: 4
+                    //radar_myData.polar_indicator[j] = { text: radar[j].exaSubName };
+                    radarMyData.series_z[j] = radar[j].scoZExam;
+                    radarMyData.series_avg[j] = 0;
+                }
+                AddRepRadar(radarMyData);
+            } else {
+                $("#rep_sub_radar_div").css("display", "none");
+            }
+            /*学科均衡*****************************/
+
+            if (isShowEva) {//总体评价是否显示
+                $("#div_eva").css("display", "");
+            } else {
+                $("#div_eva").css("display", "none");
+            }
+
+            /*学科分析*****************************/
+            var scoSAvgExam;
+            var scoBAvgExam;
+            if (subInfoCurrent.exaSubSN > 0) {
+                scoSAvgExam = getToFixed(subInfoCurrent.scoSAvgExam); //scoCenterAvg ? getToFixed(subInfoCurrent.scoSAvgExam) : "";
+                scoBAvgExam = getToFixed(subInfoCurrent.scoBAvgExam); // scoCenterAvg ? getToFixed(subInfoCurrent.scoBAvgExam) : "";
+                $("#tab_sub").append("<tr align='center'>" +
+                     "<td>" + subInfoCurrent.exaSubName + "</td>" +
+                      "<td>" + subInfoCurrent.scoScore + "</td>" +
+                      "<td>" + subInfoCurrent.scoStdScore + "</td>" +
+                      "<td>" + subInfoCurrent.scoPerExam + "</td>" +
+                      "<td>" + getToFixedL(subInfoCurrent.scoZExam, 2) + "</td>" +
+                      "<td>" + (subInfoCurrent.exaSubSN == 0 ? "" : subInfoCurrent.scoRank) + "</td>" +
+                      "<td>" + scoSAvgExam + "</td>" +
+                      "<td>" + scoBAvgExam + "</td>" +
+                      "<td>" + (scoCenterRankingExa ? (subInfoCurrent.scoPosType && subInfoCurrent.scoTypCount ? subInfoCurrent.scoPosType + " / " + subInfoCurrent.scoTypCount : "") : "") + "</td>" +
+                      "<td>" + (scoCenterRankingCla ? (subInfoCurrent.scoPosClass ? subInfoCurrent.scoPosClass + " / " + subInfoCurrent.scoClaCount : "") : "") + "</td>" +
+                      "<td>" + (scoCenterRankingSch ? (subInfoCurrent.scoPosSchool ? subInfoCurrent.scoPosSchool + " / " + subInfoCurrent.scoSchCount : "") : "") + "</td>" +
+                      "<td>" + (scoCenterRankingExa ? (subInfoCurrent.scoPosExam ? subInfoCurrent.scoPosExam + " / " + subInfoCurrent.scoExaCount : "") : "") + "</td>" +
+                      "</tr>");
+            } else {
+                for (var x = 0; x < subInfo.length; x++) {
+                    if (subInfo[x].exaSubSN > 0 || exaMark == "A" || subSN == 0) {//单科 or 网上阅卷 or 手工阅卷全科
+
+                        scoSAvgExam = getToFixed(subInfo[x].scoSAvgExam); //scoCenterAvg ? getToFixed(subInfo[x].scoSAvgExam) : "";
+                        scoBAvgExam = getToFixed(subInfo[x].scoBAvgExam); //scoCenterAvg ? getToFixed(subInfo[x].scoBAvgExam) : "";
+
+                        $("#tab_sub").append("<tr align='center'>" +
+                            "<td>" + subInfo[x].exaSubName + "</td>" +
+                            "<td>" + subInfo[x].scoScore + "</td>" +
+                            "<td>" + subInfo[x].scoStdScore + "</td>" +
+                            "<td>" + subInfo[x].scoPerExam + "</td>" +
+                            "<td>" + getToFixedL(subInfo[x].scoZExam, 2) + "</td>" +
+                            "<td>" + (subInfo[x].exaSubSN == 0 ? "" : subInfo[x].scoRank) + "</td>" +
+                            "<td>" + scoSAvgExam + "</td>" +
+                            "<td>" + scoBAvgExam + "</td>" +
+                            "<td>" + (scoCenterRankingExa ? (subInfo[x].scoPosType && subInfo[x].scoTypCount ? subInfo[x].scoPosType + " / " + subInfo[x].scoTypCount : "") : "") + "</td>" +
+                            "<td>" + (scoCenterRankingCla ? (subInfo[x].scoPosClass ? subInfo[x].scoPosClass + " / " + subInfo[x].scoClaCount : "") : "") + "</td>" +
+                            "<td>" + (scoCenterRankingSch ? (subInfo[x].scoPosSchool ? subInfo[x].scoPosSchool + " / " + subInfo[x].scoSchCount : "") : "") + "</td>" +
+                            "<td>" + (scoCenterRankingExa ? (subInfo[x].scoPosExam ? subInfo[x].scoPosExam + " / " + subInfo[x].scoExaCount : "") : "") + "</td>" +
+                            "</tr>");
+                    }
+                }
+            }
+
+            //学科排名对比、学科
+            if (subInfoCurrent.exaSubSN > 0 || exaMark == "A" || subSN == 0) {//单科 or 网上阅卷 or 手工阅卷全科
+                $("#div_sub_rank_div").css("display", "none");
+                $("#div_sub_rScore_div").css("display", "none");
+            } else {
+                $("#div_sub_rank_div").css("display", "");
+                $("#div_sub_rScore_div").css("display", "");
+
+                //学科排位对比
+                SubjectRankCompare(subInfo);
+                //学科得分率对比
+                SubjectRScoreCompare(subInfo);
+            }
+
+            /*学科分析*****************************/
+
+            /*知识点分析*****************************/
+            var kno = tab.ds1;
+            if (kno && kno.length > 0) {
+
+                $("#div_kno").css("display", "");
+                $("#div_kno_chart").css("display", "");
+                $("#div_kno_chart2").css("display", "");
+                $("#tab_kno").css("display", "");
+                $("#div_kno_tips").css("display", "");
+
+                var knoMyData = { xAxis_data: [], series_stu: [], series_avg: [], series_max: [] };
+                for (var l = 0; l < kno.length; l++) {
+                    knoMyData.xAxis_data[l] = kno[l].knoName;
+                    knoMyData.series_avg[l] = kno[l].knoExaAvg;
+                    knoMyData.series_stu[l] = kno[l].knoStuScore;
+                    knoMyData.series_max[l] = { name: kno[l].knoName, value: kno[l].knoScore };
+                }
+                AddRepKno(knoMyData);
+
+                var radarKnoData = {
+                    polar_indicator: [],
+                    series_stuRScore: [],
+                    series_claRScore: [],
+                    series_schRScore: [],
+                    series_areRScore: [],
+                    series_exaRScore: []
+                };
+                for (var j = 0; j < kno.length; j++) {
+                    radarKnoData.polar_indicator[j] = { text: kno[j].knoName, min: -5, max: 105 };
+                    radarKnoData.series_stuRScore[j] = kno[j].knoStuRScore;
+                    radarKnoData.series_claRScore[j] = kno[j].knoClaRScore;
+                    radarKnoData.series_schRScore[j] = kno[j].knoSchRScore;
+                    radarKnoData.series_areRScore[j] = kno[j].knoAreRScore;
+                    radarKnoData.series_exaRScore[j] = kno[j].knoExaRScore;
+                }
+                AddRepKno2(radarKnoData);
+
+                for (var i = 0; i < kno.length; i++) {
+
+                    var trColor = "color:black";
+                    var scoColor = "";
+                    var knoStandardAvg = kno[i].knoStandardAvg ? parseFloat(kno[i].knoStandardAvg) : 0;
+                    var knoStuScore = kno[i].knoStuScore ? parseFloat(kno[i].knoStuScore) : 0;
+                    if (knoStuScore < knoStandardAvg) {
+                        trColor = "color:red;";
+                        scoColor = "font-weight:bold;";
+                    }
+                    var knoClaAvg = getToFixed(kno[i].knoClaAvg);// scoCenterAvg ? getToFixed(kno[i].knoClaAvg) : "";
+                    var knoSchAvg = getToFixed(kno[i].knoSchAvg);//scoCenterAvg ? getToFixed(kno[i].knoSchAvg) : "";
+                    var knoExaAvg = getToFixed(kno[i].knoExaAvg);// scoCenterAvg ? getToFixed(kno[i].knoExaAvg) : "";
+
+                    //知识点、满分值、难度、学生得分、学生得分率、Z分数、班级均分、学校均分、全体均分、知识点达标分数；
+                    $('#tab_kno').append('<tr  align="center" style="' + trColor + '"><td>'
+                        + kno[i].knoName + '</td><td >'//知识点
+                        + getToFixed(kno[i].knoScore) + '</td><td>'//满分值
+                        + getToFixed(kno[i].knoStuScore) + '</td><td>'//学生得分
+                        + getToFixed(kno[i].knoStuRScore) + '</td><td>'//学生得分率
+                        + knoClaAvg + '</td><td>'//班级均分
+                        + knoSchAvg + '</td><td>'//校均分
+                        + knoExaAvg + '</td><td style="' + scoColor + '">'//全体均分
+                        + (kno[i].ND ? kno[i].ND : "") + '</td><td style="' + scoColor + '">'//难度
+                        + getToFixedL(kno[i].knoStuZExam, 2) + '</td><td>'//Z分数
+                        + (kno[i].itemName ? kno[i].itemName : "") + '</td><td>'//包含试题
+                        + (kno[i].knoStandardAvg ? kno[i].knoStandardAvg : "") + '</td></tr>'); //知识点达标分数
+                }
+            } else {
+                $("#div_kno").css("display", "none");
+                $("#div_kno_chart").css("display", "none");
+                $("#div_kno_chart2").css("display", "none");
+                $("#tab_kno").css("display", "none");
+                $("#div_kno_tips").css("display", "none");
+            }
+            /*知识点分析*****************************/
+
+            /*模块分析*****************************/
+
+            var mod = tab.ds4;
+            if (mod && mod.length > 0) {
+                $("#div_mod").css("display", "");
+                $("#div_mod_chart").css("display", "");
+                $("#div_mod_chart2").css("display", "");
+                $("#tab_mod").css("display", "");
+                $("#div_mod_tips").css("display", "");
+
+                var modMyData = { xAxis_data: [], series_stu: [], series_avg: [], series_max: [] };
+                for (var l = 0; l < mod.length; l++) {
+                    modMyData.xAxis_data[l] = mod[l].modName;
+                    modMyData.series_avg[l] = mod[l].modExaAvg;
+                    modMyData.series_stu[l] = mod[l].modStuScore;
+                    modMyData.series_max[l] = { name: mod[l].modName, value: mod[l].modScore };
+                }
+                AddRepMod(modMyData);
+
+                var radarModData = {
+                    polar_indicator: [],
+                    series_stuRScore: [],
+                    series_claRScore: [],
+                    series_schRScore: [],
+                    series_areRScore: [],
+                    series_exaRScore: []
+                };
+                for (var j = 0; j < mod.length; j++) {
+                    radarModData.polar_indicator[j] = { text: mod[j].modName, min: -2, max: 102 };
+                    radarModData.series_stuRScore[j] = mod[j].modStuRScore;
+                    radarModData.series_claRScore[j] = mod[j].modClaRScore;
+                    radarModData.series_schRScore[j] = mod[j].modSchRScore;
+                    radarModData.series_areRScore[j] = mod[j].modAreRScore;
+                    radarModData.series_exaRScore[j] = mod[j].modExaRScore;
+                }
+                AddRepMod2(radarModData);
+
+                for (var k = 0; k < mod.length; k++) {
+                    var trColor = "color:black";
+                    var scoColor = "";
+                    var modStandardAvg = mod[k].modStandardAvg ? parseFloat(mod[k].modStandardAvg) : 0;
+                    var modStuScore = mod[k].modStuScore ? parseFloat(mod[k].modStuScore) : 0;
+                    if (modStuScore < modStandardAvg) {
+                        trColor = "color:red;";
+                        scoColor = "font-weight:bold;";
+                    }
+
+                    var modClaAvg = getToFixed(mod[k].modClaAvg);//scoCenterAvg ? getToFixed(mod[k].modClaAvg) : "";
+                    var modSchAvg = getToFixed(mod[k].modSchAvg);// scoCenterAvg ? getToFixed(mod[k].modSchAvg) : "";
+                    var modExaAvg = getToFixed(mod[k].modExaAvg);//scoCenterAvg ? getToFixed(mod[k].modExaAvg) : "";
+
+                    //模块、满分值、难度、学生得分、学生得分率、Z分数、班级均分、学校均分、全体均分、知识点达标分数；
+                    $('#tab_mod').append('<tr  align="center" style="' + trColor + '"><td>'
+                        + mod[k].modName + '</td><td>'//模块
+                        + getToFixed(mod[k].modScore) + '</td><td>'//满分值
+                        + getToFixed(mod[k].modStuScore) + '</td><td>'//学生得分
+                        + getToFixed(mod[k].modStuRScore) + '</td><td >'//学生得分率
+                        + modClaAvg + '</td><td>'//班级均分
+                        + modSchAvg + '</td><td>'//校均分
+                        + modExaAvg + '</td><td>'  //全体均分
+                        + (mod[k].ND ? mod[k].ND : "") + '</td><td style="' + scoColor + '">'//难度
+                        + getToFixedL(mod[k].modStuZExam, 2) + '</td><td>'//Z分数
+                        + (mod[k].itemName ? mod[k].itemName : "") + '</td>' + //包含试题
+                        //'<td style="' + scoColor + '">'
+                        //+ (mod[k].modStandardAvg ? mod[k].modStandardAvg : "") + '</td>' +//知识点达标分数
+                        '</tr>');
+                }
+            } else {
+                $("#div_mod").css("display", "none");
+                $("#div_mod_chart").css("display", "none");
+                $("#div_mod_chart2").css("display", "none");
+                $("#tab_mod").css("display", "none");
+                $("#div_mod_tips").css("display", "none");
+            }
+
+            /*模块分析*****************************/
+
+            /*客观题分析*****************************/
+            var omr = tab.ds2;
+            if (omr && omr.length > 0) {
+                $("#div_que_omr").css("display", "");
+                $("#tab_que_omr").css("display", "");
+                $("#div_omr_tips").css("display", "");
+
+                var exaOmrScoreSum = 0;//满分
+                var omrClaAvgSum = 0;//班均分
+                var omrExaAvgSum = 0;//全体均分
+                var omrExaMaxSum = 0;//最高分
+                var omrStuScoreSum = 0;//实得分
+                for (var i = 0; i < omr.length; i++) {
+                    var YC = '';
+                    if (omr[i].omrStuNotice != null) {
+                        if ((omr[i].omrStuNotice.toString() + "").toLowerCase() == "true")
+                            YC = '<span class="important">注意</span>';
+                    }
+                    var trColor = "color:black";
+                    var scoColor = "";
+                    var omrStandardAvg = omr[i].omrStandardAvg ? parseFloat(omr[i].omrStandardAvg) : 0;
+                    var omrStuScore = omr[i].omrStuScore ? parseFloat(omr[i].omrStuScore) : 0;
+                    if (omrStuScore < omrStandardAvg) {
+                        trColor = "color:red";
+                        scoColor = "font-weight:bold;";
+                    }
+
+                    var omrClaAvg = getToFixed(omr[i].omrClaAvg);//scoCenterAvg ? getToFixed(omr[i].omrClaAvg) : "";
+                    var omrSchAvg = getToFixed(omr[i].omrSchAvg);// scoCenterAvg ? getToFixed(omr[i].omrSchAvg) : "";
+                    var omrExaAvg = getToFixed(omr[i].omrExaAvg);//scoCenterAvg ? getToFixed(omr[i].omrExaAvg) : "";
+
+                    $('#tab_que_omr').append('<tr  align="center" style="' + trColor + '"><td>'
+                        + omr[i].exaOmrNo + '</td><td>'//题号 GetShowOmrNo(exaSubSN, omr[i].exaOmrNo, omr[i].exaOmrSN)
+                        + omr[i].exaOmrSolution + '</td><td>'//答案
+                        + getToFixed(omr[i].exaOmrScore) + '</td><td>'//满分
+                        + omr[i].omrStuAnswer + '</td><td style="' + scoColor + '">'//选择
+                        + getToFixed(omr[i].omrStuScore) + '</td><td>'//得分
+                        + omrClaAvg + '</td><td>'//班均分
+                        + omrSchAvg + '</td><td>'//校均分
+                        + omrExaAvg + '</td><td>'//全体均分
+                        + (omr[i].ND ? omr[i].ND : "") + '</td><td>'
+                        + getVal(omr[i].knoName) + '</td><td>'
+                        + omr[i].ZW + '</td><td>'
+                        + YC + '</td><td style="' + scoColor + '">'//异常情况
+                        + (omr[i].omrStandardAvg ? omr[i].omrStandardAvg : "") + '</td><td>'//试题达标分数
+                        + GetAdvise1(omr[i].exaOmrNo) + ' '//巩固题
+                        + GetAdvise2(omr[i].exaOmrNo) + '</td>'//巩固题
+                        + '</tr>');
+                    omrClaAvgSum += omr[i].omrClaAvg;
+                    omrExaAvgSum += omr[i].omrExaAvg;
+                    omrExaMaxSum += omr[i].omrExaMax;
+
+                }
+                exaOmrScoreSum = subInfoCurrent.exaSubScore1;//客观题满分
+                omrStuScoreSum = subInfoCurrent.scoScore1;//学生客观题得分
+
+                //1、2卷的班级、全体平均分、最高分，以前是从各平均分里累加，后改成从数据库里读取(by weiy)
+                omrClaAvgSum = subInfoCurrent.scoClaAvg1;
+                omrExaAvgSum = subInfoCurrent.scoExaAvg1;
+                omrExaMaxSum = subInfoCurrent.scoExaMax1;
+
+                var omrClaAvgSumStr = scoCenterAvg ? "班均分：" + getToFixedL(omrClaAvgSum, 2) + "分 &nbsp;&nbsp; " : "";
+                var omrExaAvgSumStr = scoCenterAvg ? "全体均分：" + getToFixedL(omrExaAvgSum, 2) + "分 &nbsp;&nbsp;" : "";
+                //var omrClaAvgSumStr = "班均分：" + getToFixedL(omrClaAvgSum, 2) + "分&nbsp;&nbsp;";
+                //var omrExaAvgSumStr = "全体均分：" + getToFixedL(omrExaAvgSum, 2) + "分&nbsp;&nbsp;";
+
+                $("#sp_que_omr").html("【 学生得分：" + getToFixedL(omrStuScoreSum, 2) + "分&nbsp;&nbsp;" +
+                    "满分值：" + getToFixedL(exaOmrScoreSum, 2) + "分&nbsp;&nbsp;" +
+                    "最高分：" + getToFixedL(omrExaMaxSum, 2) + "分&nbsp;&nbsp;" +
+                    omrClaAvgSumStr +
+                    omrExaAvgSumStr +
+                    "建议：红色的试题需要在后期加强训练！】");
+            } else {
+
+                $("#div_que_omr").css("display", "none");
+                $("#tab_que_omr").css("display", "none");
+                $("#div_omr_tips").css("display", "none");
+            }
+            /*客观题分析*****************************/
+
+            /*主观题分析*****************************/
+            var item = tab.ds3;
+            if (item && item.length > 0) {
+                $("#div_que_item").css("display", "");
+                $("#tab_que_item").css("display", "");
+                $("#div_item_tips").css("display", "");
+
+                var exaQueScoreSum = 0;//满分
+                var queClaAvgSum = 0;//班均分
+                var queExaAvgSum = 0;//全体均分
+                var queExaMaxSum = 0;//最高分
+                var queStuScoreSum = 0;//实得分
+                for (var i = 0; i < item.length; i++) {
+                    var YC = '';
+                    if (item[i].queStuNotice != null) {
+                        if ((item[i].queStuNotice + "").toLowerCase() == "true")
+                            YC = '<span class="important">注意</span>';
+                    }
+                    var trColor = "color:black";
+                    var scoColor = "";
+                    var queStandardAvg = item[i].queStandardAvg ? parseFloat(item[i].queStandardAvg) : 0;
+                    var queStuScore = item[i].queStuScore ? parseFloat(item[i].queStuScore) : 0;
+                    if (queStuScore < queStandardAvg) {
+                        trColor = "color:red";
+                        scoColor = "font-weight:bold;";
+                    }
+                    var queClaAvg = getToFixed(item[i].queClaAvg);//scoCenterAvg ? getToFixed(item[i].queClaAvg) : "";
+                    var queSchAvg = getToFixed(item[i].queSchAvg);//scoCenterAvg ? getToFixed(item[i].queSchAvg) : "";
+                    var queExaAvg = getToFixed(item[i].queExaAvg);//scoCenterAvg ? getToFixed(item[i].queExaAvg) : "";
+                    
+                    var exaQueNo = item[i].exaQueNo;
+                    exaQueNo = item[i].exaPoiNo ? item[i].exaQueNo.split("_")[0] : item[i].exaQueNo;
+
+                    $('#tab_que_item').append('<tr  align="center" style="' + trColor + '"><td>'
+                        + item[i].exaQueNo + '</td><td>'//题号 GetShowQueNo(exaSubSN, item[i].exaQueNo, item[i].exaQueSN) 
+                        + getVal(item[i].exaPoiNo) + '</td><td>'//小题号
+                        + getToFixed(item[i].exaQueScore) + '</td><td>'//满分 
+                        + getToFixed(item[i].queExaMax) + '</td><td style="' + scoColor + '">'//最高分
+                        + getToFixed(item[i].queStuScore) + '</td><td>'//得分
+                        + queClaAvg + '</td><td>'//班均分
+                        + queSchAvg + '</td><td>'//校均分
+                        + queExaAvg + '</td><td>'//全体均分
+                        + (item[i].ND ? item[i].ND : "") + '</td><td>'//难度
+                        + getVal(item[i].knoName) + '</td><td>'//知识点说明
+                        + item[i].ZW + '</td><td>'//掌握情况
+                        + YC + '</td><td style="' + scoColor + '">'
+                        + (item[i].queStandardAvg ? item[i].queStandardAvg : "") + '</td><td>'//试题达标分数
+                        + GetAdvise1(exaQueNo) + ' '//巩固题
+                        + GetAdvise2(exaQueNo) + '</td>'//巩固题
+                        + '</tr>');
+                    if (item[i].exaPoiNo == null) {
+                        queClaAvgSum += item[i].queClaAvg;
+                        queExaAvgSum += item[i].queExaAvg;
+                        queExaMaxSum += item[i].queExaMax;
+                    }
+                }
+                exaQueScoreSum = subInfoCurrent.exaSubScore2;//主观满分得分
+                queStuScoreSum = subInfoCurrent.scoScore2;//学生主观题得分
+
+                queClaAvgSum = subInfoCurrent.scoClaAvg2;
+                queExaAvgSum = subInfoCurrent.scoExaAvg2;
+                queExaMaxSum = subInfoCurrent.scoExaMax2;
+
+                var queClaAvgSumStr = scoCenterAvg ? "班均分：" + getToFixedL(queClaAvgSum, 2) + "分 &nbsp;&nbsp; " : "";
+                var queExaAvgSumStr = scoCenterAvg ? "全体均分：" + getToFixedL(queExaAvgSum, 2) + "分 &nbsp;&nbsp;" : "";
+                //var queClaAvgSumStr = "班均分：" + getToFixedL(queClaAvgSum, 2) + "分&nbsp;&nbsp;";
+                //var queExaAvgSumStr = "全体均分：" + getToFixedL(queExaAvgSum, 2) + "分&nbsp;&nbsp;";
+
+                $("#sp_que_item").html("【 学生得分：" + getToFixedL(queStuScoreSum, 2) + "分&nbsp;&nbsp;" +
+                    "满分值：" + getToFixedL(exaQueScoreSum, 2) + "分&nbsp;&nbsp;" +
+                    "最高分：" + getToFixedL(queExaMaxSum, 2) + "分&nbsp;&nbsp;" +
+                    queClaAvgSumStr +
+                    queExaAvgSumStr +
+                    "建议：红色的试题需要在后期加强训练！】");
+            } else {
+
+                $("#div_que_item").css("display", "none");
+                $("#tab_que_item").css("display", "none");
+                $("#div_item_tips").css("display", "none");
+            }
+            /*主观题分析*****************************/
+
+
+            changeTableStyle();
+            data = null;
+
+
+        }
+
+        //备注说明
+        function SetTip(scoClassification) {
+            var content = "<div style='color:#fff;text-align:left;width:250px;line-height:18px;'>较&nbsp;&nbsp;&nbsp;好：得分率大于等于80%" +
+               "<br/>一&nbsp;&nbsp;&nbsp;般：得分率大于60%并且小于80%" +
+               "<br/>需努力：得分率大于等于30%并且小于60%" +
+               "<br/>未掌握：得分率小于30%</div>";
+            $('#zwOmrTip').tooltip({
+                position: 'right',
+                content: content,
+                onShow: function () {
+                    $(this).tooltip('tip').css({ backgroundColor: '#666', borderColor: '#666' });
+                }
+            });
+            $('#zwQueTip').tooltip({
+                position: 'right',
+                content: content,
+                onShow: function () {
+                    $(this).tooltip('tip').css({ backgroundColor: '#666', borderColor: '#666' });
+                }
+            });
+            content = "<div style='color:#fff;text-align:left;width:250px;line-height:18px;'>异常：常见于高分学生做错难度低的题目（应该得分而没有得分），或者低分学生做对难度高的题目。</div>";
+            $('#ycOmrTip').tooltip({
+                position: 'right',
+                content: content,
+                onShow: function () {
+                    $(this).tooltip('tip').css({ backgroundColor: '#666', borderColor: '#666' });
+                }
+            });
+            $('#ycQueTip').tooltip({
+                position: 'right',
+                content: content,
+                onShow: function () {
+                    $(this).tooltip('tip').css({ backgroundColor: '#666', borderColor: '#666' });
+                }
+            });
+
+            content = "<div style='color:#fff;text-align:left;width:250px;line-height:18px;'>知识点达标分数：学科成绩在该学生前后" + scoClassification + "分范围内的考生，在该知识点上的平均分。</div>";
+            $('#knoStandardTip').tooltip({
+                position: 'right',
+                content: content,
+                onShow: function () {
+                    $(this).tooltip('tip').css({ backgroundColor: '#666', borderColor: '#666' });
+                }
+            });
+            content = "<div style='color:#fff;text-align:left;width:250px;line-height:18px;'>试题达标分数：学科成绩在该学生前后" + scoClassification + "分范围内的考生，在该试题上的平均分。</div>";
+            $('#omrStandardTip').tooltip({
+                position: 'right',
+                content: content,
+                onShow: function () {
+                    $(this).tooltip('tip').css({ backgroundColor: '#666', borderColor: '#666' });
+                }
+            });
+            $('#queStandardTip').tooltip({
+                position: 'right',
+                content: content,
+                onShow: function () {
+                    $(this).tooltip('tip').css({ backgroundColor: '#666', borderColor: '#666' });
+                }
+            });
+
+        }
+
+        //清空学生信息记录
+        function ClearStuData() {
+            $("#div_sub_t").html("");
+
+            var subL = $("#tab_sub tr").length;
+            for (var m = 1; m < subL; m++) {
+                $('#tab_sub tr:eq(1)').remove();
+            }
+
+            var knoL = $("#tab_kno tr").length;
+            for (var i = 1; i < knoL; i++) {
+                $('#tab_kno tr:eq(1)').remove();
+            }
+
+            var modL = $("#tab_mod tr").length;
+            for (var i = 1; i < modL; i++) {
+                $('#tab_mod tr:eq(1)').remove();
+            }
+
+            var omrL = $("#tab_que_omr tr").length;
+            for (var i = 1; i < omrL; i++) {
+                $('#tab_que_omr tr:eq(1)').remove();
+            }
+            $("#sp_que_omr").html("&nbsp;【客观题】");
+
+            var itemL = $("#tab_que_item tr").length;
+
+            for (var i = 1; i < itemL; i++) {
+                $('#tab_que_item tr:eq(1)').remove();
+            }
+            $("#sp_que_item").html("&nbsp;【主观题】");
+
+            $('#sp_eva').html("");
+            AddRepStu(null);
+            AddRepDif(null);
+            AddRepKno(null);
+            AddRepMod(null);
+            AddRepKno2(null);
+            AddRepMod2(null);
+            AddRepSubOffer(null);
+            AddRepRadar(null);
+        }
+
+        //学科均衡雷达图
+        function AddRepRadar(myData) {
+            var polar_indicator = [{ text: '' }];
+            var series_z = [0];//Z分数
+            var series_avg = [0];//平均水平
+
+            if (myData) {
+                if (myData.polar_indicator.length > 0) {
+                    polar_indicator = myData.polar_indicator;
+                    series_z = myData.series_z;
+                    series_avg = myData.series_avg;
+                }
+            }
+
+            var myChart = echarts.init(document.getElementById('rep_sub_radar'), e_macarons);
+            var myColor = ['red', 'blue'];
+
+            var option = {
+                title: {
+                    text: '学科均衡',
+                    subtext: '反映学生各学科是否均衡，数值越大表明学科越有优势。',
+                    x: "center"
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        return params[0].indicator + '<br/>'//params[0].name +
+                            + 'Z分数:' + params[0].value + '<br/>';
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'right',
+                    data: ['Z分数']
+                },
+                color: myColor,
+                radar: {
+                    //取消图表动画效果
+                    enableMouseTracking: false,
+                    shadow: false,
+                    animation: false,
+                    indicator: polar_indicator,
+                    name: {
+                        textStyle: { color: 'black' },
+                        formatter: '【{value}】'
+                    },
+                    splitArea: {
+                        areaStyle: {
+                            color: ['rgba(114, 172, 209, 0.2)',
+                                'rgba(114, 172, 209, 0.4)', 'rgba(114, 172, 209, 0.6)',
+                                'rgba(114, 172, 209, 0.8)', 'rgba(114, 172, 209, 1)'],
+                            shadowColor: 'rgba(0, 0, 0, 0.3)',
+                            shadowBlur: 10
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.5)'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.5)'
+                        }
+                    },
+                    radius: 200
+                },
+                series: [{
+                    enableMouseTracking: false,
+                    shadow: false,
+                    animation: false,
+                    name: '学科均衡',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: series_z,
+                            name: 'Z分数',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return params.value;
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                    {
+                        enableMouseTracking: false,
+                        shadow: false,
+                        animation: false,
+                        name: '平均水平',
+                        type: 'radar',
+                        data: [
+                            {
+                                value: series_avg,
+                                name: '平均水平',
+                                itemStyle: {
+                                    color: 'blue',
+                                    normal: {
+                                        label: {
+                                            show: false,
+                                            formatter: function (params) {
+                                                return params.value;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }]
+            };
+
+            myChart.setOption(option);
+            //myChart.refresh()
+        }
+
+        //达标情况
+        function AddRepSubOffer(myData) {
+            var xAxis_data = ['0'];
+            var series_offer = [0];//贡献
+            var title_text = "";//标题
+            var series_stuScore = [0];//学生得分
+            var series_Proportion = [0];
+
+            if (myData) {
+                if (myData.xAxis_data.length > 0) {
+                    xAxis_data = myData.xAxis_data;
+                    series_offer = myData.series_offer;
+                    series_Proportion = myData.series_Proportion;
+                    title_text = myData.title_text;
+                    for (var i = 0; i < series_offer.length; i++) {
+                        series_stuScore[i] = myData.stuScore;
+                    }
+                }
+            }
+
+            var myChart = echarts.init(document.getElementById('rep_sub_offer'), e_macarons);
+            var myColor = ['#83a6d1', '#FF0000'];
+            var option = {
+                title: {
+                    text: "达标情况",
+                    subtext: '反映该学科目标达成情况，柱形图表示各个目标，横线表示学生得分。',
+                    x: "center"
+                },
+                color: myColor,
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var offer;
+                        if (params[0].name == "全体均分" || params[0].name == "学校均分" || params[0].name == "班级均分") {
+                            offer = (series_stuScore[0] - params[0].value).toFixed(1);
+                        } else {
+                            offer = series_stuScore[0] - params[0].value;
+                        }
+                        return params[0].name + '<br/>'
+                            + '目标分数:' + params[0].value + '<br/>'
+                            + '学生得分:' + series_stuScore[0] + '<br/>'
+                            + '贡 献 值:' + offer;
+
+
+                    }
+                },
+                legend: {
+                    data: ['目标分数', '学生得分'],
+                    x: "right"
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        type: 'category',
+                        data: xAxis_data,
+                        axisLabel: {
+                            rotate: 25
+                        },
+                        name: "目标"
+                    }
+                ],
+                yAxis: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} '
+                        },
+                        name: "分值"
+                    }
+                ],
+                series: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        name: '目标分数',
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true
+                                }
+                            }
+                        },
+                        data: series_Proportion
+                    },
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        name: '学生得分',
+                        type: 'line',
+                        data: series_stuScore
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        }
+
+        //难度能力
+        function AddRepDif(myData) {
+            var xAxis_data = ['0'];
+            var series_stu_poor = [0];//学生差分
+            var series_stu = [0];//学生得分
+            var series_difficulty = [0];//难度级别
+            var series_max = [0];//最高得分
+
+            if (myData) {
+                if (myData.xAxis_data.length > 0) {
+                    xAxis_data = myData.xAxis_data;
+                    series_stu = myData.series_stu;
+                    series_difficulty = myData.series_difficulty;
+                    series_max = myData.series_max;
+                    for (var i = 0; i < series_max.length; i++) {
+                        series_stu_poor[i] = series_max[i] - series_stu[i];
+                    }
+
+                }
+            }
+
+            var myChart = echarts.init(document.getElementById('rep_dif_abi'));
+            var myColor = ['#546579', '#43CD80', '#0F8FE8'];
+            var option = {
+                title: {
+                    text: '难度能力',
+                    subtext: '反映学生对不同难度试题的得分能力，X轴为难度，Y轴为分值。',
+                    x: "center" //标题水平方向位置
+                },
+                color: myColor,
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        return params[0].name + '<br/>'
+                            + '总分: ' + (params[1].value + params[0].value) + '<br/>'
+                            + params[0].seriesName + ' : ' + params[0].value + '<br/>'
+                            + params[1].seriesName + ' : ' + params[1].value + '<br/>'
+                            + params[2].seriesName + ' : ' + params[2].value;
+                    }
+                },
+                legend: {
+                    data: ['学生得分', '学生失分', '平均得分'],
+                    x: "right"
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        type: 'category',
+                        data: xAxis_data,
+                        name: "难度"
+                    }
+                ],
+                yAxis: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} '
+                        },
+                        name: "分值"
+                    }
+                ],
+                series: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        name: '学生得分',
+                        type: 'bar',
+                        stack: 'sum',
+                        barCategoryGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                color: 'tomato',
+                                barBorderColor: 'tomato',
+                                barBorderWidth: 2,
+                                barBorderRadius: 0,
+                                label: {
+                                    show: true,
+                                    position: 'insideTop'
+                                }
+                            }
+                        },
+                        data: series_stu
+                    },
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        name: '学生失分',
+                        type: 'bar',
+                        stack: 'sum',
+                        itemStyle: {
+                            normal: {
+                                color: '#fff',
+                                barBorderColor: 'tomato',
+                                barBorderWidth: 2,
+                                barBorderRadius: 0,
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: function (params) {
+                                        return params.value;
+                                        //for (var i = 0, l = option.xAxis[0].data.length; i < l; i++) {
+                                        //    if (option.xAxis[0].data[i] == params.name) {
+                                        //        return option.series[0].data[i] + params.value;
+                                        //    }
+                                        //}
+                                    },
+                                    textStyle: {
+                                        color: '#000'
+                                    }
+                                }
+                            }
+                        },
+                        data: series_stu_poor
+                    },
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        name: '平均得分',
+                        type: 'line',
+                        data: series_difficulty
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+
+        //学生位置
+        function AddRepStu(myData) {
+
+            var xAxis_data = ['0'];
+            var series_stu = [0];//人数
+            var markPoint = { xAxis: 0, yAxis: 0, value: "" };//学生当前位置
+            if (myData) {
+                if (myData.xAxis_data.length > 0) {
+                    xAxis_data = myData.xAxis_data;
+                    series_stu = myData.series_stu;
+                    markPoint = myData.markPoint;
+                }
+            }
+
+            var myChart = echarts.init(document.getElementById('rep_stu_place'), e_macarons);
+            var myColor = ['#ff7f50'];
+            var option = {
+
+                title: {
+                    text: '学生位置',
+                    subtext: 'X轴为分数段，Y轴为学生人数，红色标签表示学生所在位置。',
+                    x: "center" //标题水平方向位置
+                },
+                color: myColor,
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        return params[0].name + '<br/>'
+                            + ' 人数: ' + params[0].value + '<br/>';
+                    }
+                },
+                //legend: {
+                //    data: ['人数'],
+                //    x: "right"
+                //},
+                calculable: true,
+                xAxis: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        type: 'category',
+
+                        data: xAxis_data,
+                        axisLabel: {
+                            rotate: 25
+                        },
+                        name: "分数段"
+                    }
+                ],
+                yAxis: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} '
+                        },
+                        name: "人数"
+                    }
+                ],
+                series: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        name: '位置' + (markPoint.value != '' ? '：' + markPoint.value : ''),
+                        type: 'line',
+                        data: series_stu,
+                        markPoint: {
+                            data: [
+                                { name: '', value: '', xAxis: markPoint.xAxis, yAxis: markPoint.yAxis }
+                            ]
+                        }
+                    },
+                    {
+
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        name: '人数（柱状图）',
+                        type: 'bar',
+                        data: series_stu,
+                        itemStyle: {
+                            normal: {
+                                color: '#99BBE8'//#a4f7a8  #9ddbd9
+                            }
+                        }
+                    }
+                ]
+            };
+            // 当xAxis为类目轴时，数值1会被理解为类目轴的index
+            myChart.setOption(option);
+            //myChart.refresh()
+        }
+
+        //知识点分析
+        function AddRepKno(myData) {
+            var xAxis_data = ['0'];
+            var series_stu_poor = [0];//学生差分
+            var series_stu = [0];//学生得分
+            var series_max = [0];//最高得分
+
+            if (myData) {
+                if (myData.xAxis_data.length > 0) {
+                    xAxis_data = myData.xAxis_data;
+                    series_stu = myData.series_stu;
+                    series_max = myData.series_max;
+                    for (var i = 0; i < series_max.length; i++) {
+                        series_stu_poor[i] = series_max[i].value - series_stu[i];
+                    }
+
+                }
+
+                var myChart = echarts.init(document.getElementById('rep_sub_kno'));
+                var myColor = ['#546579', '#43CD80'];
+                var option = {
+                    title: {
+                        text: '知识点分析',
+                        x: "center" //标题水平方向位置
+                    },
+                    color: myColor,
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function (params) {
+                            return params[0].name + '<br/>'
+                                + '总分: ' + (params[1].value + params[0].value) + '<br/>'
+                                + params[0].seriesName + ' : ' + params[0].value + '<br/>'
+                                + params[1].seriesName + ' : ' + params[1].value + '<br/>';
+                        }
+                    },
+                    legend: {
+                        data: ['学生得分', '学生失分'],//, '全体均分'
+                        x: "right"
+                    },
+                    calculable: true,
+                    grid: {
+                        y2: 150
+                    },
+                    xAxis: [
+                        {
+                            //取消图表动画效果
+                            enableMouseTracking: false, shadow: false, animation: false,
+                            type: 'category',
+                            axisLabel: {
+                                rotate: 50
+                            },
+                            data: xAxis_data,
+                            name: "知识点"
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            //取消图表动画效果
+                            enableMouseTracking: false, shadow: false, animation: false,
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value} '
+                            },
+                            name: "分值"
+                        }
+                    ],
+                    series: [
+                        {
+
+                            //取消图表动画效果
+                            enableMouseTracking: false, shadow: false, animation: false,
+                            name: '学生得分',
+                            type: 'bar',
+                            stack: 'sum',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'tomato',
+                                    barBorderColor: 'tomato',
+                                    barBorderWidth: 2,
+                                    barBorderRadius: 0,
+                                    label: {
+                                        show: true,
+                                        position: 'insideTop'
+                                    }
+                                }
+                            },
+                            data: series_stu
+                        }
+                        ,
+                        {
+                            //取消图表动画效果
+                            enableMouseTracking: false, shadow: false, animation: false,
+                            name: '学生失分',
+                            type: 'bar',
+                            stack: 'sum',
+                            itemStyle: {
+                                normal: {
+                                    color: '#fff',
+                                    barBorderColor: 'tomato',
+                                    barBorderWidth: 2,
+                                    barBorderRadius: 0,
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                        formatter: function (params) {
+                                            var resValue = params.value;
+                                            for (var j = 0; j < series_max.length; j++) {
+                                                if (params.name == series_max[j].name) {
+                                                    resValue = series_max[j].value;
+                                                    break;
+                                                }
+                                            }
+                                            return resValue;
+                                        },
+                                        textStyle: {
+                                            color: '#000'
+                                        }
+                                    }
+                                }
+                            },
+                            data: series_stu_poor
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+
+
+            }
+
+        }
+
+        //知识点得分率雷达图
+        function AddRepKno2(myData) {
+            var polar_indicator = [{ text: '' }];
+            var series_stuRScore = [0];//学生得分率
+            var series_claRScore = [0];//班级得分率
+            var series_schRScore = [0];//学校得分率
+            var series_areRScore = [0];//区域得分率
+            var series_exaRScore = [0];//全体得分率
+
+            if (myData) {
+                if (myData.polar_indicator.length > 0) {
+                    polar_indicator = myData.polar_indicator;
+                    series_stuRScore = myData.series_stuRScore;
+                    series_claRScore = myData.series_claRScore;
+                    series_schRScore = myData.series_schRScore;
+                    series_areRScore = myData.series_areRScore;
+                    series_exaRScore = myData.series_exaRScore;
+                }
+            }
+            var myChart = echarts.init(document.getElementById('rep_sub_kno2'), e_macarons);
+            var option = {
+                title: {
+                    text: "知识点得分率对比",
+                    x: "center"
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        return GetTooltipTrigger(params);
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'right',
+                    data: GetLegendData()
+                },
+                color: GetColor(),
+                radar: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        indicator: polar_indicator,
+                        name: {
+                            textStyle: { color: 'black' },
+                            formatter: '【{value}】'
+                        },
+                        splitArea: {
+                            areaStyle: {
+                                color: ['rgba(114, 172, 209, 0.2)',
+                                    'rgba(114, 172, 209, 0.4)', 'rgba(114, 172, 209, 0.6)',
+                                    'rgba(114, 172, 209, 0.8)', 'rgba(114, 172, 209, 1)'],
+                                shadowColor: 'rgba(0, 0, 0, 0.3)',
+                                shadowBlur: 10
+                            }
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        },
+                        radius: 200
+                    }
+                ],
+                series: GetSeries(series_stuRScore, series_claRScore, series_schRScore, series_areRScore, series_exaRScore)
+            };
+            myChart.setOption(option);
+            //myChart.refresh();
+
+        }
+
+        function GetTooltipTrigger(params) {
+            var tooltipTrigger = params[0].indicator + '<br/>'
+                                     + '学生得分率:' + params[0].value + '<br/>';
+            var i = 1;
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'D' || exaOrganizeRange == 'E') {
+                tooltipTrigger += '班级得分率:' + params[i].value + '<br/>';
+                i++;
+            }
+            if (exaOrganizeRange != 'E') {
+                tooltipTrigger += '学校得分率:' + params[i].value + '<br/>';
+                i++;
+            }
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'B') {
+                tooltipTrigger += '区域得分率:' + params[i].value + '<br/>';
+                i++;
+            }
+            tooltipTrigger += '全体得分率:' + params[i].value + '<br/>';
+            return tooltipTrigger;
+        }
+
+        function GetLegendData() {
+
+            var legendData = [];
+            legendData.push('学生得分率');
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'D' || exaOrganizeRange == 'E') {
+                legendData.push('班级得分率');
+            }
+            if (exaOrganizeRange != 'E') {
+                legendData.push('学校得分率');
+            }
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'B') {
+                legendData.push('区域得分率');
+            }
+            legendData.push('全体得分率');
+            return legendData;
+        }
+
+        function GetColor() {
+
+            var myColor = [];
+            myColor.push('red');
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'D' || exaOrganizeRange == 'E') {
+                myColor.push('green');
+            }
+            if (exaOrganizeRange != 'E') {
+                myColor.push('#FF00FF');
+            }
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'B') {
+                myColor.push('#00FFFF');
+            }
+            myColor.push('blue');
+            return myColor;
+        }
+
+        function GetSeries(series_stuRScore, series_claRScore, series_schRScore, series_areRScore, series_exaRScore) {
+            var series = [];
+            series.push({
+                enableMouseTracking: false,
+                shadow: false,
+                animation: false,
+                name: '学生得分率',
+                type: 'radar',
+                data: [
+                    {
+                        value: series_stuRScore,
+                        name: '学生得分率',
+                        label: {
+                            normal: {
+                                show: true,
+                                formatter: function (params) {
+                                    return params.value;
+                                }
+                            }
+                        }
+                    }
+                ]
+            });
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'D' || exaOrganizeRange == 'E') {
+                series.push({
+                    name: '班级得分率',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: series_claRScore,
+                            name: '班级得分率',
+                            itemStyle: {
+                                color: 'green',
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        formatter: function (params) {
+                                            return params.value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                });
+            }
+            if (exaOrganizeRange != 'E') {
+                series.push({
+                    name: '学校得分率',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: series_schRScore,
+                            name: '学校得分率',
+                            itemStyle: {
+                                color: '#FF00FF',
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        formatter: function (params) {
+                                            return params.value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                });
+            }
+            if (exaOrganizeRange == 'A' || exaOrganizeRange == 'B') {
+                series.push({
+                    name: '区域得分率',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: series_areRScore,
+                            name: '区域得分率',
+                            itemStyle: {
+                                color: '#00FFFF',
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        formatter: function (params) {
+                                            return params.value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                });
+            }
+            series.push({
+                name: '全体得分率',
+                type: 'radar',
+                data: [
+                    {
+                        value: series_exaRScore,
+                        name: '全体得分率',
+                        itemStyle: {
+                            color: 'blue',
+                            normal: {
+                                label: {
+                                    show: false,
+                                    formatter: function (params) {
+                                        return params.value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            });
+            return series;
+        }
+
+        //模块分析
+        function AddRepMod(myData) {
+            var xAxis_data = ['0'];
+            var series_stu_poor = [0];//学生差分
+            var series_stu = [0];//学生得分
+            //var series_avg = [0];//全体均分
+            var series_max = [0];//最高得分
+
+            if (myData) {
+                if (myData.xAxis_data.length > 0) {
+                    xAxis_data = myData.xAxis_data;
+                    series_stu = myData.series_stu;
+                    //series_avg = myData.series_avg;
+                    series_max = myData.series_max;
+                    for (var i = 0; i < series_max.length; i++) {
+                        series_stu_poor[i] = series_max[i].value - series_stu[i];
+                    }
+
+                }
+
+
+                var myChart = echarts.init(document.getElementById('rep_sub_mod'));
+                var myColor = ['#546579', '#43CD80', '#0F8FE8'];
+                var option = {
+                    title: {
+                        text: '模块分析',
+                        x: "center" //标题水平方向位置
+                    },
+                    color: myColor,
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function (params) {
+                            return params[0].name + '<br/>'
+                                + '总分: ' + (params[1].value + params[0].value) + '<br/>'
+                                + params[0].seriesName + ' : ' + params[0].value + '<br/>'
+                                + params[1].seriesName + ' : ' + params[1].value + '<br/>';
+                        }
+                    },
+                    legend: {
+                        data: ['学生得分', '学生失分'],//, '全体均分'
+                        x: "right"
+                    },
+                    grid: {
+                        y2: 150
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisLabel: {
+                                rotate: 50
+                            },
+                            data: xAxis_data,
+                            name: "模块"
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value} '
+                            },
+                            name: "分值"
+                        }
+                    ],
+                    series: [
+                        {
+                            //取消图表动画效果
+                            enableMouseTracking: false, shadow: false, animation: false,
+                            name: '学生得分',
+                            type: 'bar',
+                            stack: 'sum',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'tomato',
+                                    barBorderColor: 'tomato',
+                                    barBorderWidth: 2,
+                                    barBorderRadius: 0,
+                                    label: {
+                                        show: true,
+                                        position: 'insideTop'
+                                    }
+                                }
+                            },
+                            data: series_stu
+                        }
+                        ,
+                        {
+                            //取消图表动画效果
+                            enableMouseTracking: false, shadow: false, animation: false,
+                            name: '学生失分',
+                            type: 'bar',
+                            stack: 'sum',
+                            itemStyle: {
+                                normal: {
+                                    color: '#fff',
+                                    barBorderColor: 'tomato',
+                                    barBorderWidth: 2,
+                                    barBorderRadius: 0,
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                        formatter: function (params) {
+                                            var resValue = params.value;
+                                            for (var j = 0; j < series_max.length; j++) {
+                                                if (params.name == series_max[j].name) {
+                                                    resValue = series_max[j].value;
+                                                    break;
+                                                }
+                                            }
+                                            return resValue;
+                                        },
+                                        textStyle: {
+                                            color: '#000'
+                                        }
+                                    }
+                                }
+                            },
+                            data: series_stu_poor
+                        }
+
+                    ]
+                };
+                myChart.setOption(option);
+            }
+
+        }
+
+        //模块得分率雷达图
+        function AddRepMod2(myData) {
+            var polar_indicator = [{ text: '' }];
+            var series_stuRScore = [0];//学生得分率
+            var series_claRScore = [0];//班级得分率
+            var series_schRScore = [0];//学校得分率
+            var series_areRScore = [0];//区域得分率
+            var series_exaRScore = [0];//全体得分率
+
+            if (myData) {
+                if (myData.polar_indicator.length > 0) {
+                    polar_indicator = myData.polar_indicator;
+                    series_stuRScore = myData.series_stuRScore;
+                    series_claRScore = myData.series_claRScore;
+                    series_schRScore = myData.series_schRScore;
+                    series_areRScore = myData.series_areRScore;
+                    series_exaRScore = myData.series_exaRScore;
+                }
+            }
+            var myChart = echarts.init(document.getElementById('rep_sub_mod2'), e_macarons);
+            var myColor = ['red', 'blue'];
+            var option = {
+                title: {
+                    text: "模块得分率对比",
+                    x: "center"
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        return GetTooltipTrigger(params);
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'right',
+                    data: GetLegendData()
+                },
+                color: GetColor(),
+                radar: [
+                    {
+                        //取消图表动画效果
+                        enableMouseTracking: false, shadow: false, animation: false,
+                        indicator: polar_indicator,
+                        name: {
+                            textStyle: { color: 'black' },
+                            formatter: '【{value}】'
+                        },
+                        splitArea: {
+                            areaStyle: {
+                                color: ['rgba(114, 172, 209, 0.2)',
+                                    'rgba(114, 172, 209, 0.4)', 'rgba(114, 172, 209, 0.6)',
+                                    'rgba(114, 172, 209, 0.8)', 'rgba(114, 172, 209, 1)'],
+                                shadowColor: 'rgba(0, 0, 0, 0.3)',
+                                shadowBlur: 10
+                            }
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        },
+                        radius: 200
+                    }
+                ],
+                calculable: true,
+                series: GetSeries(series_stuRScore, series_claRScore, series_schRScore, series_areRScore, series_exaRScore)
+            };
+            myChart.setOption(option);
+            //myChart.refresh();
+
+        }
+
+        //开始加载数据
+        function LoadingPageInfo() {
+            LoadStuDataOK(data);
+        }
+
+    </script>
+
+    <script>
+        //学科排名对比
+        function SubjectRankCompare(subInfo) {
+
+            var xData = [];
+            var seriesData = [];
+            var seriesDataSch = [];
+            var seriesDataExa = [];
+            for (var i = 0; i < subInfo.length; i++) {
+                var tempData = subInfo[i];
+                if (tempData.exaSubSN > 0) {
+                    xData.push(tempData.exaSubName.toString());
+                    seriesData.push(tempData.scoPosClass);
+                    seriesDataSch.push(tempData.scoPosSchool);
+                    seriesDataExa.push(tempData.scoPosExam);
+                }
+            }
+
+            var myChart = echarts.init(document.getElementById('div_sub_rank'), e_macarons);
+            var series;
+            var legendData;
+            if (exaOrganizeRange != "E") {
+                series = [
+                    {
+                        name: '班排位',
+                        type: 'line',
+                        data: seriesData,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true
+                                }
+                            }
+                        }
+                    },
+                    {
+                        name: '校排位',
+                        type: 'line',
+                        data: seriesDataSch
+                    },
+                    {
+                        name: '全体排位',
+                        type: 'line',
+                        data: seriesDataExa
+                    }
+                ];
+                legendData = ['班排位', '校排位', "全体排位"];
+            } else {
+                series = [
+                    {
+                        name: '班排位',
+                        type: 'line',
+                        data: seriesData,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true
+                                }
+                            }
+                        }
+                    },
+                    {
+                        name: '全体排位',
+                        type: 'line',
+                        data: seriesDataExa
+                    }
+                ];
+                legendData = ['班排位', "全体排位"];
+            }
+            var option = {
+                title: {
+                    text: '学科排位对比',
+                    x: "center", //标题水平方向位置
+                    subtext: ''
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                calculable: true,
+                legend: {
+                    data: legendData,
+                    x: "right"
+                },
+                grid: { y2: 80 },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: xData,
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 40
+                        },
+                        name: "学科",
+                        inverse: true
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} '
+                        },
+                        name: "排位",
+                        inverse: true //反转坐标轴
+                    }
+                ],
+                series: series
+            };
+            myChart.setOption(option);
+            //myChart.refresh();
+        }
+        //学科得分率对比
+        function SubjectRScoreCompare(subInfo) {
+
+            //生成分数段图表
+            var xData = [];
+            var seriesData = [];
+            var seriesData2 = [];
+            for (var i = 0; i < subInfo.length; i++) {
+                var tempData = subInfo[i];
+                if (tempData.exaSubSN > 0) {
+                    xData.push(tempData.exaSubName.toString());
+                    seriesData.push(tempData.scoRScore);
+                    seriesData2.push(tempData.scoRScore);
+                }
+            }
+
+            var myChart = echarts.init(document.getElementById('div_sub_rScore'), e_macarons);
+            var legendData = [];
+            var series = [
+                {
+                    name: '得分率',
+                    type: 'bar',
+                    data: seriesData
+                },
+                {
+                    name: '得分率',
+                    type: 'line',
+                    data: seriesData2,
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true
+                            }
+                        }
+                    }
+                }
+            ];
+
+            var option = {
+                title: {
+                    text: '学科得分率对比',
+                    x: "center", //标题水平方向位置
+                    subtext: ''
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        return params[0].name + '<br/>'
+                            + params[0].seriesName + ' : ' + params[0].value + '<br/>';
+                    }
+                },
+                //tooltip: {
+                //    trigger: 'axis'
+                //},
+                calculable: true,
+                legend: {
+                    data: legendData,
+                    x: "right"
+                },
+                grid: { y2: 80 },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: xData,
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 40
+                        },
+                        name: "学科"
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} '
+                        },
+                        name: "得分率(%)"
+                    }
+                ],
+                series: series
+            };
+            myChart.setOption(option);
+            //myChart.refresh();
+        }
+    </script>
+
+    <style type="text/css">
+        .datagrid-header-rownumber, .datagrid-cell-rownumber {
+            width: 30px;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .img_box {
+            overflow: hidden;
+            height: 910px;
+        }
+
+
+        .lab1 {
+            color: #FF0000;
+            text-decoration: underline;
+        }
+
+        .repTit {
+            text-align: center;
+            font: bold 22px/58px 黑体;
+            color: #0c80e8;
+        }
+
+        *html, *html body /* 修正IE6振动bug */ {
+            background-image: url(about:blank);
+            background-attachment: fixed;
+            font-family: "微软雅黑";
+        }
+
+        body, form {
+            height: auto;
+            background: #e6e6e6;
+            font-family: "微软雅黑";
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 0px;
+        }
+
+        .logo {
+            background-image: url("data:image/gif;base64,R0lGODlhyAAyAPcAAAyA6P///6XG9Gul7tXj+azU95i+8uDr+1mc7LLN9evx/EWT677V9nuu7/X4/src+Iq28RaF6S6K6d7u/A+B6P3+//P5/hqH6fz+/3m58vr9/zKU7DOU7Lnb+FKk7/f7/iSM6vj8/ny78w6B6CWN6g2A6Pv9//T5/v7//1+r8PL4/mWu8Nrs+1en74K+84G987XY+Eyh7n278xyI6kGc7bTY+EWe7aPP9oO+86nS943D9JHG9Xq58hKD6ReG6Vyq8KbR9/H4/qHO9qDN9rLX+Nzt/KvT91Ol7xWE6W6z8T+a7eLw/JvL9u72/cXh+efz/c3l+t/u/Mji+vX6/h6J6obA9BGC6Lzc+XK18s7m+u32/ajS92Kt8C+S6zyZ7Z7M9k6i7qfR98Tg+UOd7VSm74W/8yaN6hiG6R2J6vn8/iiO65LG9T+b7dXp+yGL6srj+lCj7uTx/DuY7Guy8cfi+kqg7jmX7Mzl+mCs8NDn+3C08Vup72mx8S6S62ev8Y7E9G2z8TSV7Eif7p/N9mqx8YC98/D3/sDe+aLO9iKL6nW38rbZ+DWV7K3U92+08Uuh7hSE6ZrK9ejz/eby/TCT6yqQ677d+TaW7Lrb+X6888zk+mOt8MLf+Xu68hOD6TiX7JPH9dnr+2iw8RuI6aXQ98/m+jGT7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS41LWMwMTQgNzkuMTUxNDgxLCAyMDEzLzAzLzEzLTEyOjA5OjE1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjlEQjBEQjE3QURCRDExRTk4MzgzQzVENzFGRjk0N0Q1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjlEQjBEQjE4QURCRDExRTk4MzgzQzVENzFGRjk0N0Q1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OURCMERCMTVBREJEMTFFOTgzODNDNUQ3MUZGOTQ3RDUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OURCMERCMTZBREJEMTFFOTgzODNDNUQ3MUZGOTQ3RDUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4B//79/Pv6+fj39vX08/Lx8O/u7ezr6uno5+bl5OPi4eDf3t3c29rZ2NfW1dTT0tHQz87NzMvKycjHxsXEw8LBwL++vby7urm4t7a1tLOysbCvrq2sq6qpqKempaSjoqGgn56dnJuamZiXlpWUk5KRkI+OjYyLiomIh4aFhIOCgYB/fn18e3p5eHd2dXRzcnFwb25tbGtqaWhnZmVkY2JhYF9eXVxbWllYV1ZVVFNSUVBPTk1MS0pJSEdGRURDQkFAPz49PDs6OTg3NjU0MzIxMC8uLSwrKikoJyYlJCMiISAfHh0cGxoZGBcWFRQTEhEQDw4NDAsKCQgHBgUEAwIBAAAh+QQAAAAAACwAAAAAyAAyAAAI/wABCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPnwxtDMnxqATQo0dpFAkQoM0GpFB5RjDCNECQPVGz4uQypeoEDlrDziTBqWoFEWLTvhwhA0NVOp5sNLrBRq3dk3JYVNVwhFEoph1AaFwgoHBhCQgJG17MuLFhCAMHOG68gKDkyQIMIB6I2fCArBGEVA1wY0aB0Z2MYjQwOgDkgwNay549mgBn2qMdEGyAu+oBgr2rNogKJ0jVJ6bIaBgd5VLGA60fIIwdvLdtgQKqMyBIoHqAzwK9X/8/OsrSaB4zssgeZOUigtmbC1L3Pnt89uDgBXavnl881AyjOXGGCLOF0MJFCcz2mnyjMTDAg6xV5eCD8wVg32gGUKhhQfsxleGD0FXVn28URsjUeD9RMkFVJ3iwwRIsqlCVFG5YpMBs0hlUoQCRjcbjQLXdJiJDHX43UJEjnthjVSj6NMRopFDARFUY7CDCCUxVgENFvPk2WnxLMvUjADsCx6SQTOWXEJJHjpakhWHCCZQHTVS1RCAx1MnUBBugIYVXXlDEgJsY6uhjnGMCECR2DTrGoZttDhleVQoYNuiZP0VQQ1UolNEDJmbJ0AMFfnTFFBDtRSSBA1VJdyNTvzH/WNWYZQKJKQD39faopACwOWlwOfqkxwdVaXIBIcsxdUgXkawAAFVMGfKDRBCMBlmCVVVm2aEC1fqrnLhWt2uakZL7LW7D+dRHKVWFsAkIejGlAhgpBJAHFZ88UZUTJET0QFW6AfBeVQbIKiaiZirJaHDjGqkfpN9W2hgCP0ECCgpVERHBGqN9wYFeJvAAQBUVMIVBJiM8tECDA70aQKwId8vttxcSrCGFDefnq6K3RlWHJFVpQUMMFlQVBwceeGXHBVBUFcUYD5kYQLoAYMuUtjLPGjPNaDqs0M47LxrVBVtwusMFi2jwQQgfZACAGVdUxQQFP5hQlRAROBRiAAoQ/zSwh9tqnfXBtiocLq9rQtyr4mJDtUIaVUGhBhIpzLECH3j4QEEJRxQdgAWCjJBDVSocyNDfASRQNQGsjwYzmTN7y7Phub7M+u23Y13kAbezymvjR5Fwx2hXvOACFoAkkYQjhVTxgg5LAeaDEpNUJUYiDFkdAMVFjkbx4AHQOvPs4NZOW9/l9vZmk0ABOJrdvblVlSgA4DCa2wv5zvfDs6kOvviC49rCeuM/gfyrOt8jH/t+0gH60AYRAKjEG6oCg4V0CXCLmw36YBdA2YnNfLNJIAAW0D3ZFFCBWdGBA2ejCIGkwHNhuMvXqiJDgYDgDzAogA53yMMe7pAILqCCQD6QgIUaAEEJNURIh5LIxJIgIAGsaqIUSUK1KVrxiljMoha3yMUuevGLYAyjGMdIxjKa8YxoTKMa18jGNmIxIAA7");
+            background-position: 0px;
+            background-repeat: no-repeat;
+            float: left;
+            height: 50px;
+            padding-left: 10px;
+            width: 200px;
+        }
+
+        .top_wrap {
+            background: #0d8cea repeat-x center 50%;
+            height: 52px;
+            line-height: 20px;
+            overflow: hidden;
+            width: 1280px;
+            margin: 0 auto;
+        }
+
+        .wrap {
+            position: relative;
+            height: auto;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+
+
+
+
+        .hint {
+            color: #0000FF;
+            font-weight: bold;
+        }
+
+
+        .div_basic {
+            border: 1px solid #CBCBCB;
+            padding: 10px;
+            background: #F5F5F5;
+            color: #0c80e8;
+        }
+
+            .div_basic b {
+                color: black;
+            }
+
+        .repDiv {
+            width: 1248px;
+            margin: 0 auto;
+            text-align: left;
+            font-size: 14px;
+            background-color: #ffffff;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-bottom: 15px;
+            border: 1px solid #a9a9a9;
+        }
+
+        .repTit {
+            text-align: center;
+            font: bold 22px/58px 黑体;
+            color: #0c80e8;
+        }
+
+        .repDivTit div {
+            font: bold 16px 黑体;
+            height: 18px;
+            color: #0c80e8;
+        }
+
+        .sub_font, .important {
+            font-size: 12px;
+            color: #CC0000;
+        }
+
+        .sub_font {
+            padding-left: 10px;
+        }
+        /*报表DIV样式*/
+        .div_Rep {
+            width: 1250px;
+            height: 450px;
+        }
+
+        .div_RepR {
+            float: right;
+            width: 580px;
+            height: 350px;
+        }
+
+
+        .div_RepL {
+            float: left;
+            width: 580px;
+            height: 350px;
+        }
+
+        .repNewDivTit {
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAIAAAAW4yFwAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpBOTBCRjUwNTU4NzNFMzExOTVFRUY0N0NEMEM3RUMzQSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCRUE5MUQyODQ4NEIxMUU0QUZDNkNBRTlCOEIxMUY4RiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCRUE5MUQyNzQ4NEIxMUU0QUZDNkNBRTlCOEIxMUY4RiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAyMjVBQUI1QTU0N0U0MTE5Njk4QUJBMDlFNTUzQzRFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkE5MEJGNTA1NTg3M0UzMTE5NUVFRjQ3Q0QwQzdFQzNBIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+FSUgSgAAABNJREFUeNpivnfvHhMDAwNAgAEAD8QCoAMcQcQAAAAASUVORK5CYII=")bottom repeat-x;
+            height: 50px;
+            line-height: 72px;
+            overflow: hidden;
+            color: #0c80e8;
+            font-size: 18px;
+            margin-bottom: 10px;
+            *border-bottom: 2px solid #dedede;
+        }
+
+            .repNewDivTit b {
+                border-bottom: 2px solid #0c80e8;
+                padding-right: 10px;
+            }
+
+        .p_left td {
+            padding-left: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+
+        .tab {
+            width: 1278px;
+            border-collapse: collapse;
+            font-size: 13px;
+            border: solid 1px #dedede;
+        }
+
+
+
+            .tab td {
+                border: solid 1px #dedede;
+                padding: 5px;
+            }
+
+            .tab th {
+                border: solid 1px #dedede;
+                background: #EBECED;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                height: 20px;
+                text-align: center;
+                font-weight: normal;
+            }
+
+
+
+            .tab tr:hover {
+                background: #E6E6E6;
+            }
+
+
+        .tab_new {
+            width: 1250px;
+            border: 0;
+            border-collapse: collapse;
+            cellspacing: 1;
+            font-size: 13px;
+            border: solid 1px #dedede;
+        }
+
+
+
+            .tab_new td {
+                border: solid 1px #dedede;
+                padding: 5px;
+                height: 25px;
+                text-align: center;
+            }
+
+            .tab_new th {
+                border: solid 1px #dedede;
+                background: #EBECED;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                height: 30px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+
+            /*.tab_new tr:hover {
+        background: #EBECED;
+    }*/
+
+
+            .tab_new tr:hover {
+                background: #E6E6E6;
+            }
+
+
+        .in_ul {
+            list-style: none;
+            padding: 0 0 15px;
+        }
+
+            .in_ul li {
+                display: inline;
+                padding: 0 15px 0 5px;
+            }
+
+        .foot_wrap {
+            height: 50px;
+            background: #EEEEEE;
+        }
+
+        .are_dvs {
+            color: #FF0000;
+            text-align: right;
+        }
+
+        .stamp_sign, .in_sig {
+            position: absolute;
+            text-align: center;
+            color: #00C400;
+            background: none;
+            z-index: 800;
+            transform: rotate(-10deg);
+            -ms-transform: rotate(-10deg);
+            -moz-transform: rotate(-10deg);
+            -webkit-transform: rotate(-10deg);
+            -o-transform: rotate(-10deg);
+        }
+
+        .stamp_sign {
+            top: 30px;
+            left: 30px;
+            width: auto;
+            height: 25px;
+            line-height: 25px;
+            padding: 10px 10px;
+            margin: 0px;
+            border: solid 5px #00C400;
+            font: 800 25px 'Verdana','黑体';
+            display: none;
+        }
+
+        .in_sig {
+            height: 18px;
+            line-height: 18px;
+            padding: 5px;
+            margin: 0px;
+            border: solid 2px #00C400;
+            font: 800 18px 'Verdana','黑体';
+            display: block;
+        }
+
+        .ans_img {
+        }
+
+        .det_msg {
+            padding-bottom: 3px;
+        }
+
+        .tk_testqy_box_con_tips {
+            margin-top: 10px;
+            line-height: 25px;
+        }
+
+            .tk_testqy_box_con_tips p {
+                font-size: 12px;
+                margin: 5px 0px;
+            }
+
+            .tk_testqy_box_con_tips label {
+                font-family: 微软雅黑;
+                font-style: oblique;
+                color: blue;
+                width: 50px;
+                display: block;
+                border-right: 1px solid #ff7f50;
+                padding: 0 10px;
+                text-align: left;
+                margin-right: 15px;
+                float: left;
+                font-weight: bold;
+            }
+
+            .tk_testqy_box_con_tips span {
+                font-family: 微软雅黑;
+                font-style: oblique;
+                color: green;
+            }
+
+        /*bable表格行背景色变换*/
+        .datagrid-body tr:nth-child(2n+2) {
+            background: #E0ECFF;
+        }
+
+        .tab_new tr:nth-child(2n+2) {
+            background: #E0ECFF;
+        }
+
+        .footer {
+            margin: 20px auto 30px;
+            text-align: center;
+            color: gray;
+            font-family: "PingHei",Microsoft Yahei,SimSun,Arial,Helvetica,sans-serif;
+            cursor: pointer;
+            font-style: oblique;
+        }
+
+            .footer a {
+                color: gray;
+                text-decoration: none;
+            }
+
+                .footer a:hover {
+                    color: blue;
+                    text-decoration: underline;
+                }
+
+        #goTopBtn {
+            POSITION: fixed;
+            TEXT-ALIGN: center;
+            width: 50px;
+            BOTTOM: 35px;
+            HEIGHT: 46px;
+            font-size: 40px;
+            CURSOR: pointer;
+            RIGHT: 10px;
+            _position: absolute;
+            _right: auto;
+            background: white;
+            border-radius: 5px;
+            line-height: 45px;
+            color: blue;
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1">
+
+        <div id="goTopBtn" style="display: none" title="返回顶部">
+            ↑
+        </div>
+
+        <div class="top_wrap">
+
+            <div class="wrap">
+                <div class="logo"></div>
+            </div>
+        </div>
+        <div class="repDiv">
+
+            <div class="repTit">【刘俊铭】学生成绩分析报告</div>
+
+            <div class="div_basic">
+                <span style="margin-left: 10px">考试：<b>202501初一期末考试</b>
+                </span>
+                <span style="margin-left: 10px" id="schoolControl">学校：<b>北京市京源学校</b>
+                </span>
+                <span style="margin-left: 10px" id="classControl">班级：<b>01班</b>
+                </span>
+                <span style="margin-left: 10px">学生：<b>刘俊铭</b>
+                </span>
+                <span style="margin-left: 10px">科目：<b>语文</b>
+                </span>
+            </div>
+
+            <br />
+            <div id="div_all">
+                <div id="div_eva" class="repNewDivTit">
+                    <b>总体评价</b><span id="sp_eva" class='sub_font'></span>
+                </div>
+                <div class="div_Rep" style="min-height: 500px">
+                    <div id="rep_stu_place" class="div_RepL" style="width: 100%; height: 500px;"></div>
+                </div>
+                <br />
+                <br />
+                <div class="div_Rep" style="min-height: 500px">
+                    <div id="rep_sub_offer" class="div_RepL" style="width: 100%; height: 500px;"></div>
+                </div>
+                <br />
+                <br />
+                <div style="page-break-after: always;"></div>
+                <!--<%-- 学科均衡 --%>-->
+                <div class="div_Rep" style="min-height: 600px">
+                    <div id="rep_sub_radar" class="div_RepR" style="width: 100%; height: 600px;"></div>
+                </div>
+                <br />
+
+            </div>
+            <div id="div_sub" class="repNewDivTit">
+                <b>学科分析</b><span id="div_sub_t" class="sub_font"></span>
+            </div>
+            <table id="tab_sub" class="tab_new">
+                <tbody>
+                    <tr align="center">
+                        <th>科目</th>
+                        <th>原始分</th>
+                        <th>标准分</th>
+                        <th>百分等级</th>
+                        <th>Z分数</th>
+                        <th>成绩等级</th>
+                        <th>超均率%</th>
+                        <th>比均率%</th>
+                        <th>分类排位</th>
+                        <th>班级排位</th>
+                        <th>学校排位</th>
+                        <th>全体排位</th>
+                    </tr>
+                </tbody>
+                <tr align="center">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+            <div class="tk_testqy_box_con_tips">
+                <p>
+                    <label>标准分</label>
+                    <span>是一种由原始分推导出来的分数，它用来反应学生的成绩在全体考生中的相对位置。</span>
+                </p>
+                <p>
+                    <label>百分等级</label>
+                    <span>是一种体现相对位置的指标，将全体考生的成绩从高到低排序，低于某分数的人数与总人数的百分比，即为该分数的百分等级。</span>
+                </p>
+                <p>
+                    <label>Z分数</label>
+                    <span>属于标准分的一类，Z分数 = ( 某分值 – 平均分 ) / 标准差。</span>
+                </p>
+                <p>
+                    <label>成绩等级</label>
+                    <span>是指将学生的原始得分转换为A、B、C、D……等级的指标。</span>
+                </p>
+                <p>
+                    <label style="height: 50px;">超均率</label>
+                    <span>即超过（整体）平均分的比率，是一个反应某分值超出（或低于）整体水平程度的数值，即可以用于当次考试间的比较，也可以用于历次考试间的比较。<br />
+                        超均率 = ( 某分值 – 全体平均分 ) / 全体平均分 * 100%</span>
+                </p>
+                <p>
+                    <label style="height: 50px;">比均率</label>
+                    <span>即与（整体）平均分的比率，是一个反应某分值超出（或低于）整体水平程度的数值，即可以用于当次考试间的比较，也可以用于历次考试间的比较。<br />
+                        比均率 = 某分值 / 全体平均分 * 100%</span>
+                </p>
+            </div>
+
+            <div id="div_sub_rank_div" class="div_Rep" style="min-height: 500px; margin-top: 50px;">
+                <div id="div_sub_rank" class="div_RepL" style="width: 100%; min-height: 500px;"></div>
+                <br />
+                <br />
+            </div>
+
+            <div id="div_sub_rScore_div" class="div_Rep" style="min-height: 500px;">
+                <div id="div_sub_rScore" class="div_RepL" style="width: 100%; min-height: 500px;"></div>
+                <br />
+                <br />
+            </div>
+
+            <br style="clear: both;" />
+            <div id="div_kno" class="repNewDivTit">
+                <b>知识点分析</b><span id="Span1" class="sub_font">【建议：红色的知识点需要在后期加强训练！】</span>
+            </div>
+
+            <div id="div_kno_chart" class="div_Rep">
+                <div id="rep_sub_kno" class="div_RepL" style="width: 100%; height: 600px;"></div>
+            </div>
+            <br />
+            <div style="page-break-after: always;"></div>
+            <div id="div_kno_chart2" class="div_Rep">
+                <div id="rep_sub_kno2" class="div_RepL" style="width: 100%; height: 600px;"></div>
+            </div>
+            <br />
+
+            <table id="tab_kno" class="tab_new">
+                <tbody>
+                    <tr align="center">
+                        <th width="200">知识点</th>
+                        <th width="70">满分值</th>
+                        <th width="70">学生得分</th>
+                        <th width="80">得分率(%)</th>
+                        <th width="70">班级均分</th>
+                        <th width="70">学校均分</th>
+                        <th width="70">全体均分</th>
+                        <th width="70">难度</th>
+                        <th width="70">Z分数</th>
+                        <th width="140">包含试题</th>
+                        <th width="100"><a id="knoStandardTip" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">知识点<br />
+                            达标分数</a></th>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="div_kno_tips" class="tk_testqy_box_con_tips">
+                <p>
+                    <label>难度</label>
+                    <span>知识点的难易程度，难度 = 知识点平均分 / 知识点满分值，取值范围0～1，数值越小表示难度越大。</span>
+                </p>
+                <p>
+                    <label>Z分数</label>
+                    <span>是通过知识点得分转换而得到的一种分数，它反应考生知识点得分在全体考生中的位置，Z分数属于标准分的一类。</span>
+                </p>
+                <p>
+                    <label>达标分数</label>
+                    <span>学生应当达到的最低分数标准，系统根据该学生学科水平，以及同水平学生的表现，给该学生提供的个性化的参考标准。</span>
+                </p>
+            </div>
+
+            <br style="clear: both;" />
+
+            <div style="page-break-after: always;"></div>
+
+            <div id="div_mod" class="repNewDivTit">
+                <b>模块分析</b>
+                <!--<span class="sub_font">【 建议：红色的知识点需要在后期加强训练！】</span>-->
+            </div>
+
+            <div id="div_mod_chart" class="div_Rep">
+                <div id="rep_sub_mod" class="div_RepL" style="width: 100%; height: 600px;"></div>
+            </div>
+            <br />
+            <div id="div_mod_chart2" class="div_Rep">
+                <div id="rep_sub_mod2" class="div_RepL" style="width: 100%; height: 600px;"></div>
+            </div>
+            <br />
+
+            <table id="tab_mod" class="tab_new">
+                <tbody>
+                    <tr align="center">
+                        <th width="240">模块</th>
+                        <th width="70">满分值</th>
+                        <th width="70">学生得分</th>
+                        <th width="80">得分率(%)</th>
+                        <th width="70">班级均分</th>
+                        <th width="70">学校均分</th>
+                        <th width="70">全体均分</th>
+                        <th width="70">难度</th>
+                        <th width="70">Z分数</th>
+                        <th width="200">包含试题</th>
+                        <!-- <th width="100"><a id="A1" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">模块<br />
+                            达标分数</a></th>-->
+                    </tr>
+                </tbody>
+            </table>
+            <div id="div_mod_tips" class="tk_testqy_box_con_tips">
+                <p>
+                    <label>难度</label>
+                    <span>模块的难易程度，难度 = 模块平均分 / 模块满分值，取值范围0～1，数值越小表示难度越大。</span>
+                </p>
+                <p>
+                    <label>Z分数</label>
+                    <span>是通过模块得分转换而得到的一种分数，它反应考生模块得分在全体考生中的位置，Z分数属于标准分的一类。</span>
+                </p>
+            </div>
+
+            <br style="clear: both;" />
+
+            <div style="page-break-after: always;"></div>
+            <div id="div_difficulty" class="repNewDivTit">
+                <b>难度能力</b><span id="Span2" class="sub_font"></span>
+            </div>
+            <div class="div_Rep" id="rep_dif_abi_div" style="min-height: 500px">
+                <div id="rep_dif_abi" class="div_RepR" style="width: 100%; height: 500px;"></div>
+            </div>
+
+            <br />
+            <div id="div_que_omr" class="repNewDivTit">
+                <b>客观题分析</b><span id="sp_que_omr" class="sub_font"></span>
+            </div>
+            <table id="tab_que_omr" class="tab_new">
+                <tbody>
+                    <tr align="center">
+                        <th width="80">题号</th>
+                        <th width="60">答案</th>
+                        <th width="60">满分</th>
+                        <th width="60">选择</th>
+                        <th width="70">学生得分</th>
+                        <th width="65">班均分</th>
+                        <th width="65">学校均分</th>
+                        <th width="65">全体均分</th>
+                        <th width="60">难度</th>
+                        <th width="240">知识点说明</th>
+                        <th width="70"><a id="zwOmrTip" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">掌握情况</a></th>
+                        <th width="70"><a id="ycOmrTip" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">异常情况</a></th>
+                        <th width="70"><a id="omrStandardTip" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">试题<br />
+                            达标分数</a></th>
+                        <th width="70">巩固题</th>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="div_omr_tips" class="tk_testqy_box_con_tips">
+                <p>
+                    <label>难度</label>
+                    <span>试题的难易程度，难度 = 试题平均分 / 试题满分值，取值范围0～1，数值越小表示难度越大。</span>
+                </p>
+                <p>
+                    <label>异常情况</label>
+                    <span>学生不应该的丢分情况，依据“学生问题分析理论（SP表理论）”而得。</span>
+                </p>
+                <p>
+                    <label>达标分数</label>
+                    <span>学生应当达到的最低分数标准，系统根据该学生学科水平，以及同水平学生的表现，给该学生提供的个性化的参考标准。</span>
+                </p>
+            </div>
+
+
+            <br style="clear: both;" />
+            <div id="div_que_item" class="repNewDivTit">
+                <b>主观题分析</b><span id="sp_que_item" class="sub_font"></span>
+            </div>
+            <table id="tab_que_item" class="tab_new">
+                <tbody>
+                    <tr align="center">
+                        <th width="80">题号</th>
+                        <th width="60">小题号</th>
+                        <th width="60">满分</th>
+                        <th width="60">最高分</th>
+                        <th width="70">学生得分</th>
+                        <th width="50">班均分</th>
+                        <th width="60">学校均分</th>
+                        <th width="60">全体均分</th>
+                        <th width="50">难度</th>
+                        <th width="210">知识点说明</th>
+                        <th width="60"><a id="zwQueTip" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">掌握情况</a></th>
+                        <th width="60"><a id="ycQueTip" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">异常情况</a></th>
+                        <th width="70"><a id="queStandardTip" href="javascript:void(0)" style="cursor: pointer; vertical-align: bottom; color: black; text-decoration: underline">试题<br />
+                            达标分数</a></th>
+                        <th width="70">巩固题</th>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="div_item_tips" class="tk_testqy_box_con_tips">
+                <p>
+                    <label>难度</label>
+                    <span>试题的难易程度，难度 = 试题平均分 / 试题满分值，取值范围0~1，数值越小表示难度越大。</span>
+                </p>
+                <p>
+                    <label>异常情况</label>
+                    <span>学生不应该的丢分情况，依据“学生问题分析理论（SP表理论）”而得。</span>
+                </p>
+                <p>
+                    <label>达标分数</label>
+                    <span>学生应当达到的最低分数标准，系统根据该学生学科水平，以及同水平学生的表现，给该学生提供的个性化的参考标准。</span>
+                </p>
+            </div>
+
+
+            <div style="page-break-after: always;"></div>
+            <div id="div_img_info">
+                <br style="clear: both;" />
+                <div id="div_img_box" class="repNewDivTit">
+                    <a name="答卷图像"></a><b>答卷图像</b>
+                </div>
+                <div id="Img_box" class="img_box" style="text-align: center; border: 1px solid #ABAFB8; border-width: 1px 0;">
+                    <iframe id="Ifr_img" style="width: 100%; height: 100%; border: 0; margin: 0; padding: 0;"></iframe>
+                </div>
+            </div>
+        </div>
+        <br />
+    </form>
+    <footer class="footer">
+        <a target="_blank" href="http://www.allcom.cn/">&copy;
+            <script type="text/javascript">document.write(new Date().getFullYear());</script>
+            广州全通数码科技有限公司
+        </a>
+    </footer>
+
+</body>
+</html>
