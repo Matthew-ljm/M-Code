@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户反馈</title>
+    <link rel="shortcut icon" href="icon/feedback.ico" type="image/x-icon">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        #backButton {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #surveyIframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="backButton">返回主页</button>
+    <iframe id="surveyIframe" src="https://feedback.m-code.top/"></iframe>
+    <script>
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', function () {
+            window.location.href = 'https://m-code.top';
+        });
+    </script>
+</body>
+
+</html>
