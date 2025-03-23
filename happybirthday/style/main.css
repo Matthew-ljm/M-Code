@@ -7,10 +7,6 @@ body {
   margin: 0;
 }
 
-.song {
-  visibility: hidden;
-}
-
 .container {
   height: 100vh;
   margin: 0 auto;
@@ -102,7 +98,7 @@ body {
 
 .six {
   position: relative;
-  top: 10vh;
+  top: 1vh;
   z-index: 1;
 }
 
@@ -171,42 +167,6 @@ body {
   top: 33vh;
 }
 
-.eight svg:nth-child(4) {
-  fill: #347a9d;
-  left: 57vw;
-  top: 43vh;
-}
-
-.eight svg:nth-child(5) {
-  fill: #c66053;
-  left: 7vw;
-  top: 68vh;
-}
-
-.eight svg:nth-child(6) {
-  fill: #bfaa40;
-  left: 77vw;
-  top: 42vh;
-}
-
-.eight svg:nth-child(7) {
-  fill: #e3bae8;
-  left: 83vw;
-  top: 68vh;
-}
-
-.eight svg:nth-child(8) {
-  fill: #8762cb;
-  left: 37vw;
-  top: 86vh;
-}
-
-.eight svg:nth-child(9) {
-  fill: #9a90da;
-  left: 87vw;
-  top: 94vh;
-}
-
 .wish-hbd {
   font-size: 3em;
   margin: 0;
@@ -236,107 +196,77 @@ body {
 
 .ten {
   position: absolute;
-  top: 1%;
+  top: 0%;
+  width: 100%;
   text-align: center;
+}
+
+.gold-egg-title {
+  font-size: 2.5rem;
+  margin: 0 0 10px 0;
+}
+
+.gold-text {
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 .gold-eggs {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
-  width: 25%;
-  margin: 0 auto;
+  gap: 10px;
+  width: 80%;
+  max-width: 600px;
+  margin: 10px auto 0;
+  padding-top: 1px;
 }
 
 .egg {
-  width: 25%;
-  height: auto;
-  object-fit: contain;
+  width: 120px;
+  height: 120px;
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.egg.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .blessings {
-  margin-top: 20px;
+  width: 80%;
+  max-width: 600px;
+  margin: 10px auto 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .blessing {
-  font-size: 1.7rem;
-  color: #ff69b4;
+  font-size: 1.5rem;
+  color: #e91e63;
+  margin: 10px 0;
+  animation: fadeIn 0.5s ease-out;
 }
 
-@media screen and (max-height: 1000px) {
-  .six .hat {
-    left: 40%;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@media screen and (max-height: 800px) {
-  .six .hat {
-    left: 37%;
+@media (max-width: 500px) {
+  .gold-egg-title {
+    font-size: 2rem;
   }
-}
-
-@media screen and (max-height: 700px) {
-  .six .hat {
-    left: 32%;
-  }
-}
-
-@media screen and (max-height: 850px) and (max-width: 450px) {
-  .six .hat {
-    left: 32%;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .container {
-    width: 90%;
-  }
-
-  .four .text-box {
-    width: 90%;
-  }
-
-  .text-box .fake-btn {
-    bottom: -38px;
-    right: 5px;
-  }
-
-  .idea-5 span {
-    display: block;
-  }
-
-  .idea-6 span {
-    font-size: 10rem;
-  }
-
-  .six .hat {
-    width: 50px;
-  }
-
-  .wish-hbd {
-    font-size: 2.2em;
-  }
-
-  .wish h5 {
-    font-size: 1.4rem;
-  }
-
-  .nine p {
-    font-size: 1.5rem;
-    font-weight: lighter;
-  }
-
-  .gold-eggs {
-    width: 25%;
-  }
-
+  
   .egg {
-    width: 25%;
+    width: 80px;
+    height: 80px;
   }
-
+  
   .blessing {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 }
