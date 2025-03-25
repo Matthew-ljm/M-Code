@@ -26,7 +26,7 @@
         .idea-6 span {font-size: 15rem;}
         .six {top: 10vh;position: relative;z-index: 1;}
         .six img {display: inline-block;height: 350px;max-width: 100%;}
-        .six .hat {left: 40%;position: absolute;top: -30%;width: 80px;}
+        .six .hat {left: 35%;position: absolute;top: -30%;width: 80px;}
         .baloons img {display: inline-block;position: absolute;}
         .baloons img:nth-child(even) {left: -10%;}
         .baloons img:nth-child(odd) {right: -10%;}
@@ -75,7 +75,7 @@
             <img src="img/hat.svg" alt="hat" class="hat">
             <div class="wish"><h3 class="wish-hbd">Happy Birthday!</h3><h5>May health and happiness always be with you : )</h5></div>
         </div>
-        <div class="seven"><div class="baloons"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"></div></div>
+        <div class="seven"><div class="baloons"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"><img src="img/ballon2.svg"><img src="img/ballon1.svg"><img src="img/ballon3.svg"></div></div>
         <div class="eight">
             <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20"></svg>
             <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20"></svg>
@@ -145,19 +145,19 @@
             .to(".fake-btn", 0.1, { backgroundColor: "rgb(127, 206, 248)" }, "+=4")
             .to(".four", 0.5, { scale: 0.2, opacity: 0, y: -150 }, "+=1")
             .from(".idea-1", 0.7, ideaTextTrans)
-            .to(".idea-1", 0.7, ideaTextTransLeave, "+=1.5")
+            .to(".idea-1", 0.7, ideaTextTransLeave, "+=1")
             .from(".idea-2", 0.7, ideaTextTrans)
-            .to(".idea-2", 0.7, ideaTextTransLeave, "+=1.5")
+            .to(".idea-2", 0.7, ideaTextTransLeave, "+=1")
             .from(".idea-3", 0.7, ideaTextTrans)
             .to(".idea-3 strong", 0.5, { scale: 1.2, x: 10, backgroundColor: "rgb(21, 161, 237)", color: "#fff" })
-            .to(".idea-3", 0.7, ideaTextTransLeave, "+=1.5")
+            .to(".idea-3", 0.7, ideaTextTransLeave, "+=11")
             .from(".idea-4", 0.7, ideaTextTrans)
-            .to(".idea-4", 0.7, ideaTextTransLeave, "+=1.5")
+            .to(".idea-4", 0.7, ideaTextTransLeave, "+=1")
             .from(".idea-5", 0.7, { rotationX: 15, rotationZ: -10, skewY: "-5deg", y: 50, z: 10, opacity: 0 }, "+=1.5")
             .to(".idea-5 span", 0.7, { rotation: 90, x: 8 }, "+=1.4")
             .to(".idea-5", 0.7, { scale: 0.2, opacity: 0 }, "+=2")
             .staggerFrom(".idea-6 span", 0.8, { scale: 3, opacity: 0, rotation: 15, ease: "Expo.easeOut" }, 0.2)
-            .staggerTo(".idea-6 span", 0.8, { scale: 3, opacity: 0, rotation: -15, ease: "Expo.easeOut" }, 0.2, "+=1.5")
+            .staggerTo(".idea-6 span", 0.8, { scale: 3, opacity: 0, rotation: -15, ease: "Expo.easeOut" }, 0.2, "+=1")
             .staggerFromTo(".baloons img", 2.5, { opacity: 0.9, y: 1800 }, { opacity: 1, y: -1000 }, 0.1)
             .from(".profile-picture", 0.5, { scale: 3.5, opacity: 0, x: 25, y: -25, rotationZ: -45 }, "-=2")
             .from(".hat", 0.5, { x: -100, y: 350, rotation: -180, opacity: 0 })
