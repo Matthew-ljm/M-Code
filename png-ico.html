@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNG转ICO工具</title>
+    <link rel="shortcut icon" href="icon/PNG-ICO.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+        #preview {
+            max-width: 256px;
+            max-height: 256px;
+            margin: 15px 0;
+            border: 1px dashed #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .size-option {
+            margin: 10px 0;
+        }
+        .instructions {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>PNG转ICO工具</h1>
+    <p>无损转换</p>
+    
+    <div class="container">
+        <h2>1. 选择PNG文件</h2>
+        <input type="file" id="pngInput" accept=".png">
+        
+        <h2>2. 预览</h2>
+        <img id="preview" style="display:none;">
+        
+        <h2>3. 设置ICO选项</h2>
+        <div class="size-option">
+            <label>
+                <input type="checkbox" id="size16" checked> 16×16
+            </label>
+            <label>
+                <input type="checkbox" id="size32" checked> 32×32
+            </label>
+            <label>
+                <input type="checkbox" id="size48" checked> 48×48
+            </label>
+            <label>
+                <input type="checkbox" id="size64"> 64×64
+            </label>
+            <label>
+                <input type="checkbox" id="size128"> 128×128
+            </label>
+            <label>
+                <input type="checkbox" id="size256"> 256×256
+            </label>
+        </div>
+        
+        <button id="convertBtn">转换为ICO</button>
+        <a id="downloadLink" style="display:none;"></a>
+        
+        <div class="instructions">
+            <h3>使用说明：</h3>
+            <ul>
+                <li>选择透明PNG可获得透明背景的ICO</li>
+                <li>建议至少选择16×16和32×32两种尺寸</li>
+                <li>转换完全在浏览器中进行，不会上传您的文件</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('pngInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('preview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('convertBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('pngInput');
+            if (!fileInput.files[0]) {
+                alert('请先选择PNG文件');
+                return;
+            }
+            
+            const sizes = [];
+            if (document.getElementById('size16').checked) sizes.push(16);
+            if (document.getElementById('size32').checked) sizes.push(32);
+            if (document.getElementById('size48').checked) sizes.push(48);
+            if (document.getElementById('size64').checked) sizes.push(64);
+            if (document.getElementById('size128').checked) sizes.push(128);
+            if (document.getElementById('size256').checked) sizes.push(256);
+            
+            if (sizes.length === 0) {
+                alert('请至少选择一个尺寸');
+                return;
+            }
+            
+            convertToICO(fileInput.files[0], sizes);
+        });
+
+        function convertToICO(pngFile, sizes) {
+            const img = new Image();
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                img.onload = function() {
+                    const canvases = sizes.map(size => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = size;
+                        canvas.height = size;
+                        const ctx = canvas.getContext('2d');
+                        const ratio = Math.min(size / img.width, size / img.height);
+                        const newWidth = img.width * ratio;
+                        const newHeight = img.height * ratio;
+                        const x = (size - newWidth) / 2;
+                        const y = (size - newHeight) / 2;
+                        
+                        ctx.drawImage(img, x, y, newWidth, newHeight);
+                        return canvas;
+                    });
+                    generateICO(canvases);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(pngFile);
+        }
+
+        function generateICO(canvases) {
+            const header = new Uint8Array(6);
+            header[0] = 0; header[1] = 0;
+            header[2] = 1; header[3] = 0;
+            header[4] = canvases.length; header[5] = 0;
+            
+            const directories = [];
+            const imageData = [];
+            let offset = 6 + (16 * canvases.length);
+            
+            canvases.forEach(canvas => {
+                const size = canvas.width;
+                const pngData = canvas.toDataURL('image/png').split(',')[1];
+                const binary = atob(pngData);
+                const pngBytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) {
+                    pngBytes[i] = binary.charCodeAt(i);
+                }
+                
+                const dir = new Uint8Array(16);
+                dir[0] = size === 256 ? 0 : size;
+                dir[1] = size === 256 ? 0 : size;
+                dir[2] = 0;
+                dir[3] = 0;
+                dir[4] = 1; dir[5] = 0;
+                dir[6] = 32; dir[7] = 0;
+                dir[8] = pngBytes.length & 0xFF;
+                dir[9] = (pngBytes.length >> 8) & 0xFF;
+                dir[10] = (pngBytes.length >> 16) & 0xFF;
+                dir[11] = (pngBytes.length >> 24) & 0xFF;
+                dir[12] = offset & 0xFF;
+                dir[13] = (offset >> 8) & 0xFF;
+                dir[14] = (offset >> 16) & 0xFF;
+                dir[15] = (offset >> 24) & 0xFF;
+                
+                directories.push(dir);
+                imageData.push(pngBytes);
+                offset += pngBytes.length;
+            });
+            
+            const icoData = new Uint8Array(offset);
+            icoData.set(header, 0);
+            
+            let dirOffset = 6;
+            let dataOffset = 6 + (16 * canvases.length);
+            
+            directories.forEach((dir, i) => {
+                icoData.set(dir, dirOffset);
+                dirOffset += 16;
+                icoData.set(imageData[i], dataOffset);
+                dataOffset += imageData[i].length;
+            });
+            
+            const blob = new Blob([icoData], { type: 'image/x-icon' });
+            const url = URL.createObjectURL(blob);
+            const a = document.getElementById('downloadLink');
+            a.href = url;
+            a.download = 'icon.ico';
+            a.textContent = '点击下载ICO文件';
+            a.style.display = 'inline-block';
+            a.click();
+        }
+    </script>
+</body>
+</html>
