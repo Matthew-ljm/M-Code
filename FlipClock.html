@@ -199,7 +199,7 @@
 
         .clock {
             text-align: center;
-            margin-bottom: 200px;
+            margin-bottom: 50px;
         }
 
         .clock em {
@@ -208,6 +208,75 @@
             font-size: 66px;
             font-style: normal;
             vertical-align: top;
+        }
+        
+        .analog-clock {
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+            position: relative;
+            border: 15px solid #333;
+            border-radius: 50%;
+            background: #fff url('icon/clock.png') no-repeat center;
+            background-size: 80%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .hand {
+            position: absolute;
+            left: 50%;
+            bottom: 50%;
+            transform-origin: 50% 100%;
+            background: #000;
+            border-radius: 5px;
+        }
+        
+        .hour-hand {
+            width: 8px;
+            height: 80px;
+            margin-left: -4px;
+        }
+        
+        .minute-hand {
+            width: 5px;
+            height: 110px;
+            margin-left: -2.5px;
+        }
+        
+        .second-hand {
+            width: 2px;
+            height: 120px;
+            margin-left: -1px;
+            background: #f00;
+        }
+        
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            background: #333;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        
+        .button {
+            bottom: 2%;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 30px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -241,6 +310,14 @@
             <div class="digital back number1"></div>
         </div>
     </div>
+    
+    <div class="analog-clock" id="analogClock">
+        <div class="hand hour-hand" id="hourHand"></div>
+        <div class="hand minute-hand" id="minuteHand"></div>
+        <div class="hand second-hand" id="secondHand"></div>
+        <div class="center-circle"></div>
+    </div>
+    <a href="index.html" class="button">返回主页</a>
 </body>
 <script>
     function Flipper(config) {
@@ -310,9 +387,10 @@
         }));
     }
 
-    setInterval(function () {
+    function updateClocks() {
         let now = new Date();
         let timeStr = formatDate(now, 'hhiiss');
+        
         for (let i = 0; i < flipObjs.length; i++) {
             let currentFront = flipObjs[i].frontNode.className.split(' ').find(className => className.startsWith('number'));
             let newNumber = 'number' + timeStr[i];
@@ -320,7 +398,21 @@
                 flipObjs[i].flipDown(currentFront, newNumber);
             }
         }
-    }, 1000);
+        
+        let hours = now.getHours() % 12;
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+        
+        let hourDeg = (hours * 30) + (minutes * 0.5);
+        let minuteDeg = minutes * 6;
+        let secondDeg = seconds * 6;
+        
+        document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
+        document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
+        document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
+    }
+
+    setInterval(updateClocks, 1000);
 
     function formatDate(date, dateFormat) {
         if (/(y+)/.test(dateFormat)) {
@@ -352,6 +444,8 @@
         flipObjs[i]._setFront('number' + initialTimeStr[i]);
         flipObjs[i]._setBack('number' + initialTimeStr[i]);
     }
+    
+    updateClocks();
 </script>
 
 </html>
