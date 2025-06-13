@@ -126,6 +126,17 @@
             z-index: 2;
         }
 
+        #footerText3 {
+            position: absolute;
+            bottom: 6%;
+            left: 5%;
+            width: 90%;
+            text-align: center;
+            color: yellow;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+
         #tipButton {
             top: 52%;
             right: 34%;
@@ -160,6 +171,11 @@
             color: yellow;
             text-decoration: underline;
         }
+
+        #footerText3 a {
+            color: yellow;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -171,10 +187,11 @@
     <a id="downloadButton" class="button" href="download.html">软件下载</a>
     <a id="downloadButton2" class="button" href="fireworks-show.html">2025 年烟花秀展示</a>
     <div id="infoBox">M-Code，一个由 Matthew 精心创建的软件开发个人项目组，于 2024 年 9 月创建。在这里，您将邂逅各种独具创意的实用软件。每一款软件都凝聚着 Matthew 的智慧与心血，无论是在工作效率提升方面，还是在娱乐体验上，都有着独特的魅力。软件以创新的设计和强大的功能，为您的数字生活带来全新的可能。欢迎大家前来下载和使用，一同感受 M-Code 带来的精彩与便捷！</div>
-    <div id="footerText">如有任何疑问或建议，欢迎发送邮件至 huifeidexiaogougou@126.com，或访问 <a href="feedback.html">https://m-code.top/feedback.html</a> 进行反馈</div>
-    <div id="footerText2"><a href="FlipClock.html">当前时间：<span id="currentTime"></span></a> </div>
+    <div id="footerText2">如有任何疑问或建议，欢迎发送邮件至 huifeidexiaogougou@126.com，或访问 <a href="feedback.html">https://m-code.top/feedback.html</a> 进行反馈</div>
+    <div id="footerText"><a href="privacy policy.html">隐私声明</a></div>
+    <div id="footerText3"><a href="FlipClock.html">当前时间：<span id="currentTime"></span></a> </div>
     <button id="tipButton"></button>
-    <div id="tipBox">该项目为限时展示版，展示截止时间为 2025 年 5 月 31 日。提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！如遇背景音乐无法播放，请单击屏幕任意位置重试</div>
+    <div id="tipBox">提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！如遇背景音乐无法播放，请单击屏幕任意位置重试</div>
     <script>
         document.getElementById('infoButton').addEventListener('click', function () {
             const infoBox = document.getElementById('infoBox');
