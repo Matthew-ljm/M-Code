@@ -115,37 +115,36 @@
             border-radius: 15px;
         }
 
-        #footerText {
+        #footer {
             position: absolute;
             bottom: 0.5%;
-            left: 5%;
-            width: 90%;
+            left: 0;
+            width: 100%;
             text-align: center;
             color: yellow;
             font-size: 0.8rem;
             z-index: 2;
         }
 
-        #footerText2 {
-            position: absolute;
-            bottom: 3%;
-            left: 5%;
-            width: 90%;
-            text-align: center;
-            color: yellow;
-            font-size: 0.8rem;
-            z-index: 2;
+        #footerText {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
         }
 
-        #footerText3 {
-            position: absolute;
-            bottom: 6%;
-            left: 5%;
-            width: 90%;
-            text-align: center;
+        #footerLinks {
+            margin-bottom: 5px;
+        }
+
+        #footerLinks a {
             color: yellow;
-            font-size: 0.8rem;
-            z-index: 2;
+            text-decoration: underline;
+            margin: 0 5px;
+        }
+
+        #footerContact {
+            color: yellow;
         }
 
         #tipButton {
@@ -173,17 +172,7 @@
             border-radius: 15px;
         }
 
-        #footerText a {
-            color: yellow;
-            text-decoration: underline;
-        }
-
-        #footerText2 a {
-            color: yellow;
-            text-decoration: underline;
-        }
-
-        #footerText3 a {
+        a {
             color: yellow;
             text-decoration: underline;
         }
@@ -199,9 +188,20 @@
     <a id="downloadButton2" class="button" href="fireworks-show.html">2025 年烟花秀展示</a>
     <a id="downloadButton3" class="button" href="https://ide.m-code.top/">实时协作编辑器</a>
     <div id="infoBox">M-Code，一个由 Matthew 精心创建的软件开发个人项目组，于 2024 年 9 月创建。在这里，您将邂逅各种独具创意的实用软件。每一款软件都凝聚着 Matthew 的智慧与心血，无论是在工作效率提升方面，还是在娱乐体验上，都有着独特的魅力。软件以创新的设计和强大的功能，为您的数字生活带来全新的可能。欢迎大家前来下载和使用，一同感受 M-Code 带来的精彩与便捷！</div>
-    <div id="footerText2">如有任何疑问或建议，欢迎发送邮件至 huifeidexiaogougou@126.com，或访问 <a href="feedback.html">https://m-code.top/feedback.html</a> 进行反馈</div>
-    <div id="footerText"><a href="privacy policy.html">隐私声明</a></div>
-    <div id="footerText3"><a href="FlipClock.html">当前时间：<span id="currentTime"></span></a> </div>
+    
+    <div id="footer">
+        <div id="footerText">
+            <div id="footerLinks">
+                <a href="privacy policy.html">隐私声明</a> | 
+                <a href="feedback.html">用户反馈</a> | 
+                <a href="FlipClock.html">当前时间：<span id="currentTime"></span></a>
+            </div>
+            <div id="footerContact">
+                如有任何疑问或建议，欢迎发送邮件至 huifeidexiaogougou@126.com
+            </div>
+        </div>
+    </div>
+
     <button id="tipButton"></button>
     <div id="tipBox">提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！如遇背景音乐无法播放，请单击屏幕任意位置重试</div>
     <script>
