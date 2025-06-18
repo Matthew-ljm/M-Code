@@ -166,7 +166,7 @@
             left: 0;
             width: 100%;
             text-align: center;
-            color: rgba(255, 215, 0, 0.8);
+            color: yellow;
             font-size: 0.85rem;
             z-index: 2;
         }
@@ -183,7 +183,7 @@
         }
 
         #footerLinks a {
-            color: rgba(255, 215, 0, 0.9);
+            color: yellow;
             text-decoration: none;
             margin: 0 12px;
             transition: all 0.3s;
@@ -198,14 +198,14 @@
         }
 
         #footerContact {
-            color: rgba(255, 215, 0, 0.7);
+            color: rgb(255, 215, 0);
             font-size: 0.8rem;
         }
 
         #tipButton {
             position: absolute;
-            bottom: 8%;
-            left: 50%;
+            top: 40%;
+            left: 20%;
             transform: translateX(-50%);
             background: url('icon/提示.png') no-repeat center center/cover;
             width: 50px;
@@ -315,7 +315,7 @@
         </div>
     </div>
 
-    <button id="tipButton"></button>
+    <!-- <button id="tipButton"></button> -->
     <div id="tipBox">提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！如遇背景音乐无法播放，请单击屏幕任意位置重试</div>
     <script>
         document.getElementById('infoButton').addEventListener('click', function () {
