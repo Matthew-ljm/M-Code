@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to M-Code</title>
     <link rel="shortcut icon" href="icon/favicon.ico" type="image/x-icon">
     <style>
@@ -12,117 +13,161 @@
             padding: 0;
             height: 100%;
             overflow: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
         }
 
         body {
-            margin: 0;
             position: relative;
-            font-family: sans-serif;
+            background-color: #000;
         }
 
         img {
             width: 100vw;
             height: 100vh;
             object-fit: cover;
+            filter: brightness(0.6);
         }
 
         .text-on-top {
             position: absolute;
-            top: 0;
+            top: 12%;
             left: 0;
             width: 100%;
             text-align: center;
-            color: yellow;
-            font-size: 4rem;
+            color: #FFD700;
+            font-size: 3.5rem;
             z-index: 2;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+            font-weight: bold;
+            letter-spacing: 2px;
         }
 
         .subtext {
-            font-size: 1.5rem;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
             position: absolute;
-            top: 70px;
+            top: 22%;
             left: 0;
             width: 100%;
             text-align: center;
             z-index: 2;
         }
 
-        .button {
+        .buttons-container {
             position: absolute;
-            padding: 20px 40px;
-            text-decoration: none;
-            font-size: 1.5rem;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
             z-index: 2;
         }
 
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .button {
+            padding: 18px 35px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            z-index: 2;
+            text-align: center;
+            min-width: 220px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .button:hover::after {
+            transform: translateX(100%);
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(-2px);
+        }
+
         #infoButton {
-            top: 30%;
-            left: 20%;
-            transform: translateY(-50%);
-            background-color: yellow;
-            color: black;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
         }
 
         #downloadButton {
-            top: 30%;
-            left: 70%;
-            transform: translateY(-50%);
-            background-color: #4CAF50;
-            color: white;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
         }
 
         #downloadButton2 {
-            top: 55%;
-            left: 25%;
-            transform: translate(-50%, -50%);
-            background-color: red;
-            color: white;
-            text-align: center;
+            background: linear-gradient(135deg, #FF5252, #D32F2F);
         }
 
         #downloadButton3 {
-            top: 55%;
-            left: 75%;
-            transform: translate(-50%, -50%);
-            background-color: rgb(0, 165, 230);
-            color: white;
-            text-align: center;
-        }
-
-        #downloadButton:hover {
-            background-color: #45a049;
-        }
-
-        #infoButton:hover {
-            background-color: #e6d000;
+            background: linear-gradient(135deg, #2196F3, #1565C0);
         }
 
         #infoBox {
             position: absolute;
-            top: 37%;
-            left: 10%;
-            width: 30%;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             display: none;
-            z-index: 2;
+            z-index: 10;
             border-radius: 15px;
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -45%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
         #footer {
             position: absolute;
-            bottom: 0.5%;
+            bottom: 1%;
             left: 0;
             width: 100%;
             text-align: center;
-            color: yellow;
-            font-size: 0.8rem;
+            color: rgba(255, 215, 0, 0.8);
+            font-size: 0.85rem;
             z-index: 2;
         }
 
@@ -130,7 +175,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         #footerLinks {
@@ -138,43 +183,103 @@
         }
 
         #footerLinks a {
-            color: yellow;
-            text-decoration: underline;
-            margin: 0 5px;
+            color: rgba(255, 215, 0, 0.9);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: all 0.3s;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        #footerLinks a:hover {
+            color: white;
+            background: rgba(255, 215, 0, 0.2);
+            text-decoration: none;
         }
 
         #footerContact {
-            color: yellow;
+            color: rgba(255, 215, 0, 0.7);
+            font-size: 0.8rem;
         }
 
         #tipButton {
-            top: 52%;
-            left: 35%;
             position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
             background: url('icon/提示.png') no-repeat center center/cover;
             width: 50px;
             height: 50px;
             border: none;
             cursor: pointer;
             z-index: 2;
+            opacity: 0.8;
+            transition: all 0.3s;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+        }
+
+        #tipButton:hover {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.1);
         }
 
         #tipBox {
             position: absolute;
-            top: 63%;
-            left: 20%;
-            width: 30%;
-            background-color: rgba(255, 255, 255, 0.8);
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            max-width: 650px;
+            background: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
             display: none;
-            z-index: 2;
-            border-radius: 15px;
+            z-index: 10;
+            border-radius: 12px;
+            color: #333;
+            text-align: center;
+            font-size: 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.3s;
         }
 
-        a {
-            color: yellow;
-            text-decoration: underline;
+        @keyframes slideUp {
+            from { opacity: 0; bottom: 12%; }
+            to { opacity: 1; bottom: 15%; }
+        }
+
+        @media (max-width: 768px) {
+            .text-on-top {
+                font-size: 2.5rem;
+                top: 10%;
+            }
+            
+            .subtext {
+                font-size: 1.1rem;
+                top: 18%;
+            }
+            
+            .buttons-container {
+                top: 30%;
+                gap: 20px;
+            }
+            
+            .button-row {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+            
+            .button {
+                min-width: 200px;
+                padding: 15px 25px;
+                font-size: 1.1rem;
+            }
+            
+            #infoBox, #tipBox {
+                width: 85%;
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -183,17 +288,25 @@
     <img src="icon/background.jpg" alt="Background Image">
     <div class="text-on-top">M-Code</div>
     <div class="subtext">Crafting Exquisite Software, Empowering Your Life</div>
-    <a id="infoButton" class="button">网站简介</a>
-    <a id="downloadButton" class="button" href="download.html">软件下载</a>
-    <a id="downloadButton2" class="button" href="fireworks-show.html">2025 年烟花秀展示</a>
-    <a id="downloadButton3" class="button" href="https://ide.m-code.top/">实时协作编辑器</a>
+    
+    <div class="buttons-container">
+        <div class="button-row">
+            <a id="infoButton" class="button">网站简介</a>
+            <a id="downloadButton" class="button" href="download.html">软件下载</a>
+        </div>
+        <div class="button-row">
+            <a id="downloadButton2" class="button" href="fireworks-show.html">2025 年烟花秀展示</a>
+            <a id="downloadButton3" class="button" href="https://ide.m-code.top/">实时协作编辑器</a>
+        </div>
+    </div>
+    
     <div id="infoBox">M-Code，一个由 Matthew 精心创建的软件开发个人项目组，于 2024 年 9 月创建。在这里，您将邂逅各种独具创意的实用软件。每一款软件都凝聚着 Matthew 的智慧与心血，无论是在工作效率提升方面，还是在娱乐体验上，都有着独特的魅力。软件以创新的设计和强大的功能，为您的数字生活带来全新的可能。欢迎大家前来下载和使用，一同感受 M-Code 带来的精彩与便捷！</div>
     
     <div id="footer">
         <div id="footerText">
             <div id="footerLinks">
-                <a href="privacy policy.html">隐私声明</a> | 
-                <a href="feedback.html">用户反馈</a> | 
+                <a href="privacy policy.html">隐私声明</a>
+                <a href="feedback.html">用户反馈</a>
                 <a href="FlipClock.html">当前时间：<span id="currentTime"></span></a>
             </div>
             <div id="footerContact">
@@ -208,13 +321,13 @@
         document.getElementById('infoButton').addEventListener('click', function () {
             const infoBox = document.getElementById('infoBox');
             const currentDisplay = window.getComputedStyle(infoBox).display;
-            infoBox.style.display = currentDisplay === 'none'? 'block' : 'none';
+            infoBox.style.display = currentDisplay === 'none' ? 'block' : 'none';
         });
 
         document.getElementById('tipButton').addEventListener('click', function () {
             const tipBox = document.getElementById('tipBox');
             const currentDisplay = window.getComputedStyle(tipBox).display;
-            tipBox.style.display = currentDisplay === 'none'? 'block' : 'none';
+            tipBox.style.display = currentDisplay === 'none' ? 'block' : 'none';
         });
 
         function updateTime() {
