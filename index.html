@@ -30,7 +30,7 @@
 
         .text-on-top {
             position: absolute;
-            top: 12%;
+            top: 8%;
             left: 0;
             width: 100%;
             text-align: center;
@@ -47,7 +47,7 @@
             color: rgba(255, 255, 255, 0.9);
             text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
             position: absolute;
-            top: 22%;
+            top: 18%;
             left: 0;
             width: 100%;
             text-align: center;
@@ -314,31 +314,38 @@
             </div>
         </div>
     </div>
-
-    <!-- <button id="tipButton"></button> -->
+    
     <div id="tipBox">提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！如遇背景音乐无法播放，请单击屏幕任意位置重试</div>
+    
     <script>
-        document.getElementById('infoButton').addEventListener('click', function () {
-            const infoBox = document.getElementById('infoBox');
-            const currentDisplay = window.getComputedStyle(infoBox).display;
-            infoBox.style.display = currentDisplay === 'none' ? 'block' : 'none';
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // 网站简介按钮功能
+            document.getElementById('infoButton').addEventListener('click', function() {
+                const infoBox = document.getElementById('infoBox');
+                const currentDisplay = window.getComputedStyle(infoBox).display;
+                infoBox.style.display = currentDisplay === 'none' ? 'block' : 'none';
+            });
 
-        document.getElementById('tipButton').addEventListener('click', function () {
-            const tipBox = document.getElementById('tipBox');
-            const currentDisplay = window.getComputedStyle(tipBox).display;
-            tipBox.style.display = currentDisplay === 'none' ? 'block' : 'none';
-        });
+            // 提示按钮功能
+            document.getElementById('tipButton').addEventListener('click', function() {
+                const tipBox = document.getElementById('tipBox');
+                const currentDisplay = window.getComputedStyle(tipBox).display;
+                tipBox.style.display = currentDisplay === 'none' ? 'block' : 'none';
+            });
 
-        function updateTime() {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            document.getElementById('currentTime').textContent = hours + ':' + minutes + ':' + seconds;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
+            // 更新时间功能
+            function updateTime() {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                document.getElementById('currentTime').textContent = hours + ':' + minutes + ':' + seconds;
+            }
+            
+            // 初始更新时间并设置定时器
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
     </script>
 </body>
 
