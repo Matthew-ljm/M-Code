@@ -64,14 +64,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 100px; /* 按钮垂直间距 */
+            gap: 100px;
             z-index: 2;
         }
 
         .button-row {
             display: flex;
             justify-content: center;
-            gap: 200px; /* 按钮水平间距 */
+            gap: 200px;
             width: 100%;
         }
 
@@ -153,6 +153,17 @@
             font-size: 1.1rem;
             border: 1px solid rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.3s;
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            display: none;
         }
 
         @keyframes fadeIn {
@@ -303,6 +314,7 @@
     </div>
     
     <div id="infoBox">M-Code，一个由 Matthew 精心创建的软件开发个人项目组，于 2024 年 9 月创建。在这里，您将邂逅各种独具创意的实用软件。每一款软件都凝聚着 Matthew 的智慧与心血，无论是在工作效率提升方面，还是在娱乐体验上，都有着独特的魅力。软件以创新的设计和强大的功能，为您的数字生活带来全新的可能。欢迎大家前来下载和使用，一同感受 M-Code 带来的精彩与便捷！</div>
+    <div id="overlay"></div>
     
     <div id="footer">
         <div id="footerText">
@@ -322,10 +334,28 @@
     <div id="tipBox">提示：推荐在电脑上观看，否则可能导致不兼容或效果不佳！如遇背景音乐无法播放，请单击屏幕任意位置重试</div>
     -->
     <script>
-        document.getElementById('infoButton').addEventListener('click', function () {
+        document.getElementById('infoButton').addEventListener('click', function (e) {
+            e.stopPropagation();
             const infoBox = document.getElementById('infoBox');
-            const currentDisplay = window.getComputedStyle(infoBox).display;
-            infoBox.style.display = currentDisplay === 'none' ? 'block' : 'none';
+            const overlay = document.getElementById('overlay');
+            if (infoBox.style.display === 'none' || !infoBox.style.display) {
+                infoBox.style.display = 'block';
+                overlay.style.display = 'block';
+            } else {
+                infoBox.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            const infoBox = document.getElementById('infoBox');
+            const overlay = document.getElementById('overlay');
+            if (infoBox.style.display === 'block' && 
+                !infoBox.contains(e.target) && 
+                e.target.id !== 'infoButton') {
+                infoBox.style.display = 'none';
+                overlay.style.display = 'none';
+            }
         });
 
         /*
