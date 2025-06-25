@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片迷宫挑战</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            touch-action: none;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 600px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        #timer {
+            color: #e74c3c;
+        }
+        
+        #maze-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            border: 2px solid #333;
+            overflow: hidden;
+        }
+        
+        #maze-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        #ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            z-index: 10;
+            transition: all 0.1s ease;
+        }
+        
+        #start {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #2ecc71;
+            border-radius: 5px;
+            z-index: 5;
+        }
+        
+        #end {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            border-radius: 5px;
+            z-index: 5;
+        }
+        
+        .controls {
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        #message {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            height: 30px;
+        }
+        
+        .success {
+            color: #2ecc71;
+        }
+        
+        .fail {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>超难图片迷宫挑战</h1>
+    <div class="game-info">
+        <div>难度: <span id="difficulty">极难</span></div>
+        <div>时间: <span id="timer">60</span>秒</div>
+    </div>
+    <div id="maze-container">
+        <img id="maze-image" src="https://m-code.top/icon/migong1.jpg" alt="迷宫图片">
+        <div id="start"></div>
+        <div id="end"></div>
+        <div id="ball"></div>
+    </div>
+    <div id="message"></div>
+    <div class="controls">
+        <button id="restart">重新开始</button>
+    </div>
+
+    <script>
+        // 游戏配置
+        const config = {
+            mazeWidth: 600,
+            mazeHeight: 600,
+            ballSize: 20,
+            difficulty: "extreme",
+            timeLimits: {
+                extreme: 60,
+                hard: 90,
+                medium: 120,
+                easy: 180
+            },
+            // 定义什么颜色算作墙壁 (这里假设黑色是墙壁)
+            wallColor: {
+                r: 0,
+                g: 0,
+                b: 0,
+                threshold: 10 // 颜色相似度阈值
+            }
+        };
+        
+        // 游戏状态
+        let gameState = {
+            ballX: 0,
+            ballY: 0,
+            gameActive: false,
+            timer: null,
+            timeLeft: 0,
+            canvas: null,
+            ctx: null
+        };
+        
+        // DOM元素
+        const mazeContainer = document.getElementById("maze-container");
+        const mazeImage = document.getElementById("maze-image");
+        const ball = document.getElementById("ball");
+        const start = document.getElementById("start");
+        const end = document.getElementById("end");
+        const timerDisplay = document.getElementById("timer");
+        const difficultyDisplay = document.getElementById("difficulty");
+        const messageDisplay = document.getElementById("message");
+        const restartButton = document.getElementById("restart");
+        
+        // 初始化游戏
+        function initGame() {
+            // 设置难度
+            difficultyDisplay.textContent = "极难";
+            gameState.timeLeft = config.timeLimits[config.difficulty];
+            timerDisplay.textContent = gameState.timeLeft;
+            
+            // 设置起点和终点 (根据你的图片调整)
+            start.style.left = "30px";
+            start.style.top = "30px";
+            end.style.left = "540px";
+            end.style.top = "540px";
+            
+            // 放置小球
+            gameState.ballX = 40;
+            gameState.ballY = 40;
+            ball.style.left = gameState.ballX + "px";
+            ball.style.top = gameState.ballY + "px";
+            
+            // 清除消息
+            messageDisplay.textContent = "";
+            messageDisplay.className = "";
+            
+            // 创建隐藏的canvas用于碰撞检测
+            setupCollisionDetection();
+            
+            // 开始游戏
+            gameState.gameActive = true;
+            startTimer();
+        }
+        
+        // 设置碰撞检测用的canvas
+        function setupCollisionDetection() {
+            if (gameState.canvas) {
+                mazeContainer.removeChild(gameState.canvas);
+            }
+            
+            const canvas = document.createElement("canvas");
+            canvas.width = config.mazeWidth;
+            canvas.height = config.mazeHeight;
+            canvas.style.display = "none";
+            mazeContainer.appendChild(canvas);
+            
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
+            
+            gameState.canvas = canvas;
+            gameState.ctx = ctx;
+        }
+        
+        // 开始计时器
+        function startTimer() {
+            if (gameState.timer) {
+                clearInterval(gameState.timer);
+            }
+            
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                timerDisplay.textContent = gameState.timeLeft;
+                
+                if (gameState.timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+        
+        // 结束游戏
+        function endGame(success) {
+            gameState.gameActive = false;
+            clearInterval(gameState.timer);
+            
+            if (success) {
+                messageDisplay.textContent = "恭喜你成功了！";
+                messageDisplay.className = "success";
+            } else {
+                messageDisplay.textContent = "时间到！游戏结束";
+                messageDisplay.className = "fail";
+            }
+        }
+        
+        // 检查是否碰到墙壁
+        function checkCollision(x, y) {
+            if (!gameState.ctx) return true;
+            
+            const radius = config.ballSize / 2;
+            const centerX = x + radius;
+            const centerY = y + radius;
+            
+            // 检查小球周围的几个点
+            const pointsToCheck = [
+                {x: centerX, y: centerY}, // 中心
+                {x: x, y: y}, // 左上
+                {x: x + config.ballSize, y: y}, // 右上
+                {x: x, y: y + config.ballSize}, // 左下
+                {x: x + config.ballSize, y: y + config.ballSize} // 右下
+            ];
+            
+            for (const point of pointsToCheck) {
+                if (point.x < 0 || point.x >= config.mazeWidth || point.y < 0 || point.y >= config.mazeHeight) {
+                    return true; // 超出边界
+                }
+                
+                const pixel = gameState.ctx.getImageData(point.x, point.y, 1, 1).data;
+                // 检查颜色是否接近黑色 (墙壁)
+                if (
+                    Math.abs(pixel[0] - config.wallColor.r) < config.wallColor.threshold &&
+                    Math.abs(pixel[1] - config.wallColor.g) < config.wallColor.threshold &&
+                    Math.abs(pixel[2] - config.wallColor.b) < config.wallColor.threshold
+                ) {
+                    return true; // 碰到墙壁
+                }
+            }
+            
+            // 检查是否到达终点
+            const endRect = end.getBoundingClientRect();
+            const mazeRect = mazeContainer.getBoundingClientRect();
+            const endX = endRect.left - mazeRect.left;
+            const endY = endRect.top - mazeRect.top;
+            
+            if (
+                x + config.ballSize > endX && 
+                x < endX + 30 && 
+                y + config.ballSize > endY && 
+                y < endY + 30
+            ) {
+                endGame(true);
+                return false;
+            }
+            
+            return false; // 无碰撞
+        }
+        
+        // 鼠标/触摸移动处理
+        function handleMove(clientX, clientY) {
+            if (!gameState.gameActive) return;
+            
+            const mazeRect = mazeContainer.getBoundingClientRect();
+            const mazeX = clientX - mazeRect.left;
+            const mazeY = clientY - mazeRect.top;
+            
+            // 计算小球新位置（中心跟随鼠标）
+            let newX = mazeX - config.ballSize / 2;
+            let newY = mazeY - config.ballSize / 2;
+            
+            // 边界检查
+            newX = Math.max(0, Math.min(newX, config.mazeWidth - config.ballSize));
+            newY = Math.max(0, Math.min(newY, config.mazeHeight - config.ballSize));
+            
+            // 碰撞检测
+            if (!checkCollision(newX, newY)) {
+                gameState.ballX = newX;
+                gameState.ballY = newY;
+                ball.style.left = newX + "px";
+                ball.style.top = newY + "px";
+            }
+        }
+        
+        // 事件监听
+        mazeContainer.addEventListener("mousemove", (e) => {
+            handleMove(e.clientX, e.clientY);
+        });
+        
+        mazeContainer.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            if (e.touches.length > 0) {
+                handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: false });
+        
+        // 图片加载后初始化游戏
+        mazeImage.onload = function() {
+            initGame();
+        };
+        
+        restartButton.addEventListener("click", function() {
+            // 重新加载图片确保canvas数据正确
+            mazeImage.src = mazeImage.src; // 这会重新触发onload
+        });
+        
+        // 如果图片已经缓存可能不会触发onload
+        if (mazeImage.complete) {
+            initGame();
+        }
+    </script>
+</body>
+</html>
