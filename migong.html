@@ -2,31 +2,42 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>图片迷宫挑战</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
             touch-action: none;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            padding: 10px;
         }
         
         h1 {
             color: #333;
             margin-bottom: 10px;
+            font-size: 1.5rem;
+            text-align: center;
         }
         
         .game-info {
             display: flex;
             justify-content: space-between;
-            width: 600px;
+            width: 100%;
+            max-width: 500px;
             margin-bottom: 10px;
-            font-size: 18px;
+            font-size: 1rem;
             font-weight: bold;
         }
         
@@ -34,72 +45,125 @@
             color: #e74c3c;
         }
         
+        #maze-wrapper {
+            position: relative;
+            width: 100%;
+            flex-grow: 1;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+        }
+        
         #maze-container {
             position: relative;
-            width: 600px;
-            height: 600px;
-            border: 2px solid #333;
-            overflow: hidden;
+            max-width: 100%;
+            max-height: 100%;
+            touch-action: none;
         }
         
         #maze-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            display: block;
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            touch-action: none;
+            user-select: none;
         }
         
         #ball {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 3px;
+            height: 3px;
             background-color: #e74c3c;
             border-radius: 50%;
             z-index: 10;
-            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 3px rgba(0,0,0,0.5);
         }
         
         #start {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 10px;
+            height: 10px;
             background-color: #2ecc71;
-            border-radius: 5px;
+            border-radius: 50%;
             z-index: 5;
+            transform: translate(-50%, -50%);
         }
         
         #end {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 15px;
+            height: 15px;
             background-color: #3498db;
-            border-radius: 5px;
+            border-radius: 50%;
             z-index: 5;
+            transform: translate(-50%, -50%);
         }
         
         .controls {
-            margin-top: 20px;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
+        .direction-buttons {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left . right"
+                ". down .";
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .direction-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 0 10px;
         }
         
-        button:hover {
-            background-color: #2980b9;
+        #up-btn {
+            grid-area: up;
+        }
+        
+        #left-btn {
+            grid-area: left;
+        }
+        
+        #right-btn {
+            grid-area: right;
+        }
+        
+        #down-btn {
+            grid-area: down;
+        }
+        
+        #restart {
+            padding: 8px 16px;
+            font-size: 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         
         #message {
-            margin-top: 20px;
-            font-size: 24px;
+            margin-top: 5px;
+            font-size: 1.2rem;
             font-weight: bold;
             height: 30px;
+            text-align: center;
         }
         
         .success {
@@ -117,12 +181,23 @@
         <div>难度: <span id="difficulty">极难</span></div>
         <div>时间: <span id="timer">60</span>秒</div>
     </div>
-    <div id="maze-container">
-        <img id="maze-image" src="https://m-code.top/icon/migong1.jpg" alt="迷宫图片">
-        <div id="start"></div>
-        <div id="end"></div>
-        <div id="ball"></div>
+    
+    <div class="direction-buttons">
+        <button id="up-btn" class="direction-btn">↑</button>
+        <button id="left-btn" class="direction-btn">←</button>
+        <button id="right-btn" class="direction-btn">→</button>
+        <button id="down-btn" class="direction-btn">↓</button>
     </div>
+    
+    <div id="maze-wrapper">
+        <div id="maze-container">
+            <img id="maze-image" src="https://m-code.top/icon/migong1.jpg" alt="迷宫图片">
+            <div id="start"></div>
+            <div id="end"></div>
+            <div id="ball"></div>
+        </div>
+    </div>
+    
     <div id="message"></div>
     <div class="controls">
         <button id="restart">重新开始</button>
@@ -131,9 +206,7 @@
     <script>
         // 游戏配置
         const config = {
-            mazeWidth: 600,
-            mazeHeight: 600,
-            ballSize: 20,
+            ballSize: 3,
             difficulty: "extreme",
             timeLimits: {
                 extreme: 60,
@@ -141,59 +214,75 @@
                 medium: 120,
                 easy: 180
             },
-            // 定义什么颜色算作墙壁 (这里假设黑色是墙壁)
+            // 墙壁颜色检测设置
             wallColor: {
-                r: 0,
-                g: 0,
-                b: 0,
-                threshold: 10 // 颜色相似度阈值
-            }
+                minDarkness: 50 // 被认为是墙壁的最小灰度值(0-255)
+            },
+            collisionCheckPoints: 12 // 碰撞检测点数(圆形周围)
         };
         
         // 游戏状态
         let gameState = {
-            ballX: 0,
-            ballY: 0,
+            ballPos: { x: 0, y: 0 },
             gameActive: false,
             timer: null,
             timeLeft: 0,
             canvas: null,
-            ctx: null
+            ctx: null,
+            imageSize: { width: 0, height: 0 },
+            displaySize: { width: 0, height: 0 },
+            scale: 1
         };
         
         // DOM元素
-        const mazeContainer = document.getElementById("maze-container");
-        const mazeImage = document.getElementById("maze-image");
-        const ball = document.getElementById("ball");
-        const start = document.getElementById("start");
-        const end = document.getElementById("end");
-        const timerDisplay = document.getElementById("timer");
-        const difficultyDisplay = document.getElementById("difficulty");
-        const messageDisplay = document.getElementById("message");
-        const restartButton = document.getElementById("restart");
+        const elements = {
+            mazeWrapper: document.getElementById("maze-wrapper"),
+            mazeContainer: document.getElementById("maze-container"),
+            mazeImage: document.getElementById("maze-image"),
+            ball: document.getElementById("ball"),
+            start: document.getElementById("start"),
+            end: document.getElementById("end"),
+            timerDisplay: document.getElementById("timer"),
+            difficultyDisplay: document.getElementById("difficulty"),
+            messageDisplay: document.getElementById("message"),
+            restartButton: document.getElementById("restart"),
+            upBtn: document.getElementById("up-btn"),
+            leftBtn: document.getElementById("left-btn"),
+            rightBtn: document.getElementById("right-btn"),
+            downBtn: document.getElementById("down-btn")
+        };
         
         // 初始化游戏
         function initGame() {
+            // 清除旧状态
+            if (gameState.timer) clearInterval(gameState.timer);
+            if (gameState.canvas) document.body.removeChild(gameState.canvas);
+            
             // 设置难度
-            difficultyDisplay.textContent = "极难";
+            elements.difficultyDisplay.textContent = "极难";
             gameState.timeLeft = config.timeLimits[config.difficulty];
-            timerDisplay.textContent = gameState.timeLeft;
-            
-            // 设置起点和终点 (根据你的图片调整)
-            start.style.left = "30px";
-            start.style.top = "30px";
-            end.style.left = "540px";
-            end.style.top = "540px";
-            
-            // 放置小球
-            gameState.ballX = 40;
-            gameState.ballY = 40;
-            ball.style.left = gameState.ballX + "px";
-            ball.style.top = gameState.ballY + "px";
+            elements.timerDisplay.textContent = gameState.timeLeft;
             
             // 清除消息
-            messageDisplay.textContent = "";
-            messageDisplay.className = "";
+            elements.messageDisplay.textContent = "";
+            elements.messageDisplay.className = "";
+            
+            // 设置图片尺寸
+            gameState.imageSize = {
+                width: elements.mazeImage.naturalWidth,
+                height: elements.mazeImage.naturalHeight
+            };
+            
+            // 计算显示尺寸和缩放比例
+            calculateDisplaySize();
+            
+            // 设置起点和终点 (根据你的图片调整)
+            setPosition(elements.start, 50, 50); // 起点位置
+            setPosition(elements.end, gameState.imageSize.width - 50, gameState.imageSize.height - 50); // 终点位置
+            
+            // 放置小球
+            setPosition(elements.ball, 50, 50);
+            gameState.ballPos = { x: 50, y: 50 };
             
             // 创建隐藏的canvas用于碰撞检测
             setupCollisionDetection();
@@ -203,20 +292,50 @@
             startTimer();
         }
         
-        // 设置碰撞检测用的canvas
-        function setupCollisionDetection() {
-            if (gameState.canvas) {
-                mazeContainer.removeChild(gameState.canvas);
+        // 计算图片显示尺寸和缩放比例
+        function calculateDisplaySize() {
+            const containerWidth = elements.mazeWrapper.clientWidth;
+            const containerHeight = elements.mazeWrapper.clientHeight;
+            
+            const imgRatio = gameState.imageSize.width / gameState.imageSize.height;
+            const containerRatio = containerWidth / containerHeight;
+            
+            if (imgRatio > containerRatio) {
+                // 图片比容器更宽
+                gameState.displaySize.width = containerWidth;
+                gameState.displaySize.height = containerWidth / imgRatio;
+                gameState.scale = containerWidth / gameState.imageSize.width;
+            } else {
+                // 图片比容器更高或比例相同
+                gameState.displaySize.height = containerHeight;
+                gameState.displaySize.width = containerHeight * imgRatio;
+                gameState.scale = containerHeight / gameState.imageSize.height;
             }
             
+            // 设置容器尺寸
+            elements.mazeContainer.style.width = `${gameState.displaySize.width}px`;
+            elements.mazeContainer.style.height = `${gameState.displaySize.height}px`;
+        }
+        
+        // 设置元素位置(基于原始图片坐标)
+        function setPosition(element, imgX, imgY) {
+            const x = imgX * gameState.scale;
+            const y = imgY * gameState.scale;
+            
+            element.style.left = `${x}px`;
+            element.style.top = `${y}px`;
+        }
+        
+        // 设置碰撞检测用的canvas
+        function setupCollisionDetection() {
             const canvas = document.createElement("canvas");
-            canvas.width = config.mazeWidth;
-            canvas.height = config.mazeHeight;
+            canvas.width = gameState.imageSize.width;
+            canvas.height = gameState.imageSize.height;
             canvas.style.display = "none";
-            mazeContainer.appendChild(canvas);
+            document.body.appendChild(canvas);
             
             const ctx = canvas.getContext("2d");
-            ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(elements.mazeImage, 0, 0, canvas.width, canvas.height);
             
             gameState.canvas = canvas;
             gameState.ctx = ctx;
@@ -224,13 +343,9 @@
         
         // 开始计时器
         function startTimer() {
-            if (gameState.timer) {
-                clearInterval(gameState.timer);
-            }
-            
             gameState.timer = setInterval(() => {
                 gameState.timeLeft--;
-                timerDisplay.textContent = gameState.timeLeft;
+                elements.timerDisplay.textContent = gameState.timeLeft;
                 
                 if (gameState.timeLeft <= 0) {
                     endGame(false);
@@ -244,58 +359,51 @@
             clearInterval(gameState.timer);
             
             if (success) {
-                messageDisplay.textContent = "恭喜你成功了！";
-                messageDisplay.className = "success";
+                elements.messageDisplay.textContent = "恭喜你成功了！";
+                elements.messageDisplay.className = "success";
             } else {
-                messageDisplay.textContent = "时间到！游戏结束";
-                messageDisplay.className = "fail";
+                elements.messageDisplay.textContent = "时间到！游戏结束";
+                elements.messageDisplay.className = "fail";
             }
         }
         
         // 检查是否碰到墙壁
-        function checkCollision(x, y) {
-            if (!gameState.ctx) return true;
+        function checkCollision(imgX, imgY) {
+            if (!gameState.ctx) return false;
             
             const radius = config.ballSize / 2;
-            const centerX = x + radius;
-            const centerY = y + radius;
             
-            // 检查小球周围的几个点
-            const pointsToCheck = [
-                {x: centerX, y: centerY}, // 中心
-                {x: x, y: y}, // 左上
-                {x: x + config.ballSize, y: y}, // 右上
-                {x: x, y: y + config.ballSize}, // 左下
-                {x: x + config.ballSize, y: y + config.ballSize} // 右下
-            ];
-            
-            for (const point of pointsToCheck) {
-                if (point.x < 0 || point.x >= config.mazeWidth || point.y < 0 || point.y >= config.mazeHeight) {
-                    return true; // 超出边界
+            // 检查小球周围的多个点(圆形分布)
+            for (let i = 0; i < config.collisionCheckPoints; i++) {
+                const angle = (i / config.collisionCheckPoints) * Math.PI * 2;
+                const checkX = imgX + Math.cos(angle) * radius;
+                const checkY = imgY + Math.sin(angle) * radius;
+                
+                // 确保检查点在图像范围内
+                if (checkX < 0 || checkX >= gameState.imageSize.width || 
+                    checkY < 0 || checkY >= gameState.imageSize.height) {
+                    return true;
                 }
                 
-                const pixel = gameState.ctx.getImageData(point.x, point.y, 1, 1).data;
-                // 检查颜色是否接近黑色 (墙壁)
-                if (
-                    Math.abs(pixel[0] - config.wallColor.r) < config.wallColor.threshold &&
-                    Math.abs(pixel[1] - config.wallColor.g) < config.wallColor.threshold &&
-                    Math.abs(pixel[2] - config.wallColor.b) < config.wallColor.threshold
-                ) {
+                const pixel = gameState.ctx.getImageData(Math.floor(checkX), Math.floor(checkY), 1, 1).data;
+                
+                // 计算灰度值
+                const darkness = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2];
+                
+                if (darkness < config.wallColor.minDarkness) {
                     return true; // 碰到墙壁
                 }
             }
             
             // 检查是否到达终点
-            const endRect = end.getBoundingClientRect();
-            const mazeRect = mazeContainer.getBoundingClientRect();
-            const endX = endRect.left - mazeRect.left;
-            const endY = endRect.top - mazeRect.top;
+            const endRect = elements.end.getBoundingClientRect();
+            const ballRect = elements.ball.getBoundingClientRect();
             
             if (
-                x + config.ballSize > endX && 
-                x < endX + 30 && 
-                y + config.ballSize > endY && 
-                y < endY + 30
+                ballRect.right > endRect.left && 
+                ballRect.left < endRect.right && 
+                ballRect.bottom > endRect.top && 
+                ballRect.top < endRect.bottom
             ) {
                 endGame(true);
                 return false;
@@ -304,56 +412,81 @@
             return false; // 无碰撞
         }
         
-        // 鼠标/触摸移动处理
-        function handleMove(clientX, clientY) {
+        // 移动小球
+        function moveBall(dx, dy) {
             if (!gameState.gameActive) return;
             
-            const mazeRect = mazeContainer.getBoundingClientRect();
-            const mazeX = clientX - mazeRect.left;
-            const mazeY = clientY - mazeRect.top;
+            const newX = gameState.ballPos.x + dx;
+            const newY = gameState.ballPos.y + dy;
             
-            // 计算小球新位置（中心跟随鼠标）
-            let newX = mazeX - config.ballSize / 2;
-            let newY = mazeY - config.ballSize / 2;
-            
-            // 边界检查
-            newX = Math.max(0, Math.min(newX, config.mazeWidth - config.ballSize));
-            newY = Math.max(0, Math.min(newY, config.mazeHeight - config.ballSize));
+            // 检查是否在图片范围内
+            if (newX < 0 || newX > gameState.imageSize.width || 
+                newY < 0 || newY > gameState.imageSize.height) {
+                return;
+            }
             
             // 碰撞检测
             if (!checkCollision(newX, newY)) {
-                gameState.ballX = newX;
-                gameState.ballY = newY;
-                ball.style.left = newX + "px";
-                ball.style.top = newY + "px";
+                gameState.ballPos = { x: newX, y: newY };
+                setPosition(elements.ball, newX, newY);
             }
         }
         
-        // 事件监听
-        mazeContainer.addEventListener("mousemove", (e) => {
-            handleMove(e.clientX, e.clientY);
+        // 方向按钮事件监听
+        elements.upBtn.addEventListener("click", () => moveBall(0, -1));
+        elements.leftBtn.addEventListener("click", () => moveBall(-1, 0));
+        elements.rightBtn.addEventListener("click", () => moveBall(1, 0));
+        elements.downBtn.addEventListener("click", () => moveBall(0, 1));
+        
+        // 键盘控制
+        document.addEventListener("keydown", (e) => {
+            switch(e.key) {
+                case "ArrowUp":
+                    moveBall(0, -1);
+                    break;
+                case "ArrowLeft":
+                    moveBall(-1, 0);
+                    break;
+                case "ArrowRight":
+                    moveBall(1, 0);
+                    break;
+                case "ArrowDown":
+                    moveBall(0, 1);
+                    break;
+            }
         });
         
-        mazeContainer.addEventListener("touchmove", (e) => {
-            e.preventDefault();
-            if (e.touches.length > 0) {
-                handleMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-        }, { passive: false });
-        
         // 图片加载后初始化游戏
-        mazeImage.onload = function() {
-            initGame();
+        elements.mazeImage.onload = function() {
+            // 确保图片完全加载
+            setTimeout(initGame, 100);
         };
         
-        restartButton.addEventListener("click", function() {
+        elements.restartButton.addEventListener("click", function() {
             // 重新加载图片确保canvas数据正确
-            mazeImage.src = mazeImage.src; // 这会重新触发onload
+            const imgSrc = elements.mazeImage.src;
+            elements.mazeImage.src = "";
+            setTimeout(() => elements.mazeImage.src = imgSrc, 10);
+        });
+        
+        // 防止页面缩放
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        // 窗口大小变化时重新计算
+        window.addEventListener('resize', function() {
+            if (gameState.gameActive) {
+                calculateDisplaySize();
+                setPosition(elements.ball, gameState.ballPos.x, gameState.ballPos.y);
+                setPosition(elements.start, 50, 50);
+                setPosition(elements.end, gameState.imageSize.width - 50, gameState.imageSize.height - 50);
+            }
         });
         
         // 如果图片已经缓存可能不会触发onload
-        if (mazeImage.complete) {
-            initGame();
+        if (elements.mazeImage.complete) {
+            setTimeout(initGame, 100);
         }
     </script>
 </body>
