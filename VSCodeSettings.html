@@ -48,6 +48,18 @@
             border-left: 4px solid #2196f3;
             margin: 15px 0;
         }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 30px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -96,7 +108,7 @@
         <p>launch.json用于配置调试相关设置，以实现VSCode中的代码调试功能。</p>
         <p>配置步骤：</p>
         <ol>
-            <li class="step">将“RunAndDebug.exe”下载到工作目录中。</li>
+            <li class="step">将“<a href="software/RunAndDebug.exe">RunAndDebug.exe</a>”下载到工作目录中。</li>
             <li class="step">在<code>.vscode</code>文件夹中创建<code>launch.json</code>。</li>
             <li class="step">将以下内容复制到<code>launch.json</code>并将<code>C:\\Mingw64\\bin\\gdb.exe</code>替换为您的gdb路径：</li>
         </ol>
@@ -139,5 +151,6 @@
         <p>来源：<a href="https://m-code.top" target="_blank">m-code.top</a></p>
         <p>最后更新：2025年7月29日星期二</p>
     </div>
+    <a href="index.html" class="button">返回主页</a>
 </body>
 </html>
