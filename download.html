@@ -86,6 +86,52 @@
         .highlighted-link2 {
             color: greenyellow;
         }
+
+        #tipButton {
+            position: absolute;
+            bottom: 23%;
+            left: 37%;
+            transform: translateX(-50%);
+            background: url('icon/提示.png') no-repeat center center/cover;
+            width: 50px;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0.8;
+            transition: all 0.3s;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+        }
+
+        #tipButton:hover {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        #tipBox {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            max-width: 650px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 10;
+            border-radius: 12px;
+            color: #333;
+            text-align: center;
+            font-size: 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; bottom: 0%; }
+            to { opacity: 1; bottom: 10%; }
+        }
     </style>
 </head>
 
@@ -95,6 +141,8 @@
     <a class="highlighted-link" href="test-file">访问 https://m-code.top/test-file 可查看测试文件及内部应用</a>
     <div id="footerText2">更多线上工具：<a class="highlighted-link2" href="png-ico.html">PNG转ICO</a><a>，</a><a class="highlighted-link2" href="cardmatch.html">翻牌消消乐</a> </div>
     <div id="footerText">更多内容敬请期待</div>
+    <button id="tipButton"></button>
+    <div id="tipBox">提示：VSCode C++ 运行和调试插件可以给出更详细的C++调试信息并且支持中文路径，详细配置教程请访问<a href="VSCodeSettings.html">https://m-code.top/VSCodeSettings.html</a></div>
     <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='index.html'"><返回主页</button>
     <button class="download-button" style="left:10%;" onclick="window.location.href='lupingruanjian'">录屏软件</button>
     <button class="download-button" style="left:40%;" onclick="window.location.href='chouqianzhushou'">抽签助手</button>
@@ -110,7 +158,22 @@
     <button class="download-button" style="left:70%;top:50%;" onclick="window.location.href='software/窗口置顶程序.exe'">窗口置顶程序</button>
     <button class="download-button" style="left:10%;top:60%;" onclick="window.location.href='software/Proxy Monitor.exe'">代理监视器</button>
     <button class="download-button" style="left:40%;top:60%;" onclick="window.location.href='software/error408升级版.7z'">error408升级版</button>
-    <button class="download-button" style="left:70%;top:60%;" onclick="window.location.href='software/桌面保护程序安装包.exe'">桌面保护程序安装包</button>
+    <button class="download-button" style="left:70%;top:60%;" onclick="window.location.href='software/桌面保护程序安装包.exe'">桌面保护程序</button>
+    <button class="download-button" style="left:10%;top:70%;" onclick="window.location.href='software/鲁班锁教学演示安装包.exe'">鲁班锁教学演示</button>
+    <button class="download-button" style="left:40%;top:70%;" onclick="window.location.href='software/RunAndDebug.exe'">VSCode C++ 运行和调试插件</button>
 </body>
+
+<script>
+    const tipButton = document.getElementById('tipButton');
+    const tipBox = document.getElementById('tipBox');
+    
+    tipButton.addEventListener('click', function() {
+        if (tipBox.style.display === 'block') {
+            tipBox.style.display = 'none';
+        } else {
+            tipBox.style.display = 'block';
+        }
+    });
+</script>
 
 </html>
