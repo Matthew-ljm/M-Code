@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSCode RunAndDebug 插件配置指南</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .step {
+            margin: 15px 0;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, monospace;
+        }
+        code {
+            font-family: Consolas, Monaco, monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .note {
+            background-color: #e3f2fd;
+            padding: 10px 15px;
+            border-left: 4px solid #2196f3;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>VSCode RunAndDebug 插件配置指南</h1>
+
+    <div class="section">
+        <h2>一、首先请确定您的工作区</h2>
+        <p>确定工作区是进行后续配置的前提，它是您在VSCode中开展项目工作的目录环境。您可以通过打开特定文件夹作为工作区，也可加载已有的<code>.code-workspace</code>工作区文件来确定。</p>
+    </div>
+
+    <div class="section">
+        <h2>二、配置tasks.json内容</h2>
+        <p>tasks.json用于定义VSCode中的可执行任务，如代码编译。</p>
+        <p>配置方式如下：</p>
+        <ol>
+            <li class="step">在已确定的工作区中，新建<code>.vscode</code>文件夹，在文件夹中创建<code>tasks.json</code>。</li>
+            <li class="step">将以下内容复制到<code>tasks.json</code>并将<code>C:\\Mingw64\\bin\\g++.exe</code>替换为您的Mingw64编译器路径（可从官网<a href="https://www.mingw-w64.org/downloads/" target="_blank">https://www.mingw-w64.org/downloads/</a>下载）：</li>
+        </ol>
+        <pre><code>{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Build with GBK",
+            "command": "cmd",
+        "args": [
+            "/c",
+            "chcp 936>nul && \"C:\\Mingw64\\bin\\g++.exe\" -fdiagnostics-color=always -g \"${file}\" -o \"${fileDirname}\\${fileBasenameNoExtension}.exe\""
+        ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}</code></pre>
+        <p>可根据项目实际需求，调整命令和参数等内容。</p>
+    </div>
+
+    <div class="section">
+        <h2>三、配置launch.json内容</h2>
+        <p>launch.json用于配置调试相关设置，以实现VSCode中的代码调试功能。</p>
+        <p>配置步骤：</p>
+        <ol>
+            <li class="step">将“RunAndDebug.exe”下载到工作目录中。</li>
+            <li class="step">在<code>.vscode</code>文件夹中创建<code>launch.json</code>。</li>
+            <li class="step">将以下内容复制到<code>launch.json</code>并将<code>C:\\Mingw64\\bin\\gdb.exe</code>替换为您的gdb路径：</li>
+        </ol>
+        <pre><code>{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug with GBK",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "D:\\C++\\RunAndDebug.exe",
+            "args": ["${file}"],  // 将当前文件路径作为参数传递给RunAndDebug.exe
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\Mingw64\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build with GBK"
+        }
+    ]
+}</code></pre>
+        <p>需依据具体项目类型和调试需求，修改相关参数。</p>
+    </div>
+
+    <div class="section">
+        <h2>反馈与支持</h2>
+        <p>如果您对本教程有任何疑问、意见或建议，您可以通过以下方式联系我们：</p>
+        <ol>
+            <li>电子邮箱：<a href="mailto:huifeidexiaogougou@126.com">huifeidexiaogougou@126.com</a></li>
+            <li>在线反馈：您可通过<a href="https://m-code.top/feedback.html" target="_blank">https://m-code.top/feedback.html</a>进行反馈。</li>
+        </ol>
+        <p>来源：<a href="https://m-code.top" target="_blank">m-code.top</a></p>
+        <p>最后更新：2025年7月29日星期二</p>
+    </div>
+</body>
+</html>
