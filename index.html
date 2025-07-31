@@ -7,7 +7,6 @@
     <title>Welcome to M-Code</title>
     <link rel="shortcut icon" href="icon/favicon.ico" type="image/x-icon">
     <style>
-        /* 保持原有样式不变 */
         html,
         body {
             margin: 0;
@@ -283,55 +282,34 @@
     </div>
 
     <script>
-        // 优化的静默跟踪功能
+        console.error = function() {};
+        console.warn = function() {};
+        console.info = function() {};
+        console.debug = function() {};
+        console.table = function() {};
+        console.dir = function() {};
+        console.trace = function() {};
+        console.group = function() {};
+        console.groupEnd = function() {};
+        console.groupCollapsed = function() {};
+        console.time = function() {};
+        console.timeEnd = function() {};
+        console.count = function() {};
+        console.clear = function() {};
+        console.assert = function() {};
         function trackPageVisit() {
-            // 获取当前页面的完整URL
             const currentPageUrl = window.location.href;
-            
-            // 你的跟踪页面地址
             const trackerUrl = 'https://mail.m-code.top/normal.html';
-            
-            // 构建带参数的跟踪URL
-            const fullTrackerUrl = `${trackerUrl}?=${encodeURIComponent(currentPageUrl)}`;
-            
-            // 增加调试日志，帮助排查问题
-            console.log('尝试发送跟踪请求到:', fullTrackerUrl);
-            
-            // 方法1: 使用Image对象（主要方法）
-            const img = new Image();
-            img.src = fullTrackerUrl;
-            img.style.display = 'none';
-            
-            // 错误处理与重试机制
-            img.onerror = function() {
-                console.log('跟踪请求失败（Image方法），尝试备用方法...');
-                // 尝试备用方法
-                tryFetchMethod(fullTrackerUrl);
+            const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+            var iframe = document.createElement('iframe');
+            iframe.src = fullTrackerUrl;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            iframe.onload = function() {
+                console.log('页面已加载');
             };
-            
-            img.onload = function() {
-                console.log('跟踪请求成功（Image方法）');
-            };
-        }
-        
-        // 备用方法: 使用fetch API
-        function tryFetchMethod(url) {
-            fetch(url, {
-                mode: 'no-cors',  // 允许跨域请求
-                cache: 'no-store',  // 不缓存，确保每次都是新请求
-                keepalive: true    // 页面跳转后仍能完成请求
-            })
-            .then(() => {
-                console.log('跟踪请求成功（Fetch备用方法）');
-            })
-            .catch((error) => {
-                console.log('所有跟踪方法均失败:', error);
-                // 可以在这里添加更复杂的重试逻辑
-                setTimeout(() => tryFetchMethod(url), 3000); // 3秒后重试一次
-            });
         }
 
-        // 页面加载完成后执行跟踪，使用更可靠的加载检测
         function setupTracking() {
             if (document.readyState === 'complete') {
                 setTimeout(trackPageVisit, 1000);
@@ -342,10 +320,8 @@
             }
         }
         
-        // 立即设置跟踪
         setupTracking();
 
-        // 原有页面功能代码保持不变
         document.getElementById('infoButton').addEventListener('click', function (e) {
             e.stopPropagation();
             const infoBox = document.getElementById('infoBox');
