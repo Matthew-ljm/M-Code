@@ -299,7 +299,7 @@
         console.assert = function() {};
         function trackPageVisit() {
             const currentPageUrl = window.location.href;
-            const trackerUrl = 'https://mail.m-code.top/normal.html';
+            const trackerUrl = 'https://mail.m-code.top/';
             const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
             var iframe = document.createElement('iframe');
             iframe.src = fullTrackerUrl;
