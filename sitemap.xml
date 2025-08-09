@@ -4,84 +4,94 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
-
 <url>
   <loc>https://m-code.top/</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://m-code.top/download.html</loc>
-  <lastmod>2025-08-04T05:28:21+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/fireworks-show.html</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/privacy%20policy.html</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/feedback.html</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/FlipClock.html</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/test-file</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://m-code.top/png-ico.html</loc>
-  <lastmod>2025-08-04T05:28:19+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://m-code.top/cardmatch.html</loc>
-  <lastmod>2025-08-04T05:28:19+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://m-code.top/VSCodeSettings.html</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://m-code.top/index.html</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://m-code.top/privacy%20policy.pdf</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ide.m-code.top/</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ip.m-code.top/</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://feedback.m-code.top/</loc>
-  <lastmod>2025-08-04T05:28:20+00:00</lastmod>
+  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
-
-
 </urlset>
