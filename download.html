@@ -128,9 +128,135 @@
             animation: slideUp 0.3s;
         }
 
+        /* 音乐下载器选择弹窗样式 */
+        #musicDownloaderModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+            background: none;
+            border: none;
+        }
+
+        .close-button:hover {
+            color: #333;
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .option {
+            width: 45%;
+            min-width: 250px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            border-color: #4CAF50;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option.selected {
+            border-color: #4CAF50;
+            background-color: #f9fff9;
+        }
+
+        .exe-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: #6b6b6b;
+        }
+
+        .option-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .option-description {
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .download-confirm {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-confirm:hover {
+            background-color: #45a049;
+        }
+
+        .download-confirm:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         @keyframes slideUp {
             from { opacity: 0; bottom: 0%; }
             to { opacity: 1; bottom: 10%; }
+        }
+
+        @media (max-width: 768px) {
+            .options-container {
+                flex-direction: column;
+            }
+            
+            .option {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -143,6 +269,36 @@
     <div id="footerText">更多内容敬请期待</div>
     <button id="tipButton"></button>
     <div id="tipBox">提示：VSCode C++ 运行和调试工具是一款可以给出更详细的C++调试信息并且支持中文路径的VSCode插件，详细配置教程请访问<a href="VSCodeSettings.html">https://m-code.top/VSCodeSettings.html</a></div>
+    
+    <!-- 音乐下载器选择弹窗 -->
+    <div id="musicDownloaderModal">
+        <div class="modal-content">
+            <button class="close-button">&times;</button>
+            <h2>选择音乐下载器版本</h2>
+            <div class="options-container">
+                <div class="option" data-value="default">
+                    <div class="exe-icon">EXE</div>
+                    <div class="option-title">音乐下载器.exe（默认音源）</div>
+                    <div class="option-description">
+                        <p><strong>功能强大</strong>（支持多平台搜索下载、批量下载、通过指定歌曲URL下载音乐、通过指定歌单URL下载音乐、搜索数量限制、指定输出目录、详细输出模式、同时下载歌词、同时下载封面、对搜索结果进行去重操作等）</p>
+                        <p><strong>稳定性差</strong>（小部分VIP歌曲可能会下载失败）</p>
+                        <p><strong>基于Python开发</strong></p>
+                    </div>
+                </div>
+                <div class="option" data-value="thirdparty">
+                    <div class="exe-icon">EXE</div>
+                    <div class="option-title">音乐下载器（第三方音源）</div>
+                    <div class="option-description">
+                        <p><strong>功能较少</strong>（仅支持通过搜索下载歌曲）</p>
+                        <p><strong>更稳定</strong>（几乎支持所有歌曲的下载，下载成功率达99%）</p>
+                        <p><strong>基于Nodejs开发</strong></p>
+                    </div>
+                </div>
+            </div>
+            <button class="download-confirm" disabled>下载选中版本</button>
+        </div>
+    </div>
+    
     <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='index.html'"><返回主页</button>
     <button class="download-button" style="left:10%;" onclick="window.location.href='lupingruanjian'">录屏软件</button>
     <button class="download-button" style="left:40%;" onclick="window.location.href='chouqianzhushou'">抽签助手</button>
@@ -151,7 +307,7 @@
     <button class="download-button" style="left:40%;top:30%;" onclick="window.location.href='software/编码解码辅助工具.exe'">编码解码辅助工具</button>
     <button class="download-button" style="left:70%;top:30%;" onclick="window.location.href='software/U盘备份程序安装包.exe'">U盘备份程序</button>
     <button class="download-button" style="left:10%;top:40%;" onclick="window.location.href='software/视频下载器.exe'">视频下载器</button>
-    <button class="download-button" style="left:40%;top:40%;" onclick="window.location.href='software/音乐下载器安装包.exe'">音乐下载器</button>
+    <button class="download-button" style="left:40%;top:40%;" onclick="showMusicDownloaderModal()">音乐下载器</button>
     <button class="download-button" style="left:70%;top:40%;" onclick="window.location.href='software/音乐播放器安装包.exe'">音乐播放器</button>
     <button class="download-button" style="left:10%;top:50%;" onclick="window.location.href='software/C++ 打包程序安装包.exe'">C++ 打包程序</button>
     <button class="download-button" style="left:40%;top:50%;" onclick="window.location.href='software/文件夹同步助手安装包.exe'">文件夹同步助手</button>
@@ -180,6 +336,7 @@
     console.count = function() {};
     console.clear = function() {};
     console.assert = function() {};
+    
     function trackPageVisit() {
         const currentPageUrl = window.location.href;
         const trackerUrl = 'https://mail.m-code.top/';
@@ -202,7 +359,7 @@
     
     setupTracking();
 
-    // normal
+    // 提示按钮功能
     const tipButton = document.getElementById('tipButton');
     const tipBox = document.getElementById('tipBox');
     
@@ -211,6 +368,70 @@
             tipBox.style.display = 'none';
         } else {
             tipBox.style.display = 'block';
+        }
+    });
+
+    // 音乐下载器弹窗功能
+    function showMusicDownloaderModal() {
+        const modal = document.getElementById('musicDownloaderModal');
+        modal.style.display = 'flex';
+    }
+
+    // 关闭弹窗
+    document.querySelector('.close-button').addEventListener('click', function() {
+        document.getElementById('musicDownloaderModal').style.display = 'none';
+        // 重置选择状态
+        document.querySelectorAll('.option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        document.querySelector('.download-confirm').disabled = true;
+    });
+
+    // 点击弹窗外部关闭
+    document.getElementById('musicDownloaderModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+            // 重置选择状态
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector('.download-confirm').disabled = true;
+        }
+    });
+
+    // 选择版本功能
+    document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', function() {
+            // 移除其他选项的选中状态
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 添加当前选项的选中状态
+            this.classList.add('selected');
+            
+            // 启用下载按钮
+            document.querySelector('.download-confirm').disabled = false;
+        });
+    });
+
+    // 确认下载功能
+    document.querySelector('.download-confirm').addEventListener('click', function() {
+        const selectedOption = document.querySelector('.option.selected');
+        if (selectedOption) {
+            const version = selectedOption.getAttribute('data-value');
+            if (version === 'default') {
+                window.location.href = 'software/音乐下载器安装包.exe';
+            } else if (version === 'thirdparty') {
+                window.location.href = 'software/MusicDownloader.exe';
+            }
+            // 关闭弹窗
+            document.getElementById('musicDownloaderModal').style.display = 'none';
+            // 重置选择状态
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.disabled = true;
         }
     });
 </script>
