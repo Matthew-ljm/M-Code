@@ -1,0 +1,55 @@
+{
+  "desc": "0.2.0",
+  "plugins": [
+    {
+      "name": "歌词网",
+      "url": "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/geciwang/index.js",
+      "version": "0.0.0"
+    },
+    {
+      "name": "猫耳FM",
+      "url": "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/maoerfm/index.js",
+      "version": "0.1.4"
+    },
+    {
+      "name": "音悦台",
+      "url": "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/yinyuetai/index.js",
+      "version": "0.0.1"
+    },
+    {
+      "name": "bilibili",
+      "url": "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/bilibili/index.js",
+      "version": "0.2.3"
+    },
+    {
+      "name": "歌曲宝",
+      "url": "https://gitee.com/kevinr/tvbox/raw/master/musicfree/plugins/gequbao.js",
+      "version": "0.0.6"
+    },
+    {
+      "name": "酷狗",
+      "url": "https://gitee.com/kevinr/tvbox/raw/master/musicfree/plugins/kugou.js",
+      "version": "0.1.4"
+    },
+    {
+      "name": "网易",
+      "url": "http://music.haitangw.net/cqapi/wy.js",
+      "version": "0.1.0"
+    },
+    {
+      "name": "酷我",
+      "url": "http://music.haitangw.net/cqapi/kw.js",
+      "version": "0.1.0"
+    },
+    {
+      "name": "QQ",
+      "url": "http://music.haitangw.net/cqapi/qq.js",
+      "version": "0.1.0"
+    },
+    {
+      "name": "咪咕",
+      "url": "http://music.haitangw.net/cqapi/xiaomi.js",
+      "version": "0.1.0"
+    }
+  ]
+}
