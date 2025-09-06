@@ -385,7 +385,7 @@ def create_lucky_draw_frame(parent):
             messagebox.showerror("错误", "请输入有效数字", parent=main_frame)
 
     def create_draw_execution_interface(students, draw_types):
-        """创建抓阄执行界面"""
+        """创建抓阄执行界面（添加连续抽取功能）"""
         container = tk.Frame(main_frame, bg='lightgreen')
         container.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
@@ -438,9 +438,16 @@ def create_lucky_draw_frame(parent):
         result_text.config(state=tk.DISABLED)
         
         # 当前学生显示
-        current_student_var = tk.StringVar(value="")
+        current_student_var = tk.StringVar(value="准备开始...")
         tk.Label(main_frame, textvariable=current_student_var, 
                 bg='lightgreen', font=("楷体", 18)).pack(pady=5)
+        
+        # 自动抽取复选框
+        auto_draw_var = tk.BooleanVar()
+        auto_draw_check = tk.Checkbutton(main_frame, text="自动抽取", 
+                                       variable=auto_draw_var,
+                                       bg='lightgreen', font=("楷体", 14))
+        auto_draw_check.pack()
         
         # 控制按钮框架
         button_frame = tk.Frame(main_frame, bg='lightgreen')
@@ -513,6 +520,14 @@ def create_lucky_draw_frame(parent):
             
             # 更新结果显示
             update_result_display()
+            
+            # 自动抽取逻辑
+            if auto_draw_var.get():
+                draw_button.config(state=tk.DISABLED)
+                auto_draw_check.config(state=tk.DISABLED)
+                root.after(10, draw_next_student)
+            else:
+                draw_button.config(state=tk.NORMAL)
         
         draw_button.config(command=draw_next_student)
         update_result_display()
@@ -525,7 +540,21 @@ def ensure_necessary_files():
     internal_dir = os.path.join(global_path, '_internal')
     if not os.path.exists(internal_dir):
         os.makedirs(internal_dir)
-        file_path = os.path.join(internal_dir, filename)
+    
+    # 确保默认文件存在
+    default_path = os.path.join(internal_dir, 'default.txt')
+    
+    # 确保备份文件存在
+    backup_path = os.path.join(internal_dir, 'default.bf')
+    if not os.path.exists(backup_path):
+        shutil.copy(default_path, backup_path)
+    
+    # 确保历史文件存在
+    history_path = os.path.join(internal_dir, 'history.txt')
+    if not os.path.exists(history_path):
+        with open(history_path, 'w', encoding='utf-8') as f:
+            f.write("")
+
 def main():
     global root, global_path
     
