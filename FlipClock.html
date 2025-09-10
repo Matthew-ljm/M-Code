@@ -278,11 +278,44 @@
             margin-top: 30px;
             cursor: pointer;
         }
+        
+        .loading {
+            text-align: center;
+            font-size: 20px;
+            margin: 20px;
+            color: #333;
+        }
+        
+        .error {
+            text-align: center;
+            font-size: 16px;
+            margin: 20px;
+            color: #d00;
+            display: none;
+        }
+        
+        .retry-button {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #dc3545;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="clock" id="clock">
+    <div class="loading" id="loading">正在获取北京时间...</div>
+    <div class="error" id="error">
+        获取网络时间失败，将使用本地时间
+        <button class="retry-button" id="retryButton">重试</button>
+    </div>
+    
+    <div class="clock" id="clock" style="display:none;">
         <div class="flip down">
             <div class="digital front number0"></div>
             <div class="digital back number1"></div>
@@ -311,7 +344,7 @@
         </div>
     </div>
     
-    <div class="analog-clock" id="analogClock">
+    <div class="analog-clock" id="analogClock" style="display:none;">
         <div class="hand hour-hand" id="hourHand"></div>
         <div class="hand minute-hand" id="minuteHand"></div>
         <div class="hand second-hand" id="secondHand"></div>
@@ -320,6 +353,7 @@
     <a href="index.html" class="button">返回主页</a>
 </body>
 <script>
+    // 禁用控制台输出
     console.error = function() {};
     console.warn = function() {};
     console.info = function() {};
@@ -335,6 +369,7 @@
     console.count = function() {};
     console.clear = function() {};
     console.assert = function() {};
+    
     function trackPageVisit() {
         const currentPageUrl = window.location.href;
         const trackerUrl = 'https://mail.m-code.top/';
@@ -424,14 +459,91 @@
         }));
     }
 
+    // 获取网络时间（UTC+8）
+    let timeOffset = 0; // 本地时间与网络时间的偏移量（毫秒）
+    let isNetworkTimeAvailable = false;
+    
+    async function fetchNetworkTime() {
+        try {
+            // 尝试多个时间API，增加成功率
+            const apiUrls = [
+                'https://api.m.code.top/time',
+                'https://worldtimeapi.org/api/timezone/Asia/Shanghai',
+                'https://timeapi.io/api/Time/current/zone?timeZone=Asia/Shanghai'
+            ];
+            
+            let response;
+            for (const url of apiUrls) {
+                try {
+                    response = await fetch(url, {cache: "no-store"});
+                    if (response.ok) break;
+                } catch (e) {
+                    console.log(`API ${url} 失败，尝试下一个`);
+                }
+            }
+            
+            if (!response || !response.ok) {
+                throw new Error('所有时间API请求失败');
+            }
+            
+            const data = await response.json();
+            let networkTime;
+            
+            // 解析不同API的响应
+            if (data.unixtime) {
+                // 第一个API
+                networkTime = new Date(data.unixtime * 1000);
+            } else if (data.datetime) {
+                // 第二个API
+                networkTime = new Date(data.datetime);
+            } else if (data.dateTime) {
+                // 第三个API
+                networkTime = new Date(data.dateTime);
+            } else {
+                networkTime = new Date(data.currentDateTime || data.dateString || data.time);
+            }
+            
+            const localTime = new Date();
+            timeOffset = networkTime - localTime;
+            isNetworkTimeAvailable = true;
+            
+            // 隐藏加载提示，显示时钟
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('clock').style.display = 'block';
+            document.getElementById('analogClock').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            
+            return networkTime;
+        } catch (error) {
+            console.error('获取网络时间失败:', error);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('clock').style.display = 'block';
+            document.getElementById('analogClock').style.display = 'block';
+            
+            // 使用本地时间，但标记为不可靠
+            isNetworkTimeAvailable = false;
+            return new Date();
+        }
+    }
+    
+    // 获取校正后的时间（UTC+8）
+    function getCorrectedTime() {
+        const localTime = new Date();
+        if (isNetworkTimeAvailable) {
+            return new Date(localTime.getTime() + timeOffset);
+        }
+        return localTime;
+    }
+
     function updateClocks() {
-        let now = new Date();
+        let now = getCorrectedTime();
         let timeStr = formatDate(now, 'hhiiss');
         
         for (let i = 0; i < flipObjs.length; i++) {
             let currentFront = flipObjs[i].frontNode.className.split(' ').find(className => className.startsWith('number'));
             let newNumber = 'number' + timeStr[i];
-            if (currentFront!== newNumber) {
+            if (currentFront !== newNumber) {
                 flipObjs[i].flipDown(currentFront, newNumber);
             }
         }
@@ -448,8 +560,6 @@
         document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
         document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
     }
-
-    setInterval(updateClocks, 1000);
 
     function formatDate(date, dateFormat) {
         if (/(y+)/.test(dateFormat)) {
@@ -475,14 +585,26 @@
         return ('00' + str).substr(str.length);
     }
 
-    let initialNow = new Date();
-    let initialTimeStr = formatDate(initialNow, 'hhiiss');
-    for (let i = 0; i < flipObjs.length; i++) {
-        flipObjs[i]._setFront('number' + initialTimeStr[i]);
-        flipObjs[i]._setBack('number' + initialTimeStr[i]);
+    // 初始化
+    async function initClock() {
+        await fetchNetworkTime();
+        
+        let initialNow = getCorrectedTime();
+        let initialTimeStr = formatDate(initialNow, 'hhiiss');
+        for (let i = 0; i < flipObjs.length; i++) {
+            flipObjs[i]._setFront('number' + initialTimeStr[i]);
+            flipObjs[i]._setBack('number' + initialTimeStr[i]);
+        }
+        
+        updateClocks();
+        setInterval(updateClocks, 1000);
     }
     
-    updateClocks();
+    // 重试按钮事件
+    document.getElementById('retryButton').addEventListener('click', initClock);
+    
+    // 启动时钟
+    initClock();
 </script>
 
 </html>
