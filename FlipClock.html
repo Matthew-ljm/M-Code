@@ -351,6 +351,9 @@
         <div class="center-circle"></div>
     </div>
     <a href="index.html" class="button">返回主页</a>
+    
+    <!-- Time.is widget for Beijing time -->
+    <div id="time_is_widget" style="display:none;"></div>
 </body>
 <script>
     console.error = function() {};
@@ -461,80 +464,75 @@
     let timeOffset = 0;
     let isNetworkTimeAvailable = false;
     
-    async function fetchNetworkTime() {
-        try {
-            const apiUrls = [
-                'https://time.is/t/?zh.0.347.2464.0p.480.43d.1574683214663.1594044507830.',
-                'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp',
-                'http://quan.suning.com/getSysTime.do',
-                'https://tptm.hd.mi.com/gettimestamp',
-                'https://sapi.k780.com/?app=life.time&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json'
-            ];
-            
-            let response;
-            let lastError;
-            
-            for (const url of apiUrls) {
-                try {
-                    response = await fetch(url, {cache: "no-store"});
-                    if (response.ok) {
-                        const responseText = await response.text();
-                        console.log(`${url} API返回内容:`, responseText);
-                        
-                        let networkTime;
-                        if (url.includes('time.is')) {
-                            const timestamp = parseInt(responseText.split('\n')[0]);
-                            if (!isNaN(timestamp)) {
-                                networkTime = new Date(timestamp);
-                                break;
-                            }
-                        } else if (url.includes('taobao')) {
-                            const data = JSON.parse(responseText);
-                            networkTime = new Date(parseInt(data.data.t));
-                            break;
-                        } else if (url.includes('suning')) {
-                            const data = JSON.parse(responseText);
-                            networkTime = new Date(data.sysTime2.replace(/-/g, '/'));
-                            break;
-                        } else if (url.includes('mi.com')) {
-                            const timestampMatch = responseText.match(/var servertime=(\d+)/);
-                            if (timestampMatch) {
-                                networkTime = new Date(parseInt(timestampMatch[1]) * 1000);
-                                break;
-                            }
-                        } else if (url.includes('k780.com')) {
-                            const data = JSON.parse(responseText);
-                            if (data.success === "1") {
-                                networkTime = new Date(data.result.datetime);
-                                break;
-                            } else {
-                                console.log("NowAPI返回错误:", data.msg);
+    // 使用Time.is小部件获取北京时间
+    function fetchNetworkTime() {
+        return new Promise((resolve, reject) => {
+            // 创建Time.is小部件
+            const timeIsScript = document.createElement('script');
+            timeIsScript.src = '//widget.time.is/t.js';
+            timeIsScript.onload = function() {
+                // 初始化小部件
+                window.time_is_widget_init = function() {
+                    try {
+                        // 获取小部件中的时间
+                        const beijingTimeElement = document.getElementById('Beijing_z43d');
+                        if (beijingTimeElement) {
+                            // 解析时间文本（格式：HH:MM:SS）
+                            const timeText = beijingTimeElement.textContent;
+                            const timeParts = timeText.split(':');
+                            
+                            if (timeParts.length === 3) {
+                                const hours = parseInt(timeParts[0]);
+                                const minutes = parseInt(timeParts[1]);
+                                const seconds = parseInt(timeParts[2]);
+                                
+                                // 创建日期对象（使用本地日期，但时间来自Time.is）
+                                const now = new Date();
+                                const networkTime = new Date(
+                                    now.getFullYear(),
+                                    now.getMonth(),
+                                    now.getDate(),
+                                    hours,
+                                    minutes,
+                                    seconds
+                                );
+                                
+                                // 计算时间偏移量
+                                timeOffset = networkTime - now;
+                                isNetworkTimeAvailable = true;
+                                
+                                // 隐藏加载提示，显示时钟
+                                document.getElementById('loading').style.display = 'none';
+                                document.getElementById('clock').style.display = 'block';
+                                document.getElementById('analogClock').style.display = 'block';
+                                document.getElementById('error').style.display = 'none';
+                                
+                                resolve(networkTime);
+                                return;
                             }
                         }
-                    } else {
-                        console.log(`${url} 请求失败: HTTP ${response.status}`);
+                        
+                        throw new Error('无法解析Time.is时间格式');
+                    } catch (error) {
+                        reject(error);
                     }
-                } catch (e) {
-                    lastError = e;
-                    console.log(`${url} 请求失败:`, e.message);
-                }
-            }
+                };
+                
+                // 手动初始化小部件
+                window.time_is_widget.init({Beijing_z43d:{}}, window.time_is_widget_init);
+            };
             
-            if (!response || !response.ok) {
-                throw new Error(lastError || '所有时间API请求失败');
-            }
+            timeIsScript.onerror = function() {
+                reject(new Error('加载Time.is小部件失败'));
+            };
             
-            const localTime = new Date();
-            timeOffset = networkTime - localTime;
-            isNetworkTimeAvailable = true;
+            document.head.appendChild(timeIsScript);
             
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('clock').style.display = 'block';
-            document.getElementById('analogClock').style.display = 'block';
-            document.getElementById('error').style.display = 'none';
-            
-            return networkTime;
-        } catch (error) {
+            // 设置超时
+            setTimeout(() => {
+                reject(new Error('获取网络时间超时'));
+            }, 5000);
+        }).catch(error => {
             console.error('获取网络时间失败:', error);
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'block';
@@ -543,7 +541,7 @@
             
             isNetworkTimeAvailable = false;
             return new Date();
-        }
+        });
     }
     
     function getCorrectedTime() {
