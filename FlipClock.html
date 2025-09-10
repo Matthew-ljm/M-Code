@@ -305,17 +305,22 @@
             cursor: pointer;
             margin-left: 10px;
         }
+        
+        .time-is-widget {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 36px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="loading" id="loading">正在获取北京时间...</div>
-    <div class="error" id="error">
-        获取网络时间失败，将使用本地时间
-        <button class="retry-button" id="retryButton">重试</button>
+    <div class="time-is-widget">
+        <a href="https://time.is/Beijing" id="time_is_link" rel="nofollow">北京时间:</a>
+        <span id="Beijing_z43d"></span>
     </div>
     
-    <div class="clock" id="clock" style="display:none;">
+    <div class="clock" id="clock">
         <div class="flip down">
             <div class="digital front number0"></div>
             <div class="digital back number1"></div>
@@ -344,18 +349,20 @@
         </div>
     </div>
     
-    <div class="analog-clock" id="analogClock" style="display:none;">
+    <div class="analog-clock" id="analogClock">
         <div class="hand hour-hand" id="hourHand"></div>
         <div class="hand minute-hand" id="minuteHand"></div>
         <div class="hand second-hand" id="secondHand"></div>
         <div class="center-circle"></div>
     </div>
     <a href="index.html" class="button">返回主页</a>
-    
-    <!-- Time.is widget for Beijing time -->
-    <div id="time_is_widget" style="display:none;"></div>
 </body>
+<script src="//widget.time.is/t.js"></script>
 <script>
+    // 初始化Time.is小部件
+    time_is_widget.init({Beijing_z43d:{template:"TIME"}});
+    
+    // 隐藏原有的控制台输出
     console.error = function() {};
     console.warn = function() {};
     console.info = function() {};
@@ -461,99 +468,37 @@
         }));
     }
 
-    let timeOffset = 0;
-    let isNetworkTimeAvailable = false;
-    
-    // 使用Time.is小部件获取北京时间
-    function fetchNetworkTime() {
-        return new Promise((resolve, reject) => {
-            // 创建Time.is小部件
-            const timeIsScript = document.createElement('script');
-            timeIsScript.src = '//widget.time.is/t.js';
-            timeIsScript.onload = function() {
-                // 初始化小部件
-                window.time_is_widget_init = function() {
-                    try {
-                        // 获取小部件中的时间
-                        const beijingTimeElement = document.getElementById('Beijing_z43d');
-                        if (beijingTimeElement) {
-                            // 解析时间文本（格式：HH:MM:SS）
-                            const timeText = beijingTimeElement.textContent;
-                            const timeParts = timeText.split(':');
-                            
-                            if (timeParts.length === 3) {
-                                const hours = parseInt(timeParts[0]);
-                                const minutes = parseInt(timeParts[1]);
-                                const seconds = parseInt(timeParts[2]);
-                                
-                                // 创建日期对象（使用本地日期，但时间来自Time.is）
-                                const now = new Date();
-                                const networkTime = new Date(
-                                    now.getFullYear(),
-                                    now.getMonth(),
-                                    now.getDate(),
-                                    hours,
-                                    minutes,
-                                    seconds
-                                );
-                                
-                                // 计算时间偏移量
-                                timeOffset = networkTime - now;
-                                isNetworkTimeAvailable = true;
-                                
-                                // 隐藏加载提示，显示时钟
-                                document.getElementById('loading').style.display = 'none';
-                                document.getElementById('clock').style.display = 'block';
-                                document.getElementById('analogClock').style.display = 'block';
-                                document.getElementById('error').style.display = 'none';
-                                
-                                resolve(networkTime);
-                                return;
-                            }
-                        }
-                        
-                        throw new Error('无法解析Time.is时间格式');
-                    } catch (error) {
-                        reject(error);
-                    }
-                };
+    function getBeijingTime() {
+        // 直接从Time.is小部件获取时间
+        const timeElement = document.getElementById('Beijing_z43d');
+        if (timeElement) {
+            const timeText = timeElement.textContent;
+            const timeParts = timeText.split(':');
+            
+            if (timeParts.length === 3) {
+                const hours = parseInt(timeParts[0]);
+                const minutes = parseInt(timeParts[1]);
+                const seconds = parseInt(timeParts[2]);
                 
-                // 手动初始化小部件
-                window.time_is_widget.init({Beijing_z43d:{}}, window.time_is_widget_init);
-            };
-            
-            timeIsScript.onerror = function() {
-                reject(new Error('加载Time.is小部件失败'));
-            };
-            
-            document.head.appendChild(timeIsScript);
-            
-            // 设置超时
-            setTimeout(() => {
-                reject(new Error('获取网络时间超时'));
-            }, 5000);
-        }).catch(error => {
-            console.error('获取网络时间失败:', error);
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'block';
-            document.getElementById('clock').style.display = 'block';
-            document.getElementById('analogClock').style.display = 'block';
-            
-            isNetworkTimeAvailable = false;
-            return new Date();
-        });
-    }
-    
-    function getCorrectedTime() {
-        const localTime = new Date();
-        if (isNetworkTimeAvailable) {
-            return new Date(localTime.getTime() + timeOffset);
+                // 创建日期对象
+                const now = new Date();
+                return new Date(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    now.getDate(),
+                    hours,
+                    minutes,
+                    seconds
+                );
+            }
         }
-        return localTime;
+        
+        // 如果无法获取，返回本地时间
+        return new Date();
     }
 
     function updateClocks() {
-        let now = getCorrectedTime();
+        let now = getBeijingTime();
         let timeStr = formatDate(now, 'hhiiss');
         
         for (let i = 0; i < flipObjs.length; i++) {
@@ -601,22 +546,21 @@
         return ('00' + str).substr(str.length);
     }
 
-    async function initClock() {
-        await fetchNetworkTime();
-        
-        let initialNow = getCorrectedTime();
+    function initClock() {
+        // 初始设置时钟
+        let initialNow = getBeijingTime();
         let initialTimeStr = formatDate(initialNow, 'hhiiss');
         for (let i = 0; i < flipObjs.length; i++) {
             flipObjs[i]._setFront('number' + initialTimeStr[i]);
             flipObjs[i]._setBack('number' + initialTimeStr[i]);
         }
         
+        // 每秒更新时钟
         updateClocks();
         setInterval(updateClocks, 1000);
     }
     
-    document.getElementById('retryButton').addEventListener('click', initClock);
-    
-    initClock();
+    // 页面加载完成后初始化时钟
+    window.addEventListener('load', initClock);
 </script>
 </html>
