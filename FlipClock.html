@@ -353,7 +353,6 @@
     <a href="index.html" class="button">返回主页</a>
 </body>
 <script>
-    // 禁用控制台输出
     console.error = function() {};
     console.warn = function() {};
     console.info = function() {};
@@ -459,15 +458,18 @@
         }));
     }
 
-    // 获取网络时间（UTC+8）
-    let timeOffset = 0; // 本地时间与网络时间的偏移量（毫秒）
+    let timeOffset = 0;
     let isNetworkTimeAvailable = false;
     
     async function fetchNetworkTime() {
         try {
-            // 尝试多个时间API，增加成功率
             const apiUrls = [
-                'https://api.m.code.top/time',
+                'http://ntp.aliyun.com/',
+                'time.cloud.tencent.com',
+                'https://time.is/zh/api',
+                'http://210.72.145.44/',
+                'https://time.is/zh/unixtime.php',
+                'https://www.jd.com/interface/currentTime.aspx',
                 'https://worldtimeapi.org/api/timezone/Asia/Shanghai',
                 'https://timeapi.io/api/Time/current/zone?timeZone=Asia/Shanghai'
             ];
@@ -478,7 +480,7 @@
                     response = await fetch(url, {cache: "no-store"});
                     if (response.ok) break;
                 } catch (e) {
-                    console.log(`API ${url} 失败，尝试下一个`);
+                    alert(`API ${url} 失败，尝试下一个${e}`);
                 }
             }
             
@@ -489,15 +491,11 @@
             const data = await response.json();
             let networkTime;
             
-            // 解析不同API的响应
             if (data.unixtime) {
-                // 第一个API
                 networkTime = new Date(data.unixtime * 1000);
             } else if (data.datetime) {
-                // 第二个API
                 networkTime = new Date(data.datetime);
             } else if (data.dateTime) {
-                // 第三个API
                 networkTime = new Date(data.dateTime);
             } else {
                 networkTime = new Date(data.currentDateTime || data.dateString || data.time);
@@ -507,7 +505,6 @@
             timeOffset = networkTime - localTime;
             isNetworkTimeAvailable = true;
             
-            // 隐藏加载提示，显示时钟
             document.getElementById('loading').style.display = 'none';
             document.getElementById('clock').style.display = 'block';
             document.getElementById('analogClock').style.display = 'block';
@@ -521,13 +518,11 @@
             document.getElementById('clock').style.display = 'block';
             document.getElementById('analogClock').style.display = 'block';
             
-            // 使用本地时间，但标记为不可靠
             isNetworkTimeAvailable = false;
             return new Date();
         }
     }
     
-    // 获取校正后的时间（UTC+8）
     function getCorrectedTime() {
         const localTime = new Date();
         if (isNetworkTimeAvailable) {
@@ -585,7 +580,6 @@
         return ('00' + str).substr(str.length);
     }
 
-    // 初始化
     async function initClock() {
         await fetchNetworkTime();
         
@@ -600,11 +594,9 @@
         setInterval(updateClocks, 1000);
     }
     
-    // 重试按钮事件
     document.getElementById('retryButton').addEventListener('click', initClock);
     
-    // 启动时钟
     initClock();
 </script>
 
-</html>
+</
