@@ -464,41 +464,64 @@
     async function fetchNetworkTime() {
         try {
             const apiUrls = [
-                'http://ntp.aliyun.com/',
-                'time.cloud.tencent.com',
-                'https://time.is/zh/api',
-                'http://210.72.145.44/',
-                'https://time.is/zh/unixtime.php',
-                'https://www.jd.com/interface/currentTime.aspx',
-                'https://worldtimeapi.org/api/timezone/Asia/Shanghai',
-                'https://timeapi.io/api/Time/current/zone?timeZone=Asia/Shanghai'
+                'https://time.is/t/?zh.0.347.2464.0p.480.43d.1574683214663.1594044507830.',
+                'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp',
+                'http://quan.suning.com/getSysTime.do',
+                'https://tptm.hd.mi.com/gettimestamp',
+                'https://sapi.k780.com/?app=life.time&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json'
             ];
             
             let response;
+            let lastError;
+            
             for (const url of apiUrls) {
                 try {
                     response = await fetch(url, {cache: "no-store"});
-                    if (response.ok) break;
+                    if (response.ok) {
+                        const responseText = await response.text();
+                        console.log(`${url} API返回内容:`, responseText);
+                        
+                        let networkTime;
+                        if (url.includes('time.is')) {
+                            const timestamp = parseInt(responseText.split('\n')[0]);
+                            if (!isNaN(timestamp)) {
+                                networkTime = new Date(timestamp);
+                                break;
+                            }
+                        } else if (url.includes('taobao')) {
+                            const data = JSON.parse(responseText);
+                            networkTime = new Date(parseInt(data.data.t));
+                            break;
+                        } else if (url.includes('suning')) {
+                            const data = JSON.parse(responseText);
+                            networkTime = new Date(data.sysTime2.replace(/-/g, '/'));
+                            break;
+                        } else if (url.includes('mi.com')) {
+                            const timestampMatch = responseText.match(/var servertime=(\d+)/);
+                            if (timestampMatch) {
+                                networkTime = new Date(parseInt(timestampMatch[1]) * 1000);
+                                break;
+                            }
+                        } else if (url.includes('k780.com')) {
+                            const data = JSON.parse(responseText);
+                            if (data.success === "1") {
+                                networkTime = new Date(data.result.datetime);
+                                break;
+                            } else {
+                                console.log("NowAPI返回错误:", data.msg);
+                            }
+                        }
+                    } else {
+                        console.log(`${url} 请求失败: HTTP ${response.status}`);
+                    }
                 } catch (e) {
-                    alert(`API ${url} 失败，尝试下一个${e}`);
+                    lastError = e;
+                    console.log(`${url} 请求失败:`, e.message);
                 }
             }
             
             if (!response || !response.ok) {
-                throw new Error('所有时间API请求失败');
-            }
-            
-            const data = await response.json();
-            let networkTime;
-            
-            if (data.unixtime) {
-                networkTime = new Date(data.unixtime * 1000);
-            } else if (data.datetime) {
-                networkTime = new Date(data.datetime);
-            } else if (data.dateTime) {
-                networkTime = new Date(data.dateTime);
-            } else {
-                networkTime = new Date(data.currentDateTime || data.dateString || data.time);
+                throw new Error(lastError || '所有时间API请求失败');
             }
             
             const localTime = new Date();
@@ -598,3 +621,4 @@
     
     initClock();
 </script>
+</html>
