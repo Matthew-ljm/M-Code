@@ -695,7 +695,7 @@
 
         function updateClocks() {
             let now = getCorrectedTime();
-            now = new Date(now.getTime() + 1000);
+            now = new Date(now.getTime() + 500);
             let timeStr = formatDate(now, 'hhiiss');
             
             for (let i = 0; i < flipObjs.length; i++) {
