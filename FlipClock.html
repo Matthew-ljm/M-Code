@@ -618,7 +618,7 @@
         function fetchNetworkTime() {
             return new Promise((resolve, reject) => {
                 // 初始化小部件
-                time_is_widget.init({Beijing_z43d:{template:"TIME<br>DATE<br>SUN", date_format:"year年mnum月dnum日dayname，第week周", sun_format:"日出: srhour:srminute 日落: sshour:ssminute<br>昼长: dlhours时 dlminutes分", coords:"39.9075000,116.3972300"}});
+                time_is_widget.init({Beijing_z43d:{template:"TIME<br>DATE<br>SUN", date_format:"year年mnum月dnum日dayname，week", sun_format:"日出: srhour:srminute 日落: sshour:ssminute<br>昼长: dlhours时 dlminutes分", coords:"39.9075000,116.3972300"}});
                 
                 // 检查小部件是否已加载
                 const checkWidget = setInterval(() => {
@@ -695,7 +695,7 @@
 
         function updateClocks() {
             let now = getCorrectedTime();
-            now = new Date(now.getTime() + 1500);
+            now = new Date(now.getTime() + 1000);
             let timeStr = formatDate(now, 'hhiiss');
             
             for (let i = 0; i < flipObjs.length; i++) {
