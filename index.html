@@ -274,7 +274,7 @@
             <div id="footerLinks">
                 <a href="privacy policy.html">隐私声明</a>
                 <a href="feedback.html">用户反馈</a>
-                <a href="FlipClock.html" id="time_is_link" rel="nofollow">当前时间：<span id="Beijing_z43d"></span></a>
+                <a href="https://time.is/Beijing" id="time_is_link" rel="nofollow">当前时间：<span id="Beijing_z43d"></span></a>
             </div>
             <div id="footerContact">
                 如有任何疑问或建议，欢迎发送邮件至 huifeidexiaogougou@126.com
@@ -343,6 +343,16 @@
                 overlay.style.display = 'none';
             }
         });
+
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('Beijing_z43d').textContent = hours + ':' + minutes + ':' + seconds;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
     </script>
     <script src="//widget.time.is/t.js"></script>
     <script>
