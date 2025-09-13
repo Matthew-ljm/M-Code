@@ -274,7 +274,7 @@
             <div id="footerLinks">
                 <a href="privacy policy.html">隐私声明</a>
                 <a href="feedback.html">用户反馈</a>
-                <a href="https://time.is/Beijing" id="time_is_link" rel="nofollow">当前时间：<span id="Beijing_z43d"></span></a>
+                <a href="FlipClock.html" id="time_is_link" rel="nofollow">当前时间：<span id="Beijing_z43d"></span></a>
             </div>
             <div id="footerContact">
                 如有任何疑问或建议，欢迎发送邮件至 huifeidexiaogougou@126.com
@@ -344,19 +344,42 @@
             }
         });
 
-        function updateTime() {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            document.getElementById('Beijing_z43d').textContent = hours + ':' + minutes + ':' + seconds;
+        // 确保time.is脚本加载
+        function loadTimeIsWidget() {
+            if (!document.querySelector('script[src="//widget.time.is/t.js"]')) {
+                const script = document.createElement('script');
+                script.src = '//widget.time.is/t.js';
+                document.body.appendChild(script);
+                
+                // 初始化时间小部件
+                script.onload = function() {
+                    if (typeof time_is_widget !== 'undefined') {
+                        time_is_widget.init({Beijing_z43d:{}});
+                    }
+                };
+            } else if (typeof time_is_widget !== 'undefined') {
+                // 如果已经加载，直接初始化
+                time_is_widget.init({Beijing_z43d:{}});
+            }
         }
-        setInterval(updateTime, 1000);
-        updateTime();
-    </script>
-    <script src="//widget.time.is/t.js"></script>
-    <script>
-        time_is_widget.init({Beijing_z43d:{}});
+        
+        // 页面加载后初始化time.is
+        if (document.readyState === 'complete') {
+            loadTimeIsWidget();
+        } else {
+            window.addEventListener('load', loadTimeIsWidget);
+        }
+        
+        // 定期检查time.is时间是否正常更新
+        setInterval(function() {
+            const timeElement = document.getElementById('Beijing_z43d');
+            if (timeElement && (!timeElement.textContent || timeElement.textContent.length < 8)) {
+                // 如果时间显示不正常，重新初始化
+                if (typeof time_is_widget !== 'undefined') {
+                    time_is_widget.init({Beijing_z43d:{}});
+                }
+            }
+        }, 5000);
     </script>
 </body>
 
