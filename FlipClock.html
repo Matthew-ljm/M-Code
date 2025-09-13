@@ -6,7 +6,6 @@
     <title>FlipClock</title>
     <link rel="shortcut icon" href="icon/clock.ico" type="image/x-icon">
     <style>
-        /* 样式保持不变 */
         body {
             margin: 0;
             padding: 0;
@@ -454,11 +453,11 @@
         </div>
         
         <div class="time-widget">
-            <a href="https://time.is" id="time_is_link" rel="nofollow">当前时间:</a>
-            <span id="time_is_widget"></span>
+            <a href="https://time.is/Beijing" id="time_is_link" rel="nofollow">北京时间:</a>
+            <span id="Beijing_z43d"></span>
         </div>
 
-        <div class="loading" id="loading">正在获取网络时间...</div>
+        <div class="loading" id="loading">正在获取北京时间...</div>
         <div class="error" id="error">
             获取网络时间失败，将使用本地时间
             <button class="retry-button" id="retryButton">重试</button>
@@ -507,8 +506,8 @@
         <a href="index.html" class="button">返回主页</a>
     </div>
     
+    <script src="//widget.time.is/zh.js"></script>
     <script>
-        // 禁用控制台输出
         console.error = function() {};
         console.warn = function() {};
         console.info = function() {};
@@ -617,115 +616,57 @@
         let timeOffset = 0;
         let isNetworkTimeAvailable = false;
         
-        // 获取用户时区
-        function getUserTimeZone() {
-            try {
-                return Intl.DateTimeFormat().resolvedOptions().timeZone;
-            } catch (e) {
-                // 如果无法获取时区，默认使用UTC
-                return 'UTC';
-            }
-        }
-        
-        // 根据时区获取对应的time.is链接ID
-        function getTimeIsIdForTimeZone(timeZone) {
-            // 这里列出一些常见时区对应的time.is ID
-            // 完整列表可以参考: https://time.is/zh/developers
-            const timeZoneMap = {
-                'Asia/Shanghai': 'Beijing',
-                'Asia/Tokyo': 'Tokyo',
-                'Asia/Seoul': 'Seoul',
-                'Asia/Singapore': 'Singapore',
-                'Asia/Kolkata': 'India',
-                'Europe/London': 'London',
-                'Europe/Paris': 'Paris',
-                'Europe/Berlin': 'Berlin',
-                'America/New_York': 'New_York',
-                'America/Los_Angeles': 'Los_Angeles',
-                'America/Chicago': 'Chicago',
-                'Australia/Sydney': 'Sydney',
-                'Pacific/Auckland': 'Auckland'
-            };
-            
-            return timeZoneMap[timeZone] || 'UTC';
-        }
-        
         function fetchNetworkTime() {
             return new Promise((resolve, reject) => {
-                const userTimeZone = getUserTimeZone();
-                const timeIsId = getTimeIsIdForTimeZone(userTimeZone);
+                time_is_widget.init({Beijing_z43d:{template:"TIME<br>DATE<br>SUN", date_format:"year年mnum月dnum日dayname，week", sun_format:"日出: srhour:srminute 日落: sshour:ssminute<br>昼长: dlhours时 dlminutes分", coords:"39.9075000,116.3972300"}});
                 
-                // 更新链接
-                const timeLink = document.getElementById('time_is_link');
-                timeLink.href = `https://time.is/${timeIsId}`;
-                timeLink.textContent = `${timeIsId.replace('_', ' ')}时间:`;
-                
-                // 创建time.is脚本
-                const script = document.createElement('script');
-                script.src = `//widget.time.is/zh.js`;
-                script.onload = function() {
-                    // 初始化time.is小部件
-                    time_is_widget.init({
-                        [timeIsId + '_z43d']: {
-                            template: "TIME<br>DATE",
-                            date_format: "year年mnum月dnum日dayname"
-                        }
-                    });
-                    
-                    const checkWidget = setInterval(() => {
-                        const timeElement = document.getElementById(timeIsId + '_z43d');
-                        if (timeElement && timeElement.textContent.includes(':')) {
-                            clearInterval(checkWidget);
-                            
-                            try {
-                                const timeText = timeElement.querySelector('span:first-child').textContent;
-                                const timeParts = timeText.split(':');
-                                
-                                if (timeParts.length >= 2) {
-                                    const hours = parseInt(timeParts[0]);
-                                    const minutes = parseInt(timeParts[1]);
-                                    const seconds = timeParts.length > 2 ? parseInt(timeParts[2]) : 0;
-                                    
-                                    const now = new Date();
-                                    const networkTime = new Date(
-                                        now.getFullYear(),
-                                        now.getMonth(),
-                                        now.getDate(),
-                                        hours,
-                                        minutes,
-                                        seconds
-                                    );
-                                    
-                                    timeOffset = networkTime - now;
-                                    isNetworkTimeAvailable = true;
-                                    
-                                    document.getElementById('loading').style.display = 'none';
-                                    document.getElementById('clock').style.display = 'block';
-                                    document.getElementById('analogClock').style.display = 'block';
-                                    document.getElementById('error').style.display = 'none';
-                                    
-                                    resolve(networkTime);
-                                    return;
-                                }
-                                
-                                throw new Error('无法解析Time.is时间格式');
-                            } catch (error) {
-                                reject(error);
-                            }
-                        }
-                    }, 100);
-                    
-                    setTimeout(() => {
+                const checkWidget = setInterval(() => {
+                    const beijingTimeElement = document.getElementById('Beijing_z43d');
+                    if (beijingTimeElement && beijingTimeElement.textContent.includes(':')) {
                         clearInterval(checkWidget);
-                        reject(new Error('获取网络时间超时'));
-                    }, 5000);
-                };
+                        
+                        try {
+                            const timeText = beijingTimeElement.querySelector('span:first-child').textContent;
+                            const timeParts = timeText.split(':');
+                            
+                            if (timeParts.length >= 2) {
+                                const hours = parseInt(timeParts[0]);
+                                const minutes = parseInt(timeParts[1]);
+                                const seconds = timeParts.length > 2 ? parseInt(timeParts[2]) : 0;
+                                
+                                const now = new Date();
+                                const networkTime = new Date(
+                                    now.getFullYear(),
+                                    now.getMonth(),
+                                    now.getDate(),
+                                    hours,
+                                    minutes,
+                                    seconds
+                                );
+                                
+                                timeOffset = networkTime - now;
+                                isNetworkTimeAvailable = true;
+                                
+                                document.getElementById('loading').style.display = 'none';
+                                document.getElementById('clock').style.display = 'block';
+                                document.getElementById('analogClock').style.display = 'block';
+                                document.getElementById('error').style.display = 'none';
+                                
+                                resolve(networkTime);
+                                return;
+                            }
+                            
+                            throw new Error('无法解析Time.is时间格式');
+                        } catch (error) {
+                            reject(error);
+                        }
+                    }
+                }, 100);
                 
-                script.onerror = function() {
-                    reject(new Error('无法加载Time.is脚本'));
-                };
-                
-                document.body.appendChild(script);
+                setTimeout(() => {
+                    clearInterval(checkWidget);
+                    reject(new Error('获取网络时间超时'));
+                }, 5000);
             }).catch(error => {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('error').style.display = 'block';
