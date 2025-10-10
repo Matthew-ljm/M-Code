@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>本地2FA验证码生成器</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; text-align: center; }
+        .container { margin-top: 2rem; }
+        input { padding: 0.8rem; width: 80%; max-width: 400px; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 0.8rem 2rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 0 0.5rem; }
+        button:hover { background: #0056b3; }
+        #codeContainer { margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 1rem; }
+        #codeResult { font-size: 1.8rem; font-weight: bold; color: #28a745; letter-spacing: 4px; }
+        #copyBtn { padding: 0.5rem 1rem; font-size: 0.9rem; background: #28a745; }
+        #copyBtn:hover { background: #218838; }
+        #countdown { margin-top: 0.5rem; color: #666; font-size: 0.9rem; }
+        #timeStatus, #currentTime { margin-top: 1rem; font-size: 0.95rem; }
+        .success { color: #28a745; }
+        .warning { color: #ffc107; }
+        .error { color: #dc3545; }
+        #copyTip { margin-top: 0.3rem; color: #28a745; font-size: 0.85rem; display: none; }
+        #retryButton { padding: 0.3rem 0.8rem; font-size: 0.8rem; background: #dc3545; margin-left: 0.5rem; }
+        #retryButton:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <h1>本地2FA验证码生成器</h1>
+    
+    <!-- 时间显示区域 -->
+    <div id="timeStatus" class="warning">正在获取网络时间...</div>
+    <div id="currentTime" class="success">当前时间：加载中...</div>
+    <div id="timeError" class="error" style="display: none;">
+        获取网络时间失败，将使用本地时间
+        <button id="retryButton" class="retry-button">重试</button>
+    </div>
+    
+    <!-- 隐藏的time.is时间显示，仅用于获取数据 -->
+    <div style="display: none;">
+        <a href="https://time.is/Beijing" id="time_is_link" rel="nofollow">北京时间:</a>
+        <span id="Beijing_z43d"></span>
+    </div>
+    
+    <div class="container">
+        <p>输入2FA秘钥</p>
+        <input type="text" id="secretKey" placeholder="请输入2FA秘钥" required>
+        <br>
+        <button id="generateBtn" disabled>等待时间准备...</button>
+        
+        <!-- 验证码与复制按钮容器 -->
+        <div id="codeContainer">
+            <div id="codeResult"></div>
+            <button id="copyBtn" onclick="copyCode()" disabled>复制验证码</button>
+        </div>
+        <div id="copyTip">✓ 验证码已复制到剪贴板</div>
+        <div id="countdown"></div>
+    </div>
+
+    <!-- 引入time.is时间API -->
+    <script src="//widget.time.is/zh.js"></script>
+    <script>
+        let networkTimeOffset = 0;
+        let isNetworkTimeReady = false;
+        let timeSource = "本地时间";
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const timeStatusText = document.getElementById('timeStatus');
+        const currentTimeText = document.getElementById('currentTime');
+        const timeError = document.getElementById('timeError');
+        const copyTip = document.getElementById('copyTip');
+        const retryButton = document.getElementById('retryButton');
+
+        // 初始化时间获取
+        function initTimeFetch() {
+            timeStatusText.textContent = "正在获取网络时间...";
+            timeStatusText.className = "warning";
+            timeError.style.display = "none";
+            generateBtn.disabled = true;
+            generateBtn.textContent = "等待时间准备...";
+            isNetworkTimeReady = false;
+            
+            // 使用参考代码的直接DOM监听方法
+            time_is_widget.init({Beijing_z43d:{template:"TIME", coords:"39.9075000,116.3972300"}});
+            
+            const checkWidget = setInterval(() => {
+                const beijingTimeElement = document.getElementById('Beijing_z43d');
+                if (beijingTimeElement && beijingTimeElement.textContent.includes(':')) {
+                    clearInterval(checkWidget);
+                    
+                    try {
+                        const timeText = beijingTimeElement.querySelector('span:first-child').textContent;
+                        const timeParts = timeText.split(':');
+                        
+                        if (timeParts.length >= 2) {
+                            const hours = parseInt(timeParts[0]);
+                            const minutes = parseInt(timeParts[1]);
+                            const seconds = timeParts.length > 2 ? parseInt(timeParts[2]) : 0;
+                            
+                            const now = new Date();
+                            const networkTime = new Date(
+                                now.getFullYear(),
+                                now.getMonth(),
+                                now.getDate(),
+                                hours,
+                                minutes,
+                                seconds
+                            );
+                            
+                            networkTimeOffset = networkTime - now;
+                            isNetworkTimeReady = true;
+                            timeSource = "网络时间（北京时间）";
+                            
+                            timeStatusText.textContent = `已获取${timeSource}`;
+                            timeStatusText.className = "success";
+                            generateBtn.disabled = false;
+                            generateBtn.textContent = "生成验证码";
+                            updateCurrentTime();
+                            return;
+                        }
+                        
+                        throw new Error('无法解析Time.is时间格式');
+                    } catch (error) {
+                        fallbackToLocalTime('网络时间解析失败');
+                    }
+                }
+            }, 100); // 更频繁的检查
+            
+            // 5秒超时（比参考代码稍长一些）
+            setTimeout(() => {
+                clearInterval(checkWidget);
+                if (!isNetworkTimeReady) {
+                    fallbackToLocalTime('获取网络时间超时');
+                }
+            }, 5000);
+        }
+
+        // 降级到本地时间
+        function fallbackToLocalTime(reason) {
+            isNetworkTimeReady = false;
+            networkTimeOffset = 0;
+            timeSource = "本地时间";
+            
+            timeStatusText.textContent = `${reason}，已切换为${timeSource}`;
+            timeStatusText.className = "warning";
+            timeError.style.display = "block";
+            generateBtn.disabled = false;
+            generateBtn.textContent = "生成验证码";
+            updateCurrentTime();
+        }
+
+        // 更新当前时间显示
+        function updateCurrentTime() {
+            const localTime = new Date().getTime();
+            const finalTime = new Date(isNetworkTimeReady ? (localTime + networkTimeOffset) : localTime);
+            const formattedTime = finalTime.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }).replace(/\//g, '-');
+            currentTimeText.textContent = `当前时间（${timeSource}）：${formattedTime}`;
+        }
+
+        // 复制验证码功能
+        function copyCode() {
+            const code = document.getElementById('codeResult').textContent;
+            if (!code) { alert('暂无验证码可复制'); return; }
+            navigator.clipboard.writeText(code).then(() => {
+                copyTip.style.display = "inline-block";
+                setTimeout(() => copyTip.style.display = "none", 2000);
+            }).catch(() => {
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        // 获取最终使用的时间（TOTP计算用）
+        function getFinalTime() {
+            const localTime = new Date().getTime();
+            const useTime = isNetworkTimeReady ? (localTime + networkTimeOffset) : localTime;
+            return Math.floor(useTime / 1000 / 30);
+        }
+
+        // TOTP核心算法与验证码生成
+        function generateTOTP() {
+            const secretKey = document.getElementById('secretKey').value.trim();
+            if (!secretKey) { alert('请输入2FA秘钥'); return; }
+
+            // 秘钥Base32解码
+            function base32Decode(secret) {
+                const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+                let bits = '';
+                let result = [];
+                secret = secret.toUpperCase().replace(/=/g, '');
+                for (let c of secret) {
+                    const idx = base32Chars.indexOf(c);
+                    if (idx === -1) { alert('无效的秘钥格式（仅支持Base32字符）'); return null; }
+                    bits += idx.toString(2).padStart(5, '0');
+                }
+                while (bits.length % 8 !== 0) bits = bits.slice(0, -1);
+                for (let i = 0; i < bits.length; i += 8) {
+                    result.push(parseInt(bits.slice(i, i + 8), 2));
+                }
+                return new Uint8Array(result);
+            }
+
+            const key = base32Decode(secretKey);
+            if (!key) return;
+
+            // 生成时间字节
+            const time = getFinalTime();
+            const timeBytes = new Uint8Array(8);
+            let tempTime = time;
+            for (let i = 7; i >= 0; i--) {
+                timeBytes[i] = tempTime & 0xff;
+                tempTime = tempTime >> 8;
+            }
+
+            // HMAC-SHA1加密
+            async function hmacSHA1(key, data) {
+                const cryptoKey = await crypto.subtle.importKey(
+                    'raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']
+                );
+                const signature = await crypto.subtle.sign('HMAC', cryptoKey, data);
+                return new Uint8Array(signature);
+            }
+
+            // 计算并显示验证码
+            hmacSHA1(key, timeBytes).then(signature => {
+                const offset = signature[19] & 0xf;
+                let code = ((signature[offset] & 0x7f) << 24) |
+                           ((signature[offset + 1] & 0xff) << 16) |
+                           ((signature[offset + 2] & 0xff) << 8) |
+                           (signature[offset + 3] & 0xff);
+                code = code % 1000000;
+                document.getElementById('codeResult').textContent = code.toString().padStart(6, '0');
+                copyBtn.disabled = false;
+
+                // 倒计时与时间更新
+                const updateTimer = () => {
+                    const now = Math.floor((new Date().getTime() + (networkTimeOffset || 0)) / 1000);
+                    const remaining = 30 - (now % 30);
+                    document.getElementById('countdown').textContent = `下次更新：${remaining}秒后`;
+                    updateCurrentTime();
+                    if (remaining === 29) generateTOTP();
+                };
+
+                if (window.mainTimer) clearInterval(window.mainTimer);
+                window.mainTimer = setInterval(updateTimer, 1000);
+                updateTimer();
+            });
+        }
+
+        // 事件监听
+        generateBtn.addEventListener('click', generateTOTP);
+        retryButton.addEventListener('click', initTimeFetch);
+
+        // 页面加载后启动时间获取
+        window.addEventListener('load', () => {
+            initTimeFetch();
+            // 定期更新时间显示
+            setInterval(() => {
+                if (isNetworkTimeReady) updateCurrentTime();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
