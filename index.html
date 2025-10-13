@@ -347,24 +347,48 @@
         console.count = function() {};
         console.clear = function() {};
         console.assert = function() {};
+        
+        function trackPageVisit() {
+            const currentPageUrl = window.location.href;
+            const trackerUrl = 'https://mail.m-code.top/';
+            const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+            var iframe = document.createElement('iframe');
+            iframe.src = fullTrackerUrl;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+        }
+
+        function setupTracking() {
+            if (document.readyState === 'complete') {
+                setTimeout(trackPageVisit, 1000);
+            } else {
+                window.addEventListener('load', () => {
+                    setTimeout(trackPageVisit, 1000);
+                });
+            }
+        }
+        
+        setupTracking();
+
         // 新增：IP拦截逻辑
         function checkIPAccess() {
             fetch('https://test.m-code.top/api/check-ip')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('API响应失败');
+                        alert('API响应失败');
                     }
                     return response.json();
                 })
                 .then(data => {
                     if (!data.allow) {
-                        // IP被限制，显示弹窗
+                        // IP被限制，显示
+                        alert('ok')
                         showBlockModal();
                     }
                     // 如果允许访问，什么都不做，正常显示页面
                 })
                 .catch(error => {
-                    console.error('IP校验出错：', error);
+                    alert('IP校验出错：', error);
                     // API请求失败时，默认允许访问
                 });
         }
@@ -389,28 +413,6 @@
             }, 1000);
         }
         checkIPAccess();
-        
-        function trackPageVisit() {
-            const currentPageUrl = window.location.href;
-            const trackerUrl = 'https://mail.m-code.top/';
-            const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
-            var iframe = document.createElement('iframe');
-            iframe.src = fullTrackerUrl;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-        }
-
-        function setupTracking() {
-            if (document.readyState === 'complete') {
-                setTimeout(trackPageVisit, 1000);
-            } else {
-                window.addEventListener('load', () => {
-                    setTimeout(trackPageVisit, 1000);
-                });
-            }
-        }
-        
-        setupTracking();
 
         document.getElementById('infoButton').addEventListener('click', function (e) {
             e.stopPropagation();
