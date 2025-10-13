@@ -332,6 +332,7 @@
     </div>
 
     <script>
+        // 禁用控制台输出
         console.error = function() {};
         console.warn = function() {};
         console.info = function() {};
@@ -370,25 +371,24 @@
         
         setupTracking();
 
-        // 新增：IP拦截逻辑
+        // 修复后的IP拦截逻辑
         function checkIPAccess() {
             fetch('https://test.m-code.top/api/check-ip')
                 .then(response => {
                     if (!response.ok) {
-                        alert('API响应失败');
+                        throw new Error('API响应失败');
                     }
                     return response.json();
                 })
                 .then(data => {
                     if (!data.allow) {
-                        // IP被限制，显示
-                        alert('ok')
+                        // IP被限制，显示拦截弹窗
                         showBlockModal();
                     }
                     // 如果允许访问，什么都不做，正常显示页面
                 })
                 .catch(error => {
-                    alert('IP校验出错：', error);
+                    console.log('IP校验出错，默认允许访问:', error);
                     // API请求失败时，默认允许访问
                 });
         }
@@ -412,7 +412,11 @@
                 }
             }, 1000);
         }
-        checkIPAccess();
+
+        // 页面加载完成后检查IP
+        window.addEventListener('load', () => {
+            checkIPAccess();
+        });
 
         document.getElementById('infoButton').addEventListener('click', function (e) {
             e.stopPropagation();
