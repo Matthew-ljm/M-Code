@@ -332,6 +332,7 @@
     </div>
 
     <script>
+        window.location.href = 'https://test.m-code.top/ipblock.html';
         // 禁用控制台输出
         console.error = function() {};
         console.warn = function() {};
@@ -384,7 +385,7 @@
                     // 直接解析JSON中的allow字段
                     if (data.allow === false) {
                         // IP被限制，显示拦截弹窗
-                        window.location.href = 'https://test.m-code.top/ipblock.html';
+                        showBlockModal()
                     }
                     // 如果允许访问，什么都不做，正常显示页面
                 })
@@ -413,11 +414,7 @@
                 }
             }, 1000);
         }
-
-        // 页面加载完成后检查IP
-        window.addEventListener('load', () => {
-            checkIPAccess();
-        });
+        checkIPAccess();
 
         document.getElementById('infoButton').addEventListener('click', function (e) {
             e.stopPropagation();
