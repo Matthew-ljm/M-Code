@@ -384,7 +384,7 @@
                     // 直接解析JSON中的allow字段
                     if (data.allow === false) {
                         // IP被限制，显示拦截弹窗
-                        showBlockModal();
+                        window.location.href = 'https://test.m-code.top/ipblock.html';
                     }
                     // 如果允许访问，什么都不做，正常显示页面
                 })
