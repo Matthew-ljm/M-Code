@@ -381,7 +381,8 @@
                     return response.json();
                 })
                 .then(data => {
-                    if (!data.allow) {
+                    // 直接解析JSON中的allow字段
+                    if (data.allow === false) {
                         // IP被限制，显示拦截弹窗
                         showBlockModal();
                     }
