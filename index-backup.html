@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>M-Code</title>
+    <link rel="shortcut icon" href="icon/favicon.ico" type="image/x-icon">
+    <meta name="keywords" content="M-Code,实用软件,个人原创,实用工具,实时协作编辑器,网页工具">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="M-Code是一个由开发者Matthew于2024年9月创立的个人软件开发项目，专注于开发兼具创新性与实用性的软件产品。致力于通过精心设计的软件和网页工具，优化用户的工作效率与数字化体验。">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            position: relative;
+            background-color: #000;
+        }
+
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+
+        .text-on-top {
+            position: absolute;
+            top: 4%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #FFD700;
+            font-size: 3.5rem;
+            z-index: 2;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .subtext {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+            position: absolute;
+            top: 14%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .buttons-container {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 100px;
+            z-index: 2;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 200px;
+            width: 100%;
+        }
+
+        .button {
+            padding: 18px 35px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            z-index: 2;
+            text-align: center;
+            min-width: 220px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .button:hover::after {
+            transform: translateX(100%);
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(-2px);
+        }
+
+        #infoButton {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        #downloadButton {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        }
+
+        #downloadButton2 {
+            background: linear-gradient(135deg, #FF5252, #D32F2F);
+        }
+
+        #downloadButton3 {
+            background: linear-gradient(135deg, #2196F3, #1565C0);
+        }
+
+        #infoBox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 10;
+            border-radius: 15px;
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s;
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -45%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        #footer {
+            position: absolute;
+            bottom: 1%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: rgb(255, 215, 0);
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+
+        #footerText {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #footerLinks {
+            margin-bottom: 5px;
+        }
+
+        #footerLinks a {
+            color: yellow;
+            text-decoration: none;
+            margin: 0 12px;
+            transition: all 0.3s;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        #footerLinks a:hover {
+            color: white;
+            background: rgba(255, 215, 0, 0.2);
+            text-decoration: none;
+        }
+
+        #footerContact {
+            color: rgb(0, 255, 34);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .text-on-top {
+                font-size: 2.5rem;
+                top: 10%;
+            }
+            
+            .subtext {
+                font-size: 1.1rem;
+                top: 18%;
+            }
+            
+            .buttons-container {
+                top: 30%;
+                gap: 20px;
+            }
+            
+            .button-row {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+            
+            .button {
+                min-width: 200px;
+                padding: 15px 25px;
+                font-size: 1.1rem;
+            }
+            
+            #infoBox {
+                width: 85%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <img src="icon/background.jpg" alt="Background Image">
+    <div class="text-on-top">M-Code</div>
+    <div class="subtext">Crafting Exquisite Software, Empowering Your Life</div>
+    
+    <div class="buttons-container">
+        <div class="button-row">
+            <a id="infoButton" class="button">网站简介</a>
+            <a id="downloadButton" class="button" href="download.html">软件下载</a>
+        </div>
+        <div class="button-row">
+            <a id="downloadButton2" class="button" href="fireworks-show.html">2025 年烟花秀展示</a>
+            <a id="downloadButton3" class="button" href="https://ide.m-code.top/">实时协作编辑器</a>
+        </div>
+    </div>
+    
+    <div id="infoBox">M-Code是一个由开发者Matthew于2024年9月创立的个人软件开发项目，专注于开发兼具创新性与实用性的软件产品。致力于通过精心设计的软件和网页工具，优化用户的工作效率与数字化体验。</div>
+    <div id="overlay"></div>
+    
+    <div id="footer">
+        <div id="footerText">
+            <div id="footerLinks">
+                <a href="privacy policy.html">隐私声明</a>
+                <a href="feedback.html">用户反馈</a>
+                <a href="FlipClock.html" rel="nofollow">精美时钟</a>
+            </div>
+            <div id="footerContact">
+                如有任何疑问或建议，欢迎发送邮件至<a href="mailto:huifeidexiaogougou@126.com" style="color:gold; text-decoration:underline; font-weight:bold;">huifeidexiaogougou@126.com</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.error = function() {};
+        console.warn = function() {};
+        console.info = function() {};
+        console.debug = function() {};
+        console.table = function() {};
+        console.dir = function() {};
+        console.trace = function() {};
+        console.group = function() {};
+        console.groupEnd = function() {};
+        console.groupCollapsed = function() {};
+        console.time = function() {};
+        console.timeEnd = function() {};
+        console.count = function() {};
+        console.clear = function() {};
+        console.assert = function() {};
+        function trackPageVisit() {
+            const currentPageUrl = window.location.href;
+            const trackerUrl = 'https://mail.m-code.top/';
+            const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+            var iframe = document.createElement('iframe');
+            iframe.src = fullTrackerUrl;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+        }
+
+        function setupTracking() {
+            if (document.readyState === 'complete') {
+                setTimeout(trackPageVisit, 1000);
+            } else {
+                window.addEventListener('load', () => {
+                    setTimeout(trackPageVisit, 1000);
+                });
+            }
+        }
+        
+        setupTracking();
+
+        document.getElementById('infoButton').addEventListener('click', function (e) {
+            e.stopPropagation();
+            const infoBox = document.getElementById('infoBox');
+            const overlay = document.getElementById('overlay');
+            if (infoBox.style.display === 'none' || !infoBox.style.display) {
+                infoBox.style.display = 'block';
+                overlay.style.display = 'block';
+            } else {
+                infoBox.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            const infoBox = document.getElementById('infoBox');
+            const overlay = document.getElementById('overlay');
+            if (infoBox.style.display === 'block' && 
+                !infoBox.contains(e.target) && 
+                e.target.id !== 'infoButton') {
+                infoBox.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
