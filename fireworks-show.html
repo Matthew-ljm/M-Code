@@ -19,6 +19,47 @@
             user-select: none;
         }
 
+        /* 新增：IP拦截弹窗样式 */
+        .ip-block-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .ip-block-modal {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .ip-block-modal h2 {
+            color: #dc2626;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .ip-block-modal p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .countdown {
+            color: #888;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
         audio {
             opacity: 0;
         }
@@ -129,6 +170,15 @@
 
 <body onselectstart="return false">
 
+    <!-- 新增：IP拦截弹窗 -->
+    <div class="ip-block-overlay" id="ipBlockOverlay">
+        <div class="ip-block-modal">
+            <h2>访问被限制</h2>
+            <p>您的IP网段（183.242.42.x）已被限制访问！</p>
+            <p class="countdown" id="countdown">5秒后自动打开时钟页面...</p>
+        </div>
+    </div>
+
     <div id="backgroundRendering" style="z-index: 0;"></div>
 
     <canvas id="fireworks" style="z-index: 9999;">
@@ -186,6 +236,50 @@
         }
         
         setupTracking();
+
+        // 修复后的IP拦截逻辑
+        function checkIPAccess() {
+            fetch('https://test.m-code.top/api/check-ip')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('API响应失败');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 直接解析JSON中的allow字段
+                    if (data.allow === false) {
+                        // IP被限制，显示拦截弹窗
+                        showBlockModal()
+                    }
+                    // 如果允许访问，什么都不做，正常显示页面
+                })
+                .catch(error => {
+                    console.log('IP校验出错，默认允许访问:', error);
+                    // API请求失败时，默认允许访问
+                });
+        }
+
+        function showBlockModal() {
+            const overlay = document.getElementById('ipBlockOverlay');
+            const countdownElement = document.getElementById('countdown');
+            
+            // 显示弹窗
+            overlay.style.display = 'flex';
+            
+            // 倒计时逻辑
+            let countdown = 5;
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = `${countdown}秒后自动打开时钟页面...`;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = 'FlipClock.html';
+                }
+            }, 1000);
+        }
+        checkIPAccess();
         
         const iconUrls = [
             "icon/favicon-f.ico",
