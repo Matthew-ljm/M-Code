@@ -250,10 +250,11 @@
                     // 直接解析JSON中的allow字段
                     if (data.allow === false) {
                         // IP被限制，显示拦截弹窗
-                        showBlockModal()
+                        showBlockModal();
+                    } else {
+                        // 如果允许访问，正常显示页面
+                        start_window();
                     }
-                    // 如果允许访问，正常显示页面
-                    start_window()
                 })
                 .catch(error => {
                     console.log('IP校验出错，默认允许访问:', error);
