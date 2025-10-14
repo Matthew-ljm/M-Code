@@ -109,7 +109,7 @@
             border-radius: 10px;
             background: #fff;
             font-size: 60px;
-            font-weight: 900;
+            font-weight: bold; /* 修改为bold */
             color: #fff;
             box-shadow: 0 0 6px rgba(0, 0, 0, .5);
             text-align: center;
@@ -525,6 +525,25 @@
         console.clear = function() {};
         console.assert = function() {};
         
+        // 获取URL参数
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+        
+        // 根据URL参数设置字体粗细
+        function setFontWeightFromUrl() {
+            var boldParam = getUrlParameter('bold');
+            if (boldParam) {
+                var flipElements = document.querySelectorAll('.flip');
+                for (var i = 0; i < flipElements.length; i++) {
+                    flipElements[i].style.fontWeight = boldParam;
+                }
+            }
+        }
+        
         function trackPageVisit() {
             const currentPageUrl = window.location.href;
             const trackerUrl = 'https://mail.m-code.top/';
@@ -773,6 +792,7 @@
         document.getElementById('retryButton').addEventListener('click', initClock);
         
         window.addEventListener('load', () => {
+            setFontWeightFromUrl(); // 在页面加载时设置字体粗细
             initClock();
             addDecorations();
         });
