@@ -252,7 +252,58 @@
                         // IP被限制，显示拦截弹窗
                         showBlockModal()
                     }
-                    // 如果允许访问，什么都不做，正常显示页面
+                    window.addEventListener('load', () => {
+                        Swal.fire({
+                            title: '您想要播放背景音乐吗?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                        }).then((result) => {
+                            drawFireworks();
+                            lastTime = new Date();
+                            animationEffect();
+            
+                            if (result.isConfirmed) {
+                                let audio = document.getElementById('bgm');
+                                audio.play();
+                                document.querySelector("body").onclick = function () {
+                                    if (!autoPlayFlag) {
+                                        let audio = document.getElementById('bgm');
+                                        audio.play();
+                                        autoPlayFlag = true;
+                                    }
+                                };
+                            }
+            
+                            for (let i = 0; i <= 10; i++) {
+                                setTimeout(function () {
+                                    document.querySelector("body > div.message").style.opacity = i / 10;
+                                }, i * 60 + 2000);
+                            }
+                            for (let i = 0; i <= 10; i++) {
+                                setTimeout(function () {
+                                    document.querySelector("body > div.message").style.opacity = 1 - i / 10;
+                                    if (i === 10) {
+                                        document.querySelector("body > div.message > p").innerHTML = "";
+                                    }
+                                }, i * 60 + 8000);
+                            }
+                            for (let i = 0; i <= 10; i++) {
+                                setTimeout(function () {
+                                    document.querySelector("body > div.message").style.opacity = i / 10;
+                                }, i * 60 + 8600);
+                            }
+                            for (let i = 0; i <= 10; i++) {
+                                setTimeout(function () {
+                                    document.querySelector("body > div.message").style.opacity = 1 - i / 10;
+                                }, i * 60 + 16600);
+                            }
+                        });
+                    });
+                    
                 })
                 .catch(error => {
                     console.log('IP校验出错，默认允许访问:', error);
@@ -314,58 +365,6 @@
         currentFireworks.height = fireworksCanvas.height = window.innerHeight;
         let fireworksExplosion = [];
         let autoPlayFlag = false;
-
-        window.addEventListener('load', () => {
-            Swal.fire({
-                title: '您想要播放背景音乐吗?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            }).then((result) => {
-                drawFireworks();
-                lastTime = new Date();
-                animationEffect();
-
-                if (result.isConfirmed) {
-                    let audio = document.getElementById('bgm');
-                    audio.play();
-                    document.querySelector("body").onclick = function () {
-                        if (!autoPlayFlag) {
-                            let audio = document.getElementById('bgm');
-                            audio.play();
-                            autoPlayFlag = true;
-                        }
-                    };
-                }
-
-                for (let i = 0; i <= 10; i++) {
-                    setTimeout(function () {
-                        document.querySelector("body > div.message").style.opacity = i / 10;
-                    }, i * 60 + 2000);
-                }
-                for (let i = 0; i <= 10; i++) {
-                    setTimeout(function () {
-                        document.querySelector("body > div.message").style.opacity = 1 - i / 10;
-                        if (i === 10) {
-                            document.querySelector("body > div.message > p").innerHTML = "";
-                        }
-                    }, i * 60 + 8000);
-                }
-                for (let i = 0; i <= 10; i++) {
-                    setTimeout(function () {
-                        document.querySelector("body > div.message").style.opacity = i / 10;
-                    }, i * 60 + 8600);
-                }
-                for (let i = 0; i <= 10; i++) {
-                    setTimeout(function () {
-                        document.querySelector("body > div.message").style.opacity = 1 - i / 10;
-                    }, i * 60 + 16600);
-                }
-            });
-        });
 
         let lastTime;
 
