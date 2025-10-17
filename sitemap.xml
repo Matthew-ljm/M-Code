@@ -1,121 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
   <loc>https://m-code.top/</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://m-code.top/download.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/fireworks-show.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/privacy%20policy.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/feedback.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://m-code.top/FlipClock.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://m-code.top/test-file</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
+  <loc>https://m-code.top/chouqianzhushou/index.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.70</priority>
+</url>
+<url>
+  <loc>https://m-code.top/lupingruanjian/index.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.70</priority>
 </url>
 <url>
   <loc>https://m-code.top/png-ico.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
 </url>
 <url>
   <loc>https://m-code.top/cardmatch.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
 </url>
 <url>
   <loc>https://m-code.top/VSCodeSettings.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://m-code.top/index.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
 </url>
 <url>
   <loc>https://m-code.top/privacy%20policy.pdf</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://m-code.top/quiz.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://m-code.top/quiz1.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://m-code.top/quiz2.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://m-code.top/test-file.html</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.64</priority>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
 </url>
 <url>
   <loc>https://ide.m-code.top/</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.90</priority>
 </url>
 <url>
   <loc>https://ip.m-code.top/</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://feedback.m-code.top/</loc>
-  <lastmod>2025-08-09T11:30:00+00:00</lastmod>
-  <changefreq>monthly</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
 </urlset>
