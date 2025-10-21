@@ -8,7 +8,7 @@
 <url>
   <loc>https://m-code.top/download.html</loc>
   <changefreq>monthly</changefreq>
-  <priority>0.80</priority>
+  <priority>0.90</priority>
 </url>
 <url>
   <loc>https://m-code.top/fireworks-show.html</loc>
@@ -47,6 +47,11 @@
 </url>
 <url>
   <loc>https://m-code.top/cardmatch.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
+</url>
+<url>
+  <loc>https://m-code.top/ponggame.html</loc>
   <changefreq>yearly</changefreq>
   <priority>0.60</priority>
 </url>
