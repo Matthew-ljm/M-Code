@@ -237,6 +237,8 @@
         
         setupTracking();
 
+        start_window();
+
         // 修复后的IP拦截逻辑
         function checkIPAccess() {
             fetch('https://test.m-code.top/api/check-ip')
@@ -251,9 +253,6 @@
                     if (data.allow === false) {
                         // IP被限制，显示拦截弹窗
                         showBlockModal();
-                    } else {
-                        // 如果允许访问，正常显示页面
-                        start_window();
                     }
                 })
                 .catch(error => {
