@@ -243,12 +243,21 @@
         function checkIPAccess() {
             fetch('https://test.m-code.top/api/check-ip')
                 .then(response => {
+                    // 如果返回403错误，直接显示拦截弹窗
+                    if (response.status === 403) {
+                        showBlockModal();
+                        return null;
+                    }
+                    
                     if (!response.ok) {
                         throw new Error('API响应失败');
                     }
                     return response.json();
                 })
                 .then(data => {
+                    // 如果data为null（因为403错误），直接返回
+                    if (data === null) return;
+                    
                     // 直接解析JSON中的allow字段
                     if (data.allow === false) {
                         // IP被限制，显示拦截弹窗
