@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>FlipClock</title>
+    <title>M-Code | 时钟</title>
     <link rel="shortcut icon" href="icon/clock.ico" type="image/x-icon">
     <style>
         body {
@@ -66,6 +66,7 @@
             border: 1px solid rgba(255, 255, 255, 0.18);
             width: 100%;
             max-width: 450px;
+            position: relative;
         }
 
         .time-widget a {
@@ -77,6 +78,51 @@
 
         .time-widget a:hover {
             color: #fdbb2d;
+        }
+
+        /* 太阳轨道样式 */
+        .sun-orbit-container {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            margin: 10px 0;
+            display: none; /* 初始隐藏 */
+        }
+        #orbit-path {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            stroke: url(#orbitGradient);
+            stroke-width: 3;
+            fill: none;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
+        }
+        #sun {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #ffec3b 0%, #ff9800 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ffd000, 0 0 40px rgba(255, 152, 0, 0.5);
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            transition: left 0.5s ease, top 0.5s ease;
+        }
+
+        .time-period {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .sun-info {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
         }
 
         .clock-container {
@@ -109,7 +155,7 @@
             border-radius: 10px;
             background: #fff;
             font-size: 60px;
-            font-weight: bold; /* 修改为bold */
+            font-weight: bold;
             color: #fff;
             box-shadow: 0 0 6px rgba(0, 0, 0, .5);
             text-align: center;
@@ -440,6 +486,14 @@
             .title {
                 font-size: 1.8rem;
             }
+            
+            .sun-orbit-container {
+                height: 100px;
+            }
+            #sun {
+                width: 25px;
+                height: 25px;
+            }
         }
     </style>
 </head>
@@ -449,13 +503,32 @@
     
     <div class="container">
         <div class="header">
-            <h1 class="title">FlipClock</h1>
-            <p class="subtitle">M-Code时钟</p>
+            <h1 class="title">M-Code时钟</h1>
+            <p class="subtitle">简约版</p>
         </div>
         
         <div class="time-widget">
-            <a href="https://time.is/Beijing" id="time_is_link" rel="nofollow">北京时间:</a>
+            <a id="time_is_link" rel="nofollow">北京时间:</a>
             <span id="Beijing_z43d"></span>
+            
+            <!-- 太阳轨道动画 -->
+            <div class="sun-orbit-container" id="sunOrbitContainer">
+                <svg id="orbit-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="orbitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#4a90e2" />
+                            <stop offset="50%" stop-color="#ffd000" />
+                            <stop offset="100%" stop-color="#4a90e2" />
+                        </linearGradient>
+                    </defs>
+                    <!-- 使用SVG路径绘制瘦高轨道 -->
+                    <path id="orbit" d="M 0,100 Q 50,10 100,100" />
+                </svg>
+                <div id="sun"></div>
+            </div>
+            
+            <div class="time-period" id="timePeriod"></div>
+            <div class="sun-info" id="sunInfo"></div>
         </div>
 
         <div class="loading" id="loading">正在获取北京时间...</div>
@@ -635,6 +708,8 @@
 
         let timeOffset = 0;
         let isNetworkTimeAvailable = false;
+        let sunriseTime = null;
+        let sunsetTime = null;
         
         function fetchNetworkTime() {
             return new Promise((resolve, reject) => {
@@ -667,10 +742,16 @@
                                 timeOffset = networkTime - now;
                                 isNetworkTimeAvailable = true;
                                 
+                                // 解析日出日落时间
+                                parseSunTimes(beijingTimeElement);
+                                
                                 document.getElementById('loading').style.display = 'none';
                                 document.getElementById('clock').style.display = 'block';
                                 document.getElementById('analogClock').style.display = 'block';
                                 document.getElementById('error').style.display = 'none';
+                                
+                                // 显示太阳轨道
+                                document.getElementById('sunOrbitContainer').style.display = 'block';
                                 
                                 resolve(networkTime);
                                 return;
@@ -696,6 +777,37 @@
                 isNetworkTimeAvailable = false;
                 return new Date();
             });
+        }
+        
+        function parseSunTimes(beijingTimeElement) {
+            try {
+                const sunInfo = beijingTimeElement.textContent;
+                const sunriseMatch = sunInfo.match(/日出:\s*(\d+):(\d+)/);
+                const sunsetMatch = sunInfo.match(/日落:\s*(\d+):(\d+)/);
+                
+                if (sunriseMatch && sunsetMatch) {
+                    const now = getCorrectedTime();
+                    sunriseTime = new Date(
+                        now.getFullYear(),
+                        now.getMonth(),
+                        now.getDate(),
+                        parseInt(sunriseMatch[1]),
+                        parseInt(sunriseMatch[2])
+                    );
+                    sunsetTime = new Date(
+                        now.getFullYear(),
+                        now.getMonth(),
+                        now.getDate(),
+                        parseInt(sunsetMatch[1]),
+                        parseInt(sunsetMatch[2])
+                    );
+                    
+                    document.getElementById('sunInfo').textContent = 
+                        `日出 ${sunriseMatch[1]}:${sunriseMatch[2]} | 日落 ${sunsetMatch[1]}:${sunsetMatch[2]}`;
+                }
+            } catch (error) {
+                console.log('无法解析日出日落时间');
+            }
         }
         
         function getCorrectedTime() {
@@ -730,6 +842,48 @@
             document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
             document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
             document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
+            
+            // 更新时间段和太阳位置
+            updateTimePeriod(now);
+            updateSunPosition(now);
+        }
+
+        function updateTimePeriod(now) {
+            const hour = now.getHours();
+            let period = '';
+            
+            if (sunriseTime && sunsetTime) {
+                const currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, now.getMinutes());
+                
+                if (currentTime < sunriseTime) {
+                    period = '凌晨';
+                } else if (currentTime >= sunriseTime && hour < 12) {
+                    period = '上午';
+                } else if (hour >= 12 && hour < 14) {
+                    period = '中午';
+                } else if (hour >= 14 && currentTime < sunsetTime) {
+                    period = '下午';
+                } else {
+                    period = '晚上';
+                }
+            } else {
+                // 如果没有日出日落数据，使用简单的时间段判断
+                if (hour >= 5 && hour < 8) {
+                    period = '清晨';
+                } else if (hour >= 8 && hour < 12) {
+                    period = '上午';
+                } else if (hour >= 12 && hour < 14) {
+                    period = '中午';
+                } else if (hour >= 14 && hour < 18) {
+                    period = '下午';
+                } else if (hour >= 18 && hour < 22) {
+                    period = '晚上';
+                } else {
+                    period = '深夜';
+                }
+            }
+            
+            document.getElementById('timePeriod').textContent = period;
         }
 
         function formatDate(date, dateFormat) {
@@ -770,6 +924,64 @@
             setInterval(updateClocks, 1000);
         }
         
+        // 太阳轨道动画代码
+        const sun = document.getElementById('sun');
+        const orbitPath = document.getElementById('orbit');
+        const sunOrbitContainer = document.getElementById('sunOrbitContainer');
+        
+        let containerWidth, containerHeight;
+        
+        // 获取SVG路径上的点
+        function getPointOnPath(path, percentage) {
+            const length = path.getTotalLength();
+            const point = path.getPointAtLength(length * percentage);
+            return point;
+        }
+
+        function resizeHandler() {
+            containerWidth = sunOrbitContainer.offsetWidth;
+            containerHeight = sunOrbitContainer.offsetHeight;
+        }
+        window.addEventListener('resize', resizeHandler);
+
+        function updateSunPosition(now) {
+            if (!sunriseTime || !sunsetTime) return;
+            
+            const currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+            const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0);
+            const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59);
+            
+            let percentage;
+            
+            if (currentTime < sunriseTime) {
+                // 日出前：太阳在轨道左侧下方
+                percentage = 0.1;
+            } else if (currentTime > sunsetTime) {
+                // 日落后：太阳在轨道右侧下方
+                percentage = 0.9;
+            } else {
+                // 白天：根据时间计算太阳位置
+                const dayLength = sunsetTime - sunriseTime;
+                const elapsed = currentTime - sunriseTime;
+                percentage = 0.1 + (elapsed / dayLength) * 0.8;
+            }
+            
+            const point = getPointOnPath(orbitPath, percentage);
+            
+            // 将SVG坐标转换为容器坐标
+            let x = (point.x / 100) * containerWidth;
+            let y = (point.y / 100) * containerHeight;
+            
+            sun.style.left = `${x}px`;
+            sun.style.top = `${y}px`;
+        }
+
+        // 初始化太阳轨道
+        function initSunOrbit() {
+            resizeHandler();
+            updateSunPosition(getCorrectedTime());
+        }
+        
         function addDecorations() {
             const decoration = document.getElementById('decoration');
             for (let i = 0; i < 15; i++) {
@@ -792,9 +1004,10 @@
         document.getElementById('retryButton').addEventListener('click', initClock);
         
         window.addEventListener('load', () => {
-            setFontWeightFromUrl(); // 在页面加载时设置字体粗细
+            setFontWeightFromUrl();
             initClock();
             addDecorations();
+            initSunOrbit();
         });
     </script>
 </body>
