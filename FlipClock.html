@@ -2,1013 +2,1010 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>M-Code | 时钟</title>
-    <link rel="shortcut icon" href="icon/clock.ico" type="image/x-icon">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #4b6cb7, #87CEEB, #E0F7FA);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            overflow-x: hidden;
-        }
+	<meta charset="UTF-8">
+	<title>FlipClock</title>
+	<link rel="shortcut icon" href="icon/clock.ico" type="image/x-icon">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: 'Arial', sans-serif;
+			background: linear-gradient(135deg, #4b6cb7, #87CEEB, #E0F7FA);
+			background-size: 400% 400%;
+			animation: gradientBG 15s ease infinite;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+			overflow-x: hidden;
+		}
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+		@keyframes gradientBG {
+			0% { background-position: 0% 50%; }
+			50% { background-position: 100% 50%; }
+			100% { background-position: 0% 50%; }
+		}
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            box-sizing: border-box;
-        }
+		.container {
+			width: 100%;
+			max-width: 1200px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 10px;
+			box-sizing: border-box;
+		}
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
-        }
+		.header {
+			text-align: center;
+			margin-bottom: 20px;
+			width: 100%;
+		}
 
-        .title {
-            font-size: 2.2rem;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
+		.title {
+			font-size: 2.2rem;
+			margin-bottom: 8px;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+		}
 
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
+		.subtitle {
+			font-size: 1.1rem;
+			opacity: 0.9;
+		}
 
-        .time-widget {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 15px 0;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            width: 100%;
-            max-width: 450px;
-            position: relative;
-        }
+		.time-widget {
+			background: rgba(255, 255, 255, 0.1);
+			backdrop-filter: blur(10px);
+			border-radius: 15px;
+			padding: 15px;
+			margin: 15px 0;
+			text-align: center;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+			border: 1px solid rgba(255, 255, 255, 0.18);
+			width: 100%;
+			max-width: 450px;
+			position: relative;
+		}
 
-        .time-widget a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
+		.time-widget a {
+			color: #fff;
+			text-decoration: none;
+			font-weight: bold;
+			transition: color 0.3s;
+		}
 
-        .time-widget a:hover {
-            color: #fdbb2d;
-        }
+		.time-widget a:hover {
+			color: #fdbb2d;
+		}
 
-        /* 太阳轨道样式 */
-        .sun-orbit-container {
-            position: relative;
-            width: 100%;
-            height: 120px;
-            margin: 10px 0;
-            display: none; /* 初始隐藏 */
-        }
-        #orbit-path {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            stroke: url(#orbitGradient);
-            stroke-width: 3;
-            fill: none;
-            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
-        }
-        #sun {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle, #ffec3b 0%, #ff9800 100%);
-            border-radius: 50%;
-            box-shadow: 0 0 20px #ffd000, 0 0 40px rgba(255, 152, 0, 0.5);
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            transition: left 0.5s ease, top 0.5s ease;
-        }
+		/* 太阳轨道样式 */
+		.sun-orbit-container {
+			position: relative;
+			width: 100%;
+			height: 120px;
+			margin: 10px 0;
+			display: none; /* 初始隐藏 */
+		}
+		#orbit-path {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			stroke: url(#orbitGradient);
+			stroke-width: 3;
+			fill: none;
+			filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
+		}
+		#sun {
+			position: absolute;
+			width: 30px;
+			height: 30px;
+			background: radial-gradient(circle, #ffec3b 0%, #ff9800 100%);
+			border-radius: 50%;
+			box-shadow: 0 0 20px #ffd000, 0 0 40px rgba(255, 152, 0, 0.5);
+			transform: translate(-50%, -50%);
+			z-index: 10;
+			transition: left 0.5s ease, top 0.5s ease;
+		}
 
-        .time-period {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #fff;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
+		.time-period {
+			margin-top: 10px;
+			font-size: 14px;
+			color: #fff;
+			font-weight: bold;
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		}
 
-        .sun-info {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            margin-top: 5px;
-        }
+		.sun-info {
+			font-size: 12px;
+			color: rgba(255, 255, 255, 0.8);
+			margin-top: 5px;
+		}
 
-        .clock-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin: 15px 0;
-        }
+		.clock-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			margin: 15px 0;
+		}
 
-        .single-demo {
-            margin: 15px auto;
-            padding: 20px;
-            width: 550px;
-            text-align: center;
-            border: solid 1px rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
+		.single-demo {
+			margin: 15px auto;
+			padding: 20px;
+			width: 550px;
+			text-align: center;
+			border: solid 1px rgba(255, 255, 255, 0.2);
+			border-radius: 15px;
+			background: rgba(255, 255, 255, 0.1);
+			backdrop-filter: blur(5px);
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+		}
 
-        .flip {
-            display: inline-block;
-            position: relative;
-            width: 50px;
-            height: 85px;
-            line-height: 85px;
-            border: solid 1px #000;
-            border-radius: 10px;
-            background: #fff;
-            font-size: 60px;
-            font-weight: bold;
-            color: #fff;
-            box-shadow: 0 0 6px rgba(0, 0, 0, .5);
-            text-align: center;
-            font-family: "Helvetica Neue";
-            margin: 0 2px;
-        }
+		.flip {
+			display: inline-block;
+			position: relative;
+			width: 50px;
+			height: 85px;
+			line-height: 85px;
+			border: solid 1px #000;
+			border-radius: 10px;
+			background: #fff;
+			font-size: 60px;
+			font-weight: bold;
+			color: #fff;
+			box-shadow: 0 0 6px rgba(0, 0, 0, .5);
+			text-align: center;
+			font-family: "Helvetica Neue";
+			margin: 0 2px;
+		}
 
-        .flip .digital:before,
-        .flip .digital:after {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            background: #000;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
+		.flip .digital:before,
+		.flip .digital:after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			background: #000;
+			overflow: hidden;
+			box-sizing: border-box;
+		}
 
-        .flip .digital:before {
-            top: 0;
-            bottom: 50%;
-            border-radius: 10px 10px 0 0;
-            border-bottom: solid 1px #666;
-        }
+		.flip .digital:before {
+			top: 0;
+			bottom: 50%;
+			border-radius: 10px 10px 0 0;
+			border-bottom: solid 1px #666;
+		}
 
-        .flip .digital:after {
-            top: 50%;
-            bottom: 0;
-            border-radius: 0 0 10px 10px;
-            line-height: 0;
-        }
+		.flip .digital:after {
+			top: 50%;
+			bottom: 0;
+			border-radius: 0 0 10px 10px;
+			line-height: 0;
+		}
 
-        .flip.down .front:before {
-            z-index: 3;
-        }
+		.flip.down .front:before {
+			z-index: 3;
+		}
 
-        .flip.down .back:after {
-            z-index: 2;
-            transform-origin: 50% 0%;
-            transform: perspective(160px) rotateX(180deg);
-        }
+		.flip.down .back:after {
+			z-index: 2;
+			transform-origin: 50% 0%;
+			transform: perspective(160px) rotateX(180deg);
+		}
 
-        .flip.down .front:after,
-        .flip.down .back:before {
-            z-index: 1;
-        }
+		.flip.down .front:after,
+		.flip.down .back:before {
+			z-index: 1;
+		}
 
-        .flip.down.go .front:before {
-            transform-origin: 50% 100%;
-            animation: frontFlipDown 0.6s ease-in-out both;
-            box-shadow: 0 -2px 6px rgba(255, 255, 255, 0.3);
-            backface-visibility: hidden;
-        }
+		.flip.down.go .front:before {
+			transform-origin: 50% 100%;
+			animation: frontFlipDown 0.6s ease-in-out both;
+			box-shadow: 0 -2px 6px rgba(255, 255, 255, 0.3);
+			backface-visibility: hidden;
+		}
 
-        .flip.down.go .back:after {
-            animation: backFlipDown 0.6s ease-in-out both;
-        }
+		.flip.down.go .back:after {
+			animation: backFlipDown 0.6s ease-in-out both;
+		}
 
-        .flip.up .front:after {
-            z-index: 3;
-        }
+		.flip.up .front:after {
+			z-index: 3;
+		}
 
-        .flip.up .back:before {
-            z-index: 2;
-            transform-origin: 50% 100%;
-            transform: perspective(160px) rotateX(-180deg);
-        }
+		.flip.up .back:before {
+			z-index: 2;
+			transform-origin: 50% 100%;
+			transform: perspective(160px) rotateX(-180deg);
+		}
 
-        .flip.up .front:before,
-        .flip.up .back:after {
-            z-index: 1;
-        }
+		.flip.up .front:before,
+		.flip.up .back:after {
+			z-index: 1;
+		}
 
-        .flip.up.go .front:after {
-            transform-origin: 50% 0;
-            animation: frontFlipUp 0.6s ease-in-out both;
-            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.3);
-            backface-visibility: hidden;
-        }
+		.flip.up.go .front:after {
+			transform-origin: 50% 0;
+			animation: frontFlipUp 0.6s ease-in-out both;
+			box-shadow: 0 2px 6px rgba(255, 255, 255, 0.3);
+			backface-visibility: hidden;
+		}
 
-        .flip.up.go .back:before {
-            animation: backFlipUp 0.6s ease-in-out both;
-        }
+		.flip.up.go .back:before {
+			animation: backFlipUp 0.6s ease-in-out both;
+		}
 
-        @keyframes frontFlipDown {
-            0% {
-                transform: perspective(160px) rotateX(0deg);
-            }
+		@keyframes frontFlipDown {
+			0% {
+				transform: perspective(160px) rotateX(0deg);
+			}
 
-            100% {
-                transform: perspective(160px) rotateX(-180deg);
-            }
-        }
+			100% {
+				transform: perspective(160px) rotateX(-180deg);
+			}
+		}
 
-        @keyframes backFlipDown {
-            0% {
-                transform: perspective(160px) rotateX(180deg);
-            }
+		@keyframes backFlipDown {
+			0% {
+				transform: perspective(160px) rotateX(180deg);
+			}
 
-            100% {
-                transform: perspective(160px) rotateX(0deg);
-            }
-        }
+			100% {
+				transform: perspective(160px) rotateX(0deg);
+			}
+		}
 
-        @keyframes frontFlipUp {
-            0% {
-                transform: perspective(160px) rotateX(0deg);
-            }
+		@keyframes frontFlipUp {
+			0% {
+				transform: perspective(160px) rotateX(0deg);
+			}
 
-            100% {
-                transform: perspective(160px) rotateX(180deg);
-            }
-        }
+			100% {
+				transform: perspective(160px) rotateX(180deg);
+			}
+		}
 
-        @keyframes backFlipUp {
-            0% {
-                transform: perspective(160px) rotateX(-180deg);
-            }
+		@keyframes backFlipUp {
+			0% {
+				transform: perspective(160px) rotateX(-180deg);
+			}
 
-            100% {
-                transform: perspective(160px) rotateX(0deg);
-            }
-        }
+			100% {
+				transform: perspective(160px) rotateX(0deg);
+			}
+		}
 
-        .flip .number0:before,
-        .flip .number0:after {
-            content: "0";
-        }
+		.flip .number0:before,
+		.flip .number0:after {
+			content: "0";
+		}
 
-        .flip .number1:before,
-        .flip .number1:after {
-            content: "1";
-        }
+		.flip .number1:before,
+		.flip .number1:after {
+			content: "1";
+		}
 
-        .flip .number2:before,
-        .flip .number2:after {
-            content: "2";
-        }
+		.flip .number2:before,
+		.flip .number2:after {
+			content: "2";
+		}
 
-        .flip .number3:before,
-        .flip .number3:after {
-            content: "3";
-        }
+		.flip .number3:before,
+		.flip .number3:after {
+			content: "3";
+		}
 
-        .flip .number4:before,
-        .flip .number4:after {
-            content: "4";
-        }
+		.flip .number4:before,
+		.flip .number4:after {
+			content: "4";
+		}
 
-        .flip .number5:before,
-        .flip .number5:after {
-            content: "5";
-        }
+		.flip .number5:before,
+		.flip .number5:after {
+			content: "5";
+		}
 
-        .flip .number6:before,
-        .flip .number6:after {
-            content: "6";
-        }
+		.flip .number6:before,
+		.flip .number6:after {
+			content: "6";
+		}
 
-        .flip .number7:before,
-        .flip .number7:after {
-            content: "7";
-        }
+		.flip .number7:before,
+		.flip .number7:after {
+			content: "7";
+		}
 
-        .flip .number8:before,
-        .flip .number8:after {
-            content: "8";
-        }
+		.flip .number8:before,
+		.flip .number8:after {
+			content: "8";
+		}
 
-        .flip .number9:before,
-        .flip .number9:after {
-            content: "9";
-        }
+		.flip .number9:before,
+		.flip .number9:after {
+			content: "9";
+		}
 
-        .clock {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+		.clock {
+			text-align: center;
+			margin-bottom: 40px;
+		}
 
-        .clock em {
-            display: inline-block;
-            line-height: 87px;
-            font-size: 60px;
-            font-style: normal;
-            vertical-align: top;
-            margin: 0 2px;
-        }
-        
-        .analog-clock {
-            width: 350px;
-            height: 350px;
-            margin: 40px auto;
-            position: relative;
-            border: 12px solid #333;
-            border-radius: 50%;
-            background: #fff url('icon/clock.png') no-repeat center;
-            background-size: 80%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        
-        .hand {
-            position: absolute;
-            left: 50%;
-            bottom: 50%;
-            transform-origin: 50% 100%;
-            background: #000;
-            border-radius: 5px;
-        }
-        
-        .hour-hand {
-            width: 8px;
-            height: 70px;
-            margin-left: -4px;
-        }
-        
-        .minute-hand {
-            width: 5px;
-            height: 95px;
-            margin-left: -2.5px;
-        }
-        
-        .second-hand {
-            width: 2px;
-            height: 105px;
-            margin-left: -1px;
-            background: #f00;
-        }
-        
-        .center-circle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 16px;
-            height: 16px;
-            margin: -8px 0 0 -8px;
-            background: #333;
-            border-radius: 50%;
-            z-index: 10;
-        }
-        
-        .button {
-            margin-top: 25px;
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 0.9em;
-            color: #fff;
-            background-color: rgba(0, 123, 255, 0.8);
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .button:hover {
-            background-color: rgba(0, 123, 255, 1);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        
-        .loading {
-            text-align: center;
-            font-size: 18px;
-            margin: 15px;
-            color: #fff;
-        }
-        
-        .error {
-            text-align: center;
-            font-size: 15px;
-            margin: 15px;
-            color: #ff6b6b;
-            display: none;
-        }
-        
-        .retry-button {
-            display: inline-block;
-            padding: 7px 14px;
-            font-size: 13px;
-            color: #fff;
-            background-color: #dc3545;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 8px;
-        }
+		.clock em {
+			display: inline-block;
+			line-height: 87px;
+			font-size: 60px;
+			font-style: normal;
+			vertical-align: top;
+			margin: 0 2px;
+		}
+		
+		.analog-clock {
+			width: 350px;
+			height: 350px;
+			margin: 40px auto;
+			position: relative;
+			border: 12px solid #333;
+			border-radius: 50%;
+			background: #fff url('icon/clock.png') no-repeat center;
+			background-size: 80%;
+			box-shadow: 0 0 20px rgba(0,0,0,0.5);
+		}
+		
+		.hand {
+			position: absolute;
+			left: 50%;
+			bottom: 50%;
+			transform-origin: 50% 100%;
+			background: #000;
+			border-radius: 5px;
+		}
+		
+		.hour-hand {
+			width: 8px;
+			height: 70px;
+			margin-left: -4px;
+		}
+		
+		.minute-hand {
+			width: 5px;
+			height: 95px;
+			margin-left: -2.5px;
+		}
+		
+		.second-hand {
+			width: 2px;
+			height: 105px;
+			margin-left: -1px;
+			background: #f00;
+		}
+		
+		.center-circle {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 16px;
+			height: 16px;
+			margin: -8px 0 0 -8px;
+			background: #333;
+			border-radius: 50%;
+			z-index: 10;
+		}
+		
+		.button {
+			margin-top: 25px;
+			display: inline-block;
+			padding: 10px 20px;
+			font-size: 0.9em;
+			color: #fff;
+			background-color: rgba(0, 123, 255, 0.8);
+			border: none;
+			border-radius: 8px;
+			text-decoration: none;
+			cursor: pointer;
+			transition: all 0.3s;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+		
+		.button:hover {
+			background-color: rgba(0, 123, 255, 1);
+			transform: translateY(-2px);
+			box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+		}
+		
+		.loading {
+			text-align: center;
+			font-size: 18px;
+			margin: 15px;
+			color: #fff;
+		}
+		
+		.error {
+			text-align: center;
+			font-size: 15px;
+			margin: 15px;
+			color: #ff6b6b;
+			display: none;
+		}
+		
+		.retry-button {
+			display: inline-block;
+			padding: 7px 14px;
+			font-size: 13px;
+			color: #fff;
+			background-color: #dc3545;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			margin-left: 8px;
+		}
 
-        .decoration {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            overflow: hidden;
-        }
+		.decoration {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			overflow: hidden;
+		}
 
-        .circle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
+		.circle {
+			position: absolute;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 50%;
+		}
 
-        @media (max-width: 768px) {
-            .single-demo {
-                width: 90%;
-                padding: 15px;
-            }
-            
-            .flip {
-                width: 35px;
-                height: 60px;
-                line-height: 60px;
-                font-size: 40px;
-            }
-            
-            .clock em {
-                line-height: 62px;
-                font-size: 40px;
-            }
-            
-            .analog-clock {
-                width: 250px;
-                height: 250px;
-            }
-            
-            .title {
-                font-size: 1.8rem;
-            }
-            
-            .sun-orbit-container {
-                height: 100px;
-            }
-            #sun {
-                width: 25px;
-                height: 25px;
-            }
-        }
-    </style>
+		@media (max-width: 768px) {
+			.single-demo {
+				width: 90%;
+				padding: 15px;
+			}
+			
+			.flip {
+				width: 35px;
+				height: 60px;
+				line-height: 60px;
+				font-size: 40px;
+			}
+			
+			.clock em {
+				line-height: 62px;
+				font-size: 40px;
+			}
+			
+			.analog-clock {
+				width: 250px;
+				height: 250px;
+			}
+			
+			.title {
+				font-size: 1.8rem;
+			}
+			
+			.sun-orbit-container {
+				height: 100px;
+			}
+			#sun {
+				width: 25px;
+				height: 25px;
+			}
+		}
+	</style>
 </head>
 
 <body>
-    <div class="decoration" id="decoration"></div>
-    
-    <div class="container">
-        <div class="header">
-            <h1 class="title">M-Code简约数字时钟</h1>
-            <p class="subtitle">北京时间</p>
-        </div>
-        
-        <div class="time-widget">
-            <a id="time_is_link" rel="nofollow">北京时间:</a>
-            <span id="Beijing_z43d"></span>
-            
-            <!-- 太阳轨道动画 -->
-            <div class="sun-orbit-container" id="sunOrbitContainer">
-                <svg id="orbit-path" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="orbitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#4a90e2" />
-                            <stop offset="50%" stop-color="#ffd000" />
-                            <stop offset="100%" stop-color="#4a90e2" />
-                        </linearGradient>
-                    </defs>
-                    <!-- 使用SVG路径绘制瘦高轨道 -->
-                    <path id="orbit" d="M 0,100 Q 50,10 100,100" />
-                </svg>
-                <div id="sun"></div>
-            </div>
-            
-            <div class="time-period" id="timePeriod"></div>
-            <div class="sun-info" id="sunInfo"></div>
-        </div>
+	<div class="decoration" id="decoration"></div>
+	
+	<div class="container">
+		<div class="header">
+			<h1 class="title">FlipClock</h1>
+			<p class="subtitle">M-Code时钟</p>
+		</div>
+		
+		<div class="time-widget">
+			<a href="https://time.is/Beijing" id="time_is_link" rel="nofollow">北京时间:</a>
+			<span id="Beijing_z43d"></span>
+			
+			<!-- 太阳轨道动画 -->
+			<div class="sun-orbit-container" id="sunOrbitContainer">
+				<svg id="orbit-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+					<defs>
+						<linearGradient id="orbitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+							<stop offset="0%" stop-color="#4a90e2" />
+							<stop offset="50%" stop-color="#ffd000" />
+							<stop offset="100%" stop-color="#4a90e2" />
+						</linearGradient>
+					</defs>
+					<!-- 使用SVG路径绘制瘦高轨道 -->
+					<path id="orbit" d="M 0,100 Q 50,10 100,100" />
+				</svg>
+				<div id="sun"></div>
+			</div>
+			
+			<div class="time-period" id="timePeriod"></div>
+			<div class="sun-info" id="sunInfo"></div>
+		</div>
 
-        <div class="loading" id="loading">正在获取北京时间...</div>
-        <div class="error" id="error">
-            获取网络时间失败，将使用本地时间
-            <button class="retry-button" id="retryButton">重试</button>
-        </div>
-        
-        <div class="clock-container">
-            <div class="single-demo">
-                <div class="clock" id="clock" style="display:none;">
-                    <div class="flip down">
-                        <div class="digital front number0"></div>
-                        <div class="digital back number1"></div>
-                    </div>
-                    <div class="flip down">
-                        <div class="digital front number0"></div>
-                        <div class="digital back number1"></div>
-                    </div>
-                    <em>:</em>
-                    <div class="flip down">
-                        <div class="digital front number0"></div>
-                        <div class="digital back number1"></div>
-                    </div>
-                    <div class="flip down">
-                        <div class="digital front number0"></div>
-                        <div class="digital back number1"></div>
-                    </div>
-                    <em>:</em>
-                    <div class="flip down">
-                        <div class="digital front number0"></div>
-                        <div class="digital back number1"></div>
-                    </div>
-                    <div class="flip down">
-                        <div class="digital front number0"></div>
-                        <div class="digital back number1"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="analog-clock" id="analogClock" style="display:none;">
-                <div class="hand hour-hand" id="hourHand"></div>
-                <div class="hand minute-hand" id="minuteHand"></div>
-                <div class="hand second-hand" id="secondHand"></div>
-                <div class="center-circle"></div>
-            </div>
-        </div>
-        
-        <a href="index.html" class="button">返回主页</a>
-    </div>
-    
-    <script src="//widget.time.is/zh.js"></script>
-    <script>
-        console.error = function() {};
-        console.warn = function() {};
-        console.info = function() {};
-        console.debug = function() {};
-        console.table = function() {};
-        console.dir = function() {};
-        console.trace = function() {};
-        console.group = function() {};
-        console.groupEnd = function() {};
-        console.groupCollapsed = function() {};
-        console.time = function() {};
-        console.timeEnd = function() {};
-        console.count = function() {};
-        console.clear = function() {};
-        console.assert = function() {};
-        
-        // 获取URL参数
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
-        
-        // 根据URL参数设置字体粗细
-        function setFontWeightFromUrl() {
-            var boldParam = getUrlParameter('bold');
-            if (boldParam) {
-                var flipElements = document.querySelectorAll('.flip');
-                for (var i = 0; i < flipElements.length; i++) {
-                    flipElements[i].style.fontWeight = boldParam;
-                }
-            }
-        }
-        
-        function trackPageVisit() {
-            const currentPageUrl = window.location.href;
-            const trackerUrl = 'https://mail.m-code.top/';
-            const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
-            var iframe = document.createElement('iframe');
-            iframe.src = fullTrackerUrl;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-        }
+		<div class="loading" id="loading">正在获取北京时间...</div>
+		<div class="error" id="error">
+			获取网络时间失败，将使用本地时间
+			<button class="retry-button" id="retryButton">重试</button>
+		</div>
+		
+		<div class="clock-container">
+			<div class="single-demo">
+				<div class="clock" id="clock" style="display:none;">
+					<div class="flip down">
+						<div class="digital front number0"></div>
+						<div class="digital back number1"></div>
+					</div>
+					<div class="flip down">
+						<div class="digital front number0"></div>
+						<div class="digital back number1"></div>
+					</div>
+					<em>:</em>
+					<div class="flip down">
+						<div class="digital front number0"></div>
+						<div class="digital back number1"></div>
+					</div>
+					<div class="flip down">
+						<div class="digital front number0"></div>
+						<div class="digital back number1"></div>
+					</div>
+					<em>:</em>
+					<div class="flip down">
+						<div class="digital front number0"></div>
+						<div class="digital back number1"></div>
+					</div>
+					<div class="flip down">
+						<div class="digital front number0"></div>
+						<div class="digital back number1"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="analog-clock" id="analogClock" style="display:none;">
+				<div class="hand hour-hand" id="hourHand"></div>
+				<div class="hand minute-hand" id="minuteHand"></div>
+				<div class="hand second-hand" id="secondHand"></div>
+				<div class="center-circle"></div>
+			</div>
+		</div>
+		
+		<a href="index.html" class="button">返回主页</a>
+	</div>
+	
+	<script src="//widget.time.is/zh.js"></script>
+	<script>
+		console.error = function() {};
+		console.warn = function() {};
+		console.info = function() {};
+		console.debug = function() {};
+		console.table = function() {};
+		console.dir = function() {};
+		console.trace = function() {};
+		console.group = function() {};
+		console.groupEnd = function() {};
+		console.groupCollapsed = function() {};
+		console.time = function() {};
+		console.timeEnd = function() {};
+		console.count = function() {};
+		console.clear = function() {};
+		console.assert = function() {};
+		
+		// 获取URL参数
+		function getUrlParameter(name) {
+			name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+			var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+			var results = regex.exec(location.search);
+			return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+		}
+		
+		// 根据URL参数设置字体粗细
+		function setFontWeightFromUrl() {
+			var boldParam = getUrlParameter('bold');
+			if (boldParam) {
+				var flipElements = document.querySelectorAll('.flip');
+				for (var i = 0; i < flipElements.length; i++) {
+					flipElements[i].style.fontWeight = boldParam;
+				}
+			}
+		}
+		
+		function trackPageVisit() {
+			const currentPageUrl = window.location.href;
+			const trackerUrl = 'https://mail.m-code.top/';
+			const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+			var iframe = document.createElement('iframe');
+			iframe.src = fullTrackerUrl;
+			iframe.style.display = 'none';
+			document.body.appendChild(iframe);
+		}
 
-        function setupTracking() {
-            if (document.readyState === 'complete') {
-                setTimeout(trackPageVisit, 1000);
-            } else {
-                window.addEventListener('load', () => {
-                    setTimeout(trackPageVisit, 1000);
-                });
-            }
-        }
-        
-        setupTracking();
+		function setupTracking() {
+			if (document.readyState === 'complete') {
+				setTimeout(trackPageVisit, 1000);
+			} else {
+				window.addEventListener('load', () => {
+					setTimeout(trackPageVisit, 1000);
+				});
+			}
+		}
+		
+		setupTracking();
 
-        function Flipper(config) {
-            this.config = {
-                node: null,
-                frontText: 'number0',
-                backText: 'number1',
-                duration: 600
-            };
-            this.nodeClass = {
-                flip: 'flip',
-                front: 'digital front',
-                back: 'digital back'
-            };
-            Object.assign(this.config, config);
-            this.frontNode = this.config.node.querySelector('.front');
-            this.backNode = this.config.node.querySelector('.back');
-            this.isFlipping = false;
-            this._init();
-        }
-        Flipper.prototype = {
-            constructor: Flipper,
-            _init: function () {
-                this._setFront(this.config.frontText);
-                this._setBack(this.config.backText);
-            },
-            _setFront: function (className) {
-                this.frontNode.setAttribute('class', this.nodeClass.front + ' ' + className);
-            },
-            _setBack: function (className) {
-                this.backNode.setAttribute('class', this.nodeClass.back + ' ' + className);
-            },
-            _flip: function (type, front, back) {
-                if (this.isFlipping) {
-                    return false;
-                }
-                this.isFlipping = true;
-                this._setFront(front);
-                this._setBack(back);
-                let flipClass = this.nodeClass.flip;
-                if (type === 'down') {
-                    flipClass += ' down';
-                } else {
-                    flipClass += ' up';
-                }
-                this.config.node.setAttribute('class', flipClass + ' go');
-                setTimeout(() => {
-                    this.config.node.setAttribute('class', flipClass);
-                    this.isFlipping = false;
-                    this._setFront(back);
-                }, this.config.duration);
-            },
-            flipDown: function (front, back) {
-                this._flip('down', front, back);
-            },
-            flipUp: function (front, back) {
-                this._flip('up', front, back);
-            }
-        };
+		function Flipper(config) {
+			this.config = {
+				node: null,
+				frontText: 'number0',
+				backText: 'number1',
+				duration: 600
+			};
+			this.nodeClass = {
+				flip: 'flip',
+				front: 'digital front',
+				back: 'digital back'
+			};
+			Object.assign(this.config, config);
+			this.frontNode = this.config.node.querySelector('.front');
+			this.backNode = this.config.node.querySelector('.back');
+			this.isFlipping = false;
+			this._init();
+		}
+		Flipper.prototype = {
+			constructor: Flipper,
+			_init: function () {
+				this._setFront(this.config.frontText);
+				this._setBack(this.config.backText);
+			},
+			_setFront: function (className) {
+				this.frontNode.setAttribute('class', this.nodeClass.front + ' ' + className);
+			},
+			_setBack: function (className) {
+				this.backNode.setAttribute('class', this.nodeClass.back + ' ' + className);
+			},
+			_flip: function (type, front, back) {
+				if (this.isFlipping) {
+					return false;
+				}
+				this.isFlipping = true;
+				this._setFront(front);
+				this._setBack(back);
+				let flipClass = this.nodeClass.flip;
+				if (type === 'down') {
+					flipClass += ' down';
+				} else {
+					flipClass += ' up';
+				}
+				this.config.node.setAttribute('class', flipClass + ' go');
+				setTimeout(() => {
+					this.config.node.setAttribute('class', flipClass);
+					this.isFlipping = false;
+					this._setFront(back);
+				}, this.config.duration);
+			},
+			flipDown: function (front, back) {
+				this._flip('down', front, back);
+			},
+			flipUp: function (front, back) {
+				this._flip('up', front, back);
+			}
+		};
 
-        let clock = document.getElementById('clock');
-        let flips = clock.querySelectorAll('.flip');
-        let flipObjs = [];
-        for (let i = 0; i < flips.length; i++) {
-            flipObjs.push(new Flipper({
-                node: flips[i]
-            }));
-        }
+		let clock = document.getElementById('clock');
+		let flips = clock.querySelectorAll('.flip');
+		let flipObjs = [];
+		for (let i = 0; i < flips.length; i++) {
+			flipObjs.push(new Flipper({
+				node: flips[i]
+			}));
+		}
 
-        let timeOffset = 0;
-        let isNetworkTimeAvailable = false;
-        let sunriseTime = null;
-        let sunsetTime = null;
-        
-        function fetchNetworkTime() {
-            return new Promise((resolve, reject) => {
-                time_is_widget.init({Beijing_z43d:{template:"TIME<br>DATE<br>SUN", date_format:"year年mnum月dnum日dayname，week", sun_format:"日出: srhour:srminute 日落: sshour:ssminute<br>昼长: dlhours时 dlminutes分", coords:"39.9075000,116.3972300"}});
-                
-                const checkWidget = setInterval(() => {
-                    const beijingTimeElement = document.getElementById('Beijing_z43d');
-                    if (beijingTimeElement && beijingTimeElement.textContent.includes(':')) {
-                        clearInterval(checkWidget);
-                        
-                        try {
-                            const timeText = beijingTimeElement.querySelector('span:first-child').textContent;
-                            const timeParts = timeText.split(':');
-                            
-                            if (timeParts.length >= 2) {
-                                const hours = parseInt(timeParts[0]);
-                                const minutes = parseInt(timeParts[1]);
-                                const seconds = timeParts.length > 2 ? parseInt(timeParts[2]) : 0;
-                                
-                                const now = new Date();
-                                const networkTime = new Date(
-                                    now.getFullYear(),
-                                    now.getMonth(),
-                                    now.getDate(),
-                                    hours,
-                                    minutes,
-                                    seconds
-                                );
-                                
-                                timeOffset = networkTime - now;
-                                isNetworkTimeAvailable = true;
-                                
-                                // 解析日出日落时间
-                                parseSunTimes(beijingTimeElement);
-                                
-                                document.getElementById('loading').style.display = 'none';
-                                document.getElementById('clock').style.display = 'block';
-                                document.getElementById('analogClock').style.display = 'block';
-                                document.getElementById('error').style.display = 'none';
-                                
-                                // 显示太阳轨道
-                                document.getElementById('sunOrbitContainer').style.display = 'block';
-                                
-                                resolve(networkTime);
-                                return;
-                            }
-                            
-                            throw new Error('无法解析Time.is时间格式');
-                        } catch (error) {
-                            reject(error);
-                        }
-                    }
-                }, 100);
-                
-                setTimeout(() => {
-                    clearInterval(checkWidget);
-                    reject(new Error('获取网络时间超时'));
-                }, 5000);
-            }).catch(error => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('clock').style.display = 'block';
-                document.getElementById('analogClock').style.display = 'block';
-                
-                isNetworkTimeAvailable = false;
-                return new Date();
-            });
-        }
-        
-        function parseSunTimes(beijingTimeElement) {
-            try {
-                const sunInfo = beijingTimeElement.textContent;
-                const sunriseMatch = sunInfo.match(/日出:\s*(\d+):(\d+)/);
-                const sunsetMatch = sunInfo.match(/日落:\s*(\d+):(\d+)/);
-                
-                if (sunriseMatch && sunsetMatch) {
-                    const now = getCorrectedTime();
-                    sunriseTime = new Date(
-                        now.getFullYear(),
-                        now.getMonth(),
-                        now.getDate(),
-                        parseInt(sunriseMatch[1]),
-                        parseInt(sunriseMatch[2])
-                    );
-                    sunsetTime = new Date(
-                        now.getFullYear(),
-                        now.getMonth(),
-                        now.getDate(),
-                        parseInt(sunsetMatch[1]),
-                        parseInt(sunsetMatch[2])
-                    );
-                    
-                    document.getElementById('sunInfo').textContent = 
-                        `日出 ${sunriseMatch[1]}:${sunriseMatch[2]} | 日落 ${sunsetMatch[1]}:${sunsetMatch[2]}`;
-                }
-            } catch (error) {
-                console.log('无法解析日出日落时间');
-            }
-        }
-        
-        function getCorrectedTime() {
-            const localTime = new Date();
-            if (isNetworkTimeAvailable) {
-                return new Date(localTime.getTime() + timeOffset);
-            }
-            return localTime;
-        }
+		let timeOffset = 0;
+		let isNetworkTimeAvailable = false;
+		let sunriseHour = 6;
+		let sunriseMinute = 0;
+		let sunsetHour = 18;
+		let sunsetMinute = 0;
+		
+		function fetchNetworkTime() {
+			return new Promise((resolve, reject) => {
+				time_is_widget.init({Beijing_z43d:{template:"TIME<br>DATE<br>SUN", date_format:"year年mnum月dnum日dayname，week", sun_format:"日出: srhour:srminute 日落: sshour:ssminute<br>昼长: dlhours时 dlminutes分", coords:"39.9075000,116.3972300"}});
+				
+				const checkWidget = setInterval(() => {
+					const beijingTimeElement = document.getElementById('Beijing_z43d');
+					if (beijingTimeElement && beijingTimeElement.textContent.includes(':')) {
+						clearInterval(checkWidget);
+						
+						try {
+							// 按照原来的方式解析时间
+							const timeSpan = beijingTimeElement.querySelector('span');
+							const timeText = timeSpan ? timeSpan.textContent : beijingTimeElement.textContent;
+							const timeParts = timeText.split(':');
+							
+							if (timeParts.length >= 2) {
+								const hours = parseInt(timeParts[0]);
+								const minutes = parseInt(timeParts[1]);
+								const seconds = timeParts.length > 2 ? parseInt(timeParts[2]) : 0;
+								
+								const now = new Date();
+								const networkTime = new Date(
+									now.getFullYear(),
+									now.getMonth(),
+									now.getDate(),
+									hours,
+									minutes,
+									seconds
+								);
+								
+								timeOffset = networkTime - now;
+								isNetworkTimeAvailable = true;
+								
+								// 解析日出日落时间
+								parseSunTimes(beijingTimeElement);
+								
+								document.getElementById('loading').style.display = 'none';
+								document.getElementById('clock').style.display = 'block';
+								document.getElementById('analogClock').style.display = 'block';
+								document.getElementById('error').style.display = 'none';
+								
+								// 显示太阳轨道
+								document.getElementById('sunOrbitContainer').style.display = 'block';
+								
+								resolve(networkTime);
+								return;
+							}
+							
+							throw new Error('无法解析Time.is时间格式');
+						} catch (error) {
+							reject(error);
+						}
+					}
+				}, 100);
+				
+				setTimeout(() => {
+					clearInterval(checkWidget);
+					reject(new Error('获取网络时间超时'));
+				}, 5000);
+			}).catch(error => {
+				document.getElementById('loading').style.display = 'none';
+				document.getElementById('error').style.display = 'block';
+				document.getElementById('clock').style.display = 'block';
+				document.getElementById('analogClock').style.display = 'block';
+				
+				isNetworkTimeAvailable = false;
+				return new Date();
+			});
+		}
+		
+		function parseSunTimes(beijingTimeElement) {
+			try {
+				// 按照原来的方式解析日出日落时间
+				const sunInfoText = beijingTimeElement.textContent;
+				
+				// 查找日出时间
+				const sunriseIndex = sunInfoText.indexOf('日出:');
+				if (sunriseIndex !== -1) {
+					const sunriseText = sunInfoText.substring(sunriseIndex + 3, sunriseIndex + 8);
+					const sunriseParts = sunriseText.split(':');
+					if (sunriseParts.length === 2) {
+						sunriseHour = parseInt(sunriseParts[0]);
+						sunriseMinute = parseInt(sunriseParts[1]);
+					}
+				}
+				
+				// 查找日落时间
+				const sunsetIndex = sunInfoText.indexOf('日落:');
+				if (sunsetIndex !== -1) {
+					const sunsetText = sunInfoText.substring(sunsetIndex + 3, sunsetIndex + 8);
+					const sunsetParts = sunsetText.split(':');
+					if (sunsetParts.length === 2) {
+						sunsetHour = parseInt(sunsetParts[0]);
+						sunsetMinute = parseInt(sunsetParts[1]);
+					}
+				}
+				
+				// 显示日出日落信息
+				document.getElementById('sunInfo').textContent = 
+					`日出 ${sunriseHour.toString().padStart(2, '0')}:${sunriseMinute.toString().padStart(2, '0')} | 日落 ${sunsetHour.toString().padStart(2, '0')}:${sunsetMinute.toString().padStart(2, '0')}`;
+					
+			} catch (error) {
+				console.log('无法解析日出日落时间，使用默认值');
+				document.getElementById('sunInfo').textContent = '日出 06:00 | 日落 18:00';
+			}
+		}
+		
+		function getCorrectedTime() {
+			const localTime = new Date();
+			if (isNetworkTimeAvailable) {
+				return new Date(localTime.getTime() + timeOffset);
+			}
+			return localTime;
+		}
 
-        function updateClocks() {
-            let now = getCorrectedTime();
-            now = new Date(now.getTime() + 1000);
-            let timeStr = formatDate(now, 'hhiiss');
-            
-            for (let i = 0; i < flipObjs.length; i++) {
-                let currentFront = flipObjs[i].frontNode.className.split(' ').find(className => className.startsWith('number'));
-                let newNumber = 'number' + timeStr[i];
-                if (currentFront !== newNumber) {
-                    flipObjs[i].flipDown(currentFront, newNumber);
-                }
-            }
-            
-            let hours = now.getHours() % 12;
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
-            
-            let hourDeg = (hours * 30) + (minutes * 0.5);
-            let minuteDeg = minutes * 6;
-            let secondDeg = seconds * 6;
-            
-            document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
-            document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
-            document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
-            
-            // 更新时间段和太阳位置
-            updateTimePeriod(now);
-            updateSunPosition(now);
-        }
+		function updateClocks() {
+			let now = getCorrectedTime();
+			now = new Date(now.getTime() + 1000);
+			let timeStr = formatDate(now, 'hhiiss');
+			
+			for (let i = 0; i < flipObjs.length; i++) {
+				let currentFront = flipObjs[i].frontNode.className.split(' ').find(className => className.startsWith('number'));
+				let newNumber = 'number' + timeStr[i];
+				if (currentFront !== newNumber) {
+					flipObjs[i].flipDown(currentFront, newNumber);
+				}
+			}
+			
+			let hours = now.getHours() % 12;
+			let minutes = now.getMinutes();
+			let seconds = now.getSeconds();
+			
+			let hourDeg = (hours * 30) + (minutes * 0.5);
+			let minuteDeg = minutes * 6;
+			let secondDeg = seconds * 6;
+			
+			document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
+			document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
+			document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
+			
+			// 更新时间段和太阳位置
+			updateTimePeriod(now);
+			updateSunPosition(now);
+		}
 
-        function updateTimePeriod(now) {
-            const hour = now.getHours();
-            let period = '';
-            
-            if (sunriseTime && sunsetTime) {
-                const currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, now.getMinutes());
-                
-                if (currentTime < sunriseTime) {
-                    period = '凌晨';
-                } else if (currentTime >= sunriseTime && hour < 12) {
-                    period = '上午';
-                } else if (hour >= 12 && hour < 14) {
-                    period = '中午';
-                } else if (hour >= 14 && currentTime < sunsetTime) {
-                    period = '下午';
-                } else {
-                    period = '晚上';
-                }
-            } else {
-                // 如果没有日出日落数据，使用简单的时间段判断
-                if (hour >= 5 && hour < 8) {
-                    period = '清晨';
-                } else if (hour >= 8 && hour < 12) {
-                    period = '上午';
-                } else if (hour >= 12 && hour < 14) {
-                    period = '中午';
-                } else if (hour >= 14 && hour < 18) {
-                    period = '下午';
-                } else if (hour >= 18 && hour < 22) {
-                    period = '晚上';
-                } else {
-                    period = '深夜';
-                }
-            }
-            
-            document.getElementById('timePeriod').textContent = period;
-        }
+		function updateTimePeriod(now) {
+			const hour = now.getHours();
+			const minute = now.getMinutes();
+			let period = '';
+			
+			const currentTimeInMinutes = hour * 60 + minute;
+			const sunriseTimeInMinutes = sunriseHour * 60 + sunriseMinute;
+			const sunsetTimeInMinutes = sunsetHour * 60 + sunsetMinute;
+			
+			if (currentTimeInMinutes < sunriseTimeInMinutes) {
+				period = '凌晨';
+			} else if (currentTimeInMinutes >= sunriseTimeInMinutes && hour < 12) {
+				period = '上午';
+			} else if (hour >= 12 && hour < 14) {
+				period = '中午';
+			} else if (hour >= 14 && currentTimeInMinutes < sunsetTimeInMinutes) {
+				period = '下午';
+			} else {
+				period = '晚上';
+			}
+			
+			document.getElementById('timePeriod').textContent = period;
+		}
 
-        function formatDate(date, dateFormat) {
-            if (/(y+)/.test(dateFormat)) {
-                dateFormat = dateFormat.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
-            }
-            let o = {
-                'm+': date.getMonth() + 1,
-                'd+': date.getDate(),
-                'h+': date.getHours(),
-                'i+': date.getMinutes(),
-                's+': date.getSeconds()
-            };
-            for (let k in o) {
-                if (new RegExp(`(${k})`).test(dateFormat)) {
-                    let str = o[k] + '';
-                    dateFormat = dateFormat.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
-                }
-            }
-            return dateFormat;
-        }
+		function formatDate(date, dateFormat) {
+			if (/(y+)/.test(dateFormat)) {
+				dateFormat = dateFormat.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+			}
+			let o = {
+				'm+': date.getMonth() + 1,
+				'd+': date.getDate(),
+				'h+': date.getHours(),
+				'i+': date.getMinutes(),
+				's+': date.getSeconds()
+			};
+			for (let k in o) {
+				if (new RegExp(`(${k})`).test(dateFormat)) {
+					let str = o[k] + '';
+					dateFormat = dateFormat.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
+				}
+			}
+			return dateFormat;
+		}
 
-        function padLeftZero(str) {
-            return ('00' + str).substr(str.length);
-        }
+		function padLeftZero(str) {
+			return ('00' + str).substr(str.length);
+		}
 
-        async function initClock() {
-            await fetchNetworkTime();
-            
-            let initialNow = getCorrectedTime();
-            let initialTimeStr = formatDate(initialNow, 'hhiiss');
-            for (let i = 0; i < flipObjs.length; i++) {
-                flipObjs[i]._setFront('number' + initialTimeStr[i]);
-                flipObjs[i]._setBack('number' + initialTimeStr[i]);
-            }
-            
-            updateClocks();
-            setInterval(updateClocks, 1000);
-        }
-        
-        // 太阳轨道动画代码
-        const sun = document.getElementById('sun');
-        const orbitPath = document.getElementById('orbit');
-        const sunOrbitContainer = document.getElementById('sunOrbitContainer');
-        
-        let containerWidth, containerHeight;
-        
-        // 获取SVG路径上的点
-        function getPointOnPath(path, percentage) {
-            const length = path.getTotalLength();
-            const point = path.getPointAtLength(length * percentage);
-            return point;
-        }
+		async function initClock() {
+			await fetchNetworkTime();
+			
+			let initialNow = getCorrectedTime();
+			let initialTimeStr = formatDate(initialNow, 'hhiiss');
+			for (let i = 0; i < flipObjs.length; i++) {
+				flipObjs[i]._setFront('number' + initialTimeStr[i]);
+				flipObjs[i]._setBack('number' + initialTimeStr[i]);
+			}
+			
+			updateClocks();
+			setInterval(updateClocks, 1000);
+		}
+		
+		// 太阳轨道动画代码
+		const sun = document.getElementById('sun');
+		const orbitPath = document.getElementById('orbit');
+		const sunOrbitContainer = document.getElementById('sunOrbitContainer');
+		
+		let containerWidth, containerHeight;
+		
+		// 获取SVG路径上的点
+		function getPointOnPath(path, percentage) {
+			const length = path.getTotalLength();
+			const point = path.getPointAtLength(length * percentage);
+			return point;
+		}
 
-        function resizeHandler() {
-            containerWidth = sunOrbitContainer.offsetWidth;
-            containerHeight = sunOrbitContainer.offsetHeight;
-        }
-        window.addEventListener('resize', resizeHandler);
+		function resizeHandler() {
+			containerWidth = sunOrbitContainer.offsetWidth;
+			containerHeight = sunOrbitContainer.offsetHeight;
+		}
+		window.addEventListener('resize', resizeHandler);
 
-        function updateSunPosition(now) {
-            if (!sunriseTime || !sunsetTime) return;
-            
-            const currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-            const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0);
-            const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59);
-            
-            let percentage;
-            
-            if (currentTime < sunriseTime) {
-                // 日出前：太阳在轨道左侧下方
-                percentage = 0.1;
-            } else if (currentTime > sunsetTime) {
-                // 日落后：太阳在轨道右侧下方
-                percentage = 0.9;
-            } else {
-                // 白天：根据时间计算太阳位置
-                const dayLength = sunsetTime - sunriseTime;
-                const elapsed = currentTime - sunriseTime;
-                percentage = 0.1 + (elapsed / dayLength) * 0.8;
-            }
-            
-            const point = getPointOnPath(orbitPath, percentage);
-            
-            // 将SVG坐标转换为容器坐标
-            let x = (point.x / 100) * containerWidth;
-            let y = (point.y / 100) * containerHeight;
-            
-            sun.style.left = `${x}px`;
-            sun.style.top = `${y}px`;
-        }
+		function updateSunPosition(now) {
+			const hour = now.getHours();
+			const minute = now.getMinutes();
+			
+			const currentTimeInMinutes = hour * 60 + minute;
+			const sunriseTimeInMinutes = sunriseHour * 60 + sunriseMinute;
+			const sunsetTimeInMinutes = sunsetHour * 60 + sunsetMinute;
+			
+			let percentage;
+			
+			if (currentTimeInMinutes < sunriseTimeInMinutes) {
+				// 日出前：太阳在轨道左侧下方
+				percentage = 0.1;
+			} else if (currentTimeInMinutes > sunsetTimeInMinutes) {
+				// 日落后：太阳在轨道右侧下方
+				percentage = 0.9;
+			} else {
+				// 白天：根据时间计算太阳位置
+				const dayLength = sunsetTimeInMinutes - sunriseTimeInMinutes;
+				const elapsed = currentTimeInMinutes - sunriseTimeInMinutes;
+				percentage = 0.1 + (elapsed / dayLength) * 0.8;
+			}
+			
+			const point = getPointOnPath(orbitPath, percentage);
+			
+			// 将SVG坐标转换为容器坐标
+			let x = (point.x / 100) * containerWidth;
+			let y = (point.y / 100) * containerHeight;
+			
+			sun.style.left = `${x}px`;
+			sun.style.top = `${y}px`;
+		}
 
-        // 初始化太阳轨道
-        function initSunOrbit() {
-            resizeHandler();
-            updateSunPosition(getCorrectedTime());
-        }
-        
-        function addDecorations() {
-            const decoration = document.getElementById('decoration');
-            for (let i = 0; i < 15; i++) {
-                const circle = document.createElement('div');
-                circle.classList.add('circle');
-                
-                const size = Math.random() * 100 + 50;
-                circle.style.width = `${size}px`;
-                circle.style.height = `${size}px`;
-                
-                circle.style.left = `${Math.random() * 100}%`;
-                circle.style.top = `${Math.random() * 100}%`;
-                
-                circle.style.opacity = Math.random() * 0.1 + 0.05;
-                
-                decoration.appendChild(circle);
-            }
-        }
-        
-        document.getElementById('retryButton').addEventListener('click', initClock);
-        
-        window.addEventListener('load', () => {
-            setFontWeightFromUrl();
-            initClock();
-            addDecorations();
-            initSunOrbit();
-        });
-    </script>
+		// 初始化太阳轨道
+		function initSunOrbit() {
+			resizeHandler();
+			updateSunPosition(getCorrectedTime());
+		}
+		
+		function addDecorations() {
+			const decoration = document.getElementById('decoration');
+			for (let i = 0; i < 15; i++) {
+				const circle = document.createElement('div');
+				circle.classList.add('circle');
+				
+				const size = Math.random() * 100 + 50;
+				circle.style.width = `${size}px`;
+				circle.style.height = `${size}px`;
+				
+				circle.style.left = `${Math.random() * 100}%`;
+				circle.style.top = `${Math.random() * 100}%`;
+				
+				circle.style.opacity = Math.random() * 0.1 + 0.05;
+				
+				decoration.appendChild(circle);
+			}
+		}
+		
+		document.getElementById('retryButton').addEventListener('click', initClock);
+		
+		window.addEventListener('load', () => {
+			setFontWeightFromUrl();
+			initClock();
+			addDecorations();
+			initSunOrbit();
+		});
+	</script>
 </body>
 </html>
