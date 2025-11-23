@@ -119,8 +119,13 @@
             box-shadow: 0 0 20px #ffd000, 0 0 40px rgba(255, 152, 0, 0.5);
             transform: translate(-50%, -50%);
             z-index: 10;
-            transition: left 1.5s ease, top 1.5s ease;
-            will-change: left, top;
+            transition: all 1.5s ease;
+            will-change: left, top, opacity, box-shadow;
+        }
+        #sun.night-sun {
+            opacity: 0.4;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.3), 0 0 20px rgba(255, 152, 0, 0.2);
+            background: radial-gradient(circle, rgba(255, 236, 59, 0.6) 0%, rgba(255, 152, 0, 0.6) 100%);
         }
 
         .time-period {
@@ -952,19 +957,26 @@
             const sunsetTimeInMinutes = sunsetHour * 60 + sunsetMinute;
             
             let targetPercentage;
+            let isNightTime = false;
             
             if (currentTimeInMinutes < sunriseTimeInMinutes) {
+                // 日出前：太阳在轨道下方更远的位置
                 const nightBeforeLength = sunriseTimeInMinutes;
                 const elapsedBefore = currentTimeInMinutes;
                 targetPercentage = 0.05 + (elapsedBefore / nightBeforeLength) * 0.05;
+                isNightTime = true;
             } else if (currentTimeInMinutes > sunsetTimeInMinutes) {
+                // 日落后：太阳在轨道下方更远的位置
                 const nightAfterLength = 24 * 60 - sunsetTimeInMinutes;
                 const elapsedAfter = currentTimeInMinutes - sunsetTimeInMinutes;
                 targetPercentage = 0.95 + (elapsedAfter / nightAfterLength) * 0.05;
+                isNightTime = true;
             } else {
+                // 白天：太阳在轨道上
                 const dayLength = sunsetTimeInMinutes - sunriseTimeInMinutes;
                 const elapsed = currentTimeInMinutes - sunriseTimeInMinutes;
                 targetPercentage = 0.1 + (elapsed / dayLength) * 0.8;
+                isNightTime = false;
             }
             
             targetPercentage = Math.max(0.05, Math.min(0.95, targetPercentage));
@@ -973,29 +985,32 @@
             let x = (point.x / 100) * containerWidth;
             let y = (point.y / 100) * containerHeight;
             
+            // 如果是日出前或日落后，将太阳位置向下移动
+            if (isNightTime) {
+                y += containerHeight * 0.3; // 向下移动30%的容器高度
+            }
+            
             lastSunPosition = { x, y };
             
             void sun.offsetWidth;
             
+            // 设置太阳样式：夜晚时变暗
+            if (isNightTime) {
+                sun.classList.add('night-sun');
+            } else {
+                sun.classList.remove('night-sun');
+            }
+            
+            // 直接设置太阳位置，不使用动画
             if (!sunInitialized) {
-                const initialPercentage = 0.05;
-                const initialPoint = getPointOnPath(orbitPath, initialPercentage);
-                let initialX = (initialPoint.x / 100) * containerWidth;
-                let initialY = (initialPoint.y / 100) * containerHeight;
-                
-                sun.style.left = `${initialX}px`;
-                sun.style.top = `${initialY}px`;
                 sun.style.transition = 'none';
+                sun.style.left = `${x}px`;
+                sun.style.top = `${y}px`;
                 
                 void sun.offsetWidth;
                 
-                sun.style.transition = 'left 1.5s ease, top 1.5s ease';
+                sun.style.transition = 'all 1.5s ease';
                 sunInitialized = true;
-                
-                setTimeout(() => {
-                    sun.style.left = `${x}px`;
-                    sun.style.top = `${y}px`;
-                }, 50);
             } else {
                 sun.style.left = `${x}px`;
                 sun.style.top = `${y}px`;
@@ -1004,16 +1019,13 @@
 
         function initSunOrbit() {
             resizeHandler();
-            setTimeout(() => {
-                updateSunPosition(getCorrectedTime());
-            }, 100);
+            // 直接设置太阳位置，不使用延迟
+            updateSunPosition(getCorrectedTime());
             
             document.addEventListener('visibilitychange', function() {
                 if (!document.hidden) {
                     sunInitialized = false;
-                    setTimeout(() => {
-                        updateSunPosition(getCorrectedTime());
-                    }, 100);
+                    updateSunPosition(getCorrectedTime());
                 }
             });
         }
