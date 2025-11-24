@@ -123,7 +123,7 @@
 			will-change: left, top, opacity, box-shadow;
 		}
 		#sun.night-sun {
-			opacity: 0.4;
+			opacity: 0.7;
 			box-shadow: 0 0 10px rgba(255, 152, 0, 0.3), 0 0 20px rgba(255, 152, 0, 0.2);
 			background: radial-gradient(circle, rgba(255, 236, 59, 0.6) 0%, rgba(255, 152, 0, 0.6) 100%);
 		}
@@ -976,11 +976,6 @@
 			const hour = now.getHours();
 			const minute = now.getMinutes();
 			
-			// 检查是否是午夜00:00，如果是则重置太阳位置
-			if (hour === 0 && minute === 0 && lastHour !== 0) {
-				sunInitialized = false;
-				lastSunPosition = { x: 0, y: 0 };
-			}
 			lastHour = hour;
 			
 			const currentTimeInMinutes = hour * 60 + minute;
@@ -1022,11 +1017,12 @@
 				x += containerHeight * 0.1;
 			}
 			
-			// 如果是午夜00:00，太阳从最右边瞬间移动到最左边
+			// 如果是午夜00:00
 			if (hour === 0 && minute === 0) {
+				sun.classList.add('night-sun');
 				sun.style.transition = 'none';
 				x = (0 / 100) * containerWidth;
-				y = (100 / 100) * containerHeight + containerHeight * 0.3;
+				y = (100 / 100) * containerHeight;
 				sun.style.left = `${x}px`;
 				sun.style.top = `${y}px`;
 				void sun.offsetWidth;
