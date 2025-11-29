@@ -1,369 +1,277 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>新旧三民主义历史消消乐</title>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-			font-family: 'Microsoft YaHei', sans-serif;
-		}
-		
-		body {
-			background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-			min-height: 100vh;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			padding: 20px;
-			color: #fff;
-		}
-		
-		.header {
-			text-align: center;
-			margin-bottom: 30px;
-			width: 100%;
-		}
-		
-		h1 {
-			font-size: 3.2rem;
-			text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
-			margin-bottom: 15px;
-			background: linear-gradient(to right, #ff9966, #ff5e62);
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
-			animation: glow 2s ease-in-out infinite alternate;
-		}
-		
-		@keyframes glow {
-			from {
-				text-shadow: 0 0 10px #fff, 0 0 20px #ff9966, 0 0 30px #ff5e62;
-			}
-			to {
-				text-shadow: 0 0 20px #fff, 0 0 30px #ff9966, 0 0 40px #ff5e62;
-			}
-		}
-		
-		.instructions {
-			background-color: rgba(255, 255, 255, 0.2);
-			padding: 15px;
-			border-radius: 10px;
-			max-width: 800px;
-			margin: 0 auto 20px;
-			text-align: center;
-			font-size: 1.1rem;
-			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-		}
-		
-		.game-container {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			gap: 20px;
-			max-width: 1200px;
-			margin: 0 auto;
-		}
-		
-		.bubble {
-			width: 200px;
-			height: 200px;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			text-align: center;
-			padding: 15px;
-			cursor: pointer;
-			font-weight: bold;
-			font-size:2rem;
-			color: #333;
-			box-shadow: 
-				inset 0 -8px 20px rgba(0, 0, 0, 0.2),
-				inset 0 8px 20px rgba(255, 255, 255, 0.5),
-				0 0 20px rgba(255, 255, 255, 0.5);
-			transition: transform 0.3s, box-shadow 0.3s;
-			user-select: none;
-			position: relative;
-			overflow: hidden;
-		}
-		
-		.bubble::before {
-			content: '';
-			position: absolute;
-			top: -10%;
-			left: -10%;
-			width: 120%;
-			height: 120%;
-			background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-			opacity: 0.6;
-		}
-		
-		.bubble:hover {
-			transform: scale(1.05);
-			box-shadow: 
-				inset 0 -8px 20px rgba(0, 0, 0, 0.2),
-				inset 0 8px 20px rgba(255, 255, 255, 0.7),
-				0 0 25px rgba(255, 255, 255, 0.7);
-		}
-		
-		.bubble.selected {
-			transform: scale(1.1);
-			box-shadow: 
-				inset 0 -8px 20px rgba(0, 0, 0, 0.2),
-				inset 0 8px 20px rgba(255, 255, 255, 0.7),
-				0 0 30px rgba(255, 215, 0, 0.8);
-		}
-		
-		.bubble.matched {
-			visibility: hidden;
-			opacity: 0;
-			transition: visibility 0.5s, opacity 0.5s;
-		}
-		
-		.victory-message {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background-color: rgba(0, 0, 0, 0.8);
-			display: none;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			z-index: 100;
-		}
-		
-		.victory-text {
-			font-size: 4rem;
-			color: gold;
-			text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-			margin-bottom: 30px;
-			animation: bounce 1s ease infinite alternate;
-		}
-		
-		@keyframes bounce {
-			from { transform: scale(1); }
-			to { transform: scale(1.1); }
-		}
-		
-		.restart-btn {
-			padding: 15px 40px;
-			font-size: 1.5rem;
-			background: linear-gradient(to right, #ff9966, #ff5e62);
-			border: none;
-			border-radius: 50px;
-			color: white;
-			cursor: pointer;
-			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-			transition: transform 0.3s, box-shadow 0.3s;
-		}
-		
-		.restart-btn:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-		}
-		
-		.counter {
-			font-size: 1.5rem;
-			margin-top: 20px;
-			background-color: rgba(255, 255, 255, 0.2);
-			padding: 10px 20px;
-			border-radius: 50px;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-		}
-		
-		/* 泡泡颜色 */
-		.bubble:nth-child(1) { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
-		.bubble:nth-child(2) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
-		.bubble:nth-child(3) { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
-		.bubble:nth-child(4) { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
-		.bubble:nth-child(5) { background: linear-gradient(135deg, #d4fc79, #96e6a1); }
-		.bubble:nth-child(6) { background: linear-gradient(135deg, #a6c0fe, #f68084); }
-		.bubble:nth-child(7) { background: linear-gradient(135deg, #fccb90, #d57eeb); }
-		.bubble:nth-child(8) { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); }
-		.bubble:nth-child(9) { background: linear-gradient(135deg, #f6d365, #fda085); }
-		.bubble:nth-child(10) { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
-		.bubble:nth-child(11) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
-		.bubble:nth-child(12) { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=xiaoxiaole.html" />
+    <title>历史学科 - 教学小游戏</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        historical: {
+                            dark: '#3E2723',    // 深棕色
+                            medium: '#6D4C41',  // 中棕色
+                            light: '#A1887F',   // 浅棕色
+                            gold: '#D4AF37',    // 金色
+                            cream: '#F5F5DC'    // 米色
+                        },
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif SC"', 'serif'],
+                        sans: ['"Noto Sans SC"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .btn-hover {
+                @apply transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95;
+            }
+            .bg-texture {
+                background-image: url('https://picsum.photos/id/175/1000/1000');
+                background-size: cover;
+                background-blend-mode: overlay;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 导入中文字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        
+        /* 页面加载动画 */
+        body {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 按钮装饰元素 */
+        .btn-decoration::before {
+            content: "•";
+            color: #D4AF37;
+            margin-right: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn-decoration::after {
+            content: "•";
+            color: #D4AF37;
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn-hover:hover .btn-decoration::before,
+        .btn-hover:hover .btn-decoration::after {
+            opacity: 1;
+        }
+    </style>
 </head>
-<body>
-	<div class="header">
-		<h1>新旧三民主义历史消消乐</h1>
-		<div class="instructions">
-			<p>游戏规则：点击两个泡泡进行匹配，只有新旧三民主义的具体内容和解释言论匹配正确，泡泡才会消失。</p>
-			<p>全部匹配完成后，游戏胜利！</p>
-		</div>
-		<div class="counter">已匹配: <span id="match-count">0</span> / 6 对</div>
-	</div>
-	
-	<div class="game-container" id="game-container">
-		<!-- 泡泡将通过JavaScript动态生成 -->
-	</div>
-	
-	<div class="victory-message" id="victory-message">
-		<div class="victory-text">恭喜你挑战成功！</div>=
-		<button class="restart-btn" onclick="restartGame()">再玩一次</button>
-	</div>
-	
-	<!-- 音效 -->
-	<audio id="click-sound" preload="auto">
-		<source src="click.wav" type="audio/mpeg">
-	</audio>
-	<audio id="pop-sound" preload="auto">
-		<source src="match.wav" type="audio/mpeg">
-	</audio>
-	<audio id="victory-sound" preload="auto">
-		<source src="victory.wav" type="audio/mpeg">
-	</audio>
-	
-	<script>
-		// 游戏数据 - 6个概念和6个解释
-		const items = [
-			// 概念
-			{ id: 1, type: "概念", title: "旧三民民族主义", content: "民族主义" },
-			{ id: 2, type: "概念", title: "旧三民民权主义", content: "民权主义" },
-			{ id: 3, type: "概念", title: "旧三民民生主义", content: "民生主义" },
-			{ id: 4, type: "概念", title: "新三民民族主义", content: "民族主义" },
-			{ id: 5, type: "概念", title: "新三民民权主义", content: "民权主义" },
-			{ id: 6, type: "概念", title: "新三民民生主义", content: "民生主义" },
-			
-			// 解释
-			{ id: 7, type: "解释", title: "旧三民民族主义解释", content: "驱除鞑虏，恢复中华" },
-			{ id: 8, type: "解释", title: "旧三民民权主义解释", content: "创立民国" },
-			{ id: 9, type: "解释", title: "旧三民民生主义解释", content: "平均地权" },
-			{ id: 10, type: "解释", title: "新三民民族主义解释", content: "反对帝国主义" },
-			{ id: 11, type: "解释", title: "新三民民权主义解释", content: "民主权利应为一般平民所共有。" },
-			{ id: 12, type: "解释", title: "新三民民生主义解释", content: "平均地权，节制资本，耕者有其田" }
-		];
-		
-		// 匹配关
-		const matches = {
-			1: 7,  // 旧三民民族主义 -> 驱除鞑虏，恢复中华
-			7: 1,
-			2: 8,  // 旧三民民权主义 -> 创立民国
-			8: 2,
-			3: 9,  // 旧三民民生主义 -> 平均地权
-			9: 3,
-			4: 10, // 新三民民族主义 -> 反对帝国主义
-			10: 4,
-			5: 11, // 新三民民权主义 -> 民主权利应为一般平民所共
-			11: 5,
-			6: 12, // 新三民民生主义 -> 平均地权，节制资本，耕者有其田
-			12: 6
-		};
-		
-		// 游戏状态变量
-		let selectedBubble = null;
-		let matchCount = 0;
-		let canClick = true;
-		
-		// 初始化游戏
-		function initGame() {
-			const gameContainer = document.getElementById('game-container');
-			gameContainer.innerHTML = '';
-			
-			// 复制并打乱概念数组
-			const shuffledItems = [...items].sort(() => Math.random() - 0.5);
-			
-			// 创建泡泡元素
-			shuffledItems.forEach(item => {
-				const bubble = document.createElement('div');
-				bubble.className = 'bubble';
-				bubble.dataset.id = item.id;
-				
-				// 创建泡泡内容
-				const content = document.createElement('div');
-				if (item.type === "概念") {
-					content.innerHTML = `<strong>${item.title}</strong>`;
-				} else {
-					content.innerHTML = `${item.content}`;
-				}
-				bubble.appendChild(content);
-				
-				// 添加点击事件
-				bubble.addEventListener('click', () => handleBubbleClick(bubble));
-				
-				gameContainer.appendChild(bubble);
-			});
-			
-			// 重置游戏状态
-			selectedBubble = null;
-			matchCount = 0;
-			document.getElementById('match-count').textContent = matchCount;
-			document.getElementById('victory-message').style.display = 'none';
-		}
-		
-		// 处理泡泡点击
-		function handleBubbleClick(bubble) {
-			if (!canClick || bubble.classList.contains('matched') || bubble === selectedBubble) {
-				return;
-			}
-			
-			// 播放点击音效
-			document.getElementById('click-sound').play();
-			
-			// 添加选中效果
-			bubble.classList.add('selected');
-			
-			if (!selectedBubble) {
-				// 第一次选择
-				selectedBubble = bubble;
-			} else {
-				// 第二次选择，检查是否匹配
-				canClick = false;
-				const firstId = parseInt(selectedBubble.dataset.id);
-				const secondId = parseInt(bubble.dataset.id);
-				
-				if (matches[firstId] === secondId) {
-					// 匹配成功
-					setTimeout(() => {
-						selectedBubble.classList.add('matched');
-						bubble.classList.add('matched');
-						selectedBubble.classList.remove('selected');
-						bubble.classList.remove('selected');
-						
-						// 播放匹配成功音效
-						document.getElementById('pop-sound').play();
-						
-						matchCount++;
-						document.getElementById('match-count').textContent = matchCount;
-						
-						// 检查游戏是否结束
-						if (matchCount === items.length / 2) {
-							setTimeout(() => {
-								document.getElementById('victory-sound').play();
-								document.getElementById('victory-message').style.display = 'flex';
-							}, 500);
-						}
-						
-						selectedBubble = null;
-						canClick = true;
-					}, 500);
-				} else {
-					// 匹配失败
-					setTimeout(() => {
-						selectedBubble.classList.remove('selected');
-						bubble.classList.remove('selected');
-						selectedBubble = null;
-						canClick = true;
-					}, 1000);
-				}
-			}
-		}
-		
-		// 重新开始游戏
-		function restartGame() {
-			initGame();
-		}
-		
-		// 页面加载时初始化游戏
-		window.onload = initGame;
-	</script>
+<body class="bg-historical-cream min-h-screen">
+    <!-- 页面头部 -->
+    <header class="bg-historical-dark text-white py-8 px-4 md:px-8 lg:px-16 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-texture"></div>
+        <div class="container mx-auto relative z-10">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-serif font-bold text-center text-shadow">
+                历史学科 <span class="text-historical-gold">教学小游戏</span>
+            </h1>
+            <p class="text-center mt-4 text-historical-light max-w-2xl mx-auto">
+                寓教于乐，让历史学习更加生动有趣。选择下方游戏，开始探索历史的奥秘吧！
+            </p>
+        </div>
+        
+        <!-- 装饰性分隔线 -->
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-historical-gold to-transparent"></div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto py-12 px-4 md:px-8">
+        <!-- 游戏按钮网格 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- 消消乐游戏 -->
+            <a href="xiaoxiaole.html" class="group">
+                <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col items-center justify-center btn-hover border border-historical-light/30 hover:border-historical-gold/50">
+                    <div class="w-20 h-20 bg-historical-medium/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-historical-medium/20 transition-colors">
+                        <i class="fa fa-th text-3xl text-historical-medium group-hover:text-historical-gold transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-semibold text-historical-dark mb-2 text-center">
+                        <span class="btn-decoration">历史事件消消乐</span>
+                    </h3>
+                    <p class="text-center text-historical-light text-sm">
+                        匹配相同的历史事件卡片，在游戏中记忆重要的历史时刻和人物
+                    </p>
+                </div>
+            </a>
+
+            <!-- 拼图游戏 -->
+            <a href="历史拼图.html" class="group">
+                <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col items-center justify-center btn-hover border border-historical-light/30 hover:border-historical-gold/50">
+                    <div class="w-20 h-20 bg-historical-medium/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-historical-medium/20 transition-colors">
+                        <i class="fa fa-puzzle-piece text-3xl text-historical-medium group-hover:text-historical-gold transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-semibold text-historical-dark mb-2 text-center">
+                        <span class="btn-decoration">历史文物拼图</span>
+                    </h3>
+                    <p class="text-center text-historical-light text-sm">
+                        拼接历史文物图片，了解古代文明的灿烂成就和艺术瑰宝
+                    </p>
+                </div>
+            </a>
+
+            <!-- 问答游戏 -->
+            <a href="历史问答.html" class="group">
+                <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col items-center justify-center btn-hover border border-historical-light/30 hover:border-historical-gold/50">
+                    <div class="w-20 h-20 bg-historical-medium/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-historical-medium/20 transition-colors">
+                        <i class="fa fa-question-circle text-3xl text-historical-medium group-hover:text-historical-gold transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-semibold text-historical-dark mb-2 text-center">
+                        <span class="btn-decoration">历史知识问答</span>
+                    </h3>
+                    <p class="text-center text-historical-light text-sm">
+                        挑战历史知识问答，检验你的历史素养，学习更多历史细节
+                    </p>
+                </div>
+            </a>
+
+            <!-- 时间线游戏 -->
+            <a href="历史时间线.html" class="group">
+                <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col items-center justify-center btn-hover border border-historical-light/30 hover:border-historical-gold/50">
+                    <div class="w-20 h-20 bg-historical-medium/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-historical-medium/20 transition-colors">
+                        <i class="fa fa-clock-o text-3xl text-historical-medium group-hover:text-historical-gold transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-semibold text-historical-dark mb-2 text-center">
+                        <span class="btn-decoration">历史时间线排序</span>
+                    </h3>
+                    <p class="text-center text-historical-light text-sm">
+                        将历史事件按时间顺序排列，建立清晰的历史发展脉络
+                    </p>
+                </div>
+            </a>
+
+            <!-- 配对游戏 -->
+            <a href="历史配对.html" class="group">
+                <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col items-center justify-center btn-hover border border-historical-light/30 hover:border-historical-gold/50">
+                    <div class="w-20 h-20 bg-historical-medium/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-historical-medium/20 transition-colors">
+                        <i class="fa fa-exchange text-3xl text-historical-medium group-hover:text-historical-gold transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-semibold text-historical-dark mb-2 text-center">
+                        <span class="btn-decoration">人物事件配对</span>
+                    </h3>
+                    <p class="text-center text-historical-light text-sm">
+                        匹配历史人物与相关事件，加深对历史人物贡献的理解
+                    </p>
+                </div>
+            </a>
+
+            <!-- 地理游戏 -->
+            <a href="历史地理.html" class="group">
+                <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col items-center justify-center btn-hover border border-historical-light/30 hover:border-historical-gold/50">
+                    <div class="w-20 h-20 bg-historical-medium/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-historical-medium/20 transition-colors">
+                        <i class="fa fa-map-marker text-3xl text-historical-medium group-hover:text-historical-gold transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-semibold text-historical-dark mb-2 text-center">
+                        <span class="btn-decoration">历史地理探索</span>
+                    </h3>
+                    <p class="text-center text-historical-light text-sm">
+                        探索历史上的重要地点，了解地理环境对历史发展的影响
+                    </p>
+                </div>
+            </a>
+        </div>
+        
+        <!-- 提示信息 -->
+        <div class="mt-12 bg-historical-medium/10 rounded-lg p-6 border-l-4 border-historical-gold">
+            <div class="flex items-start">
+                <i class="fa fa-info-circle text-historical-gold text-xl mt-1 mr-4"></i>
+                <div>
+                    <h4 class="font-serif font-semibold text-historical-dark mb-2">使用提示</h4>
+                    <ul class="text-historical-medium space-y-2 text-sm md:text-base">
+                        <li><i class="fa fa-check-circle text-historical-gold mr-2"></i> 点击相应按钮即可进入对应页面</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-historical-dark text-historical-light py-8 px-4 mt-12">
+        <div class="container mx-auto text-center">
+            <p class="mb-4">让历史学习更有趣</p>
+                <a href="https://m-code.top/feedback.html" class="hover:text-historical-gold transition-colors">
+                    <i class="fa fa-envelope mr-1"></i> 问题反馈
+                </a>
+                <a href="#" class="hover:text-historical-gold transition-colors">
+                    <i class="fa fa-envelope mr-1"></i> 帮助中心
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-historical-medium text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-historical-gold">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 返回顶部按钮功能
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'invisible');
+                backToTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopBtn.classList.remove('opacity-100', 'visible');
+                backToTopBtn.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 为所有游戏链接添加打开动画
+        document.querySelectorAll('a[href$=".html"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetUrl = this.getAttribute('href');
+                
+                // 添加页面切换动画
+                document.body.style.opacity = '0';
+                document.body.style.transform = 'translateY(20px)';
+                document.body.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>

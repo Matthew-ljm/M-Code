@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>新旧三民主义历史消消乐</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Microsoft YaHei', sans-serif;
+		}
+		
+		body {
+			background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 20px;
+			color: #fff;
+		}
+		
+		.header {
+			text-align: center;
+			margin-bottom: 30px;
+			width: 100%;
+		}
+		
+		h1 {
+			font-size: 3.2rem;
+			text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+			margin-bottom: 15px;
+			background: linear-gradient(to right, #ff9966, #ff5e62);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			animation: glow 2s ease-in-out infinite alternate;
+		}
+		
+		@keyframes glow {
+			from {
+				text-shadow: 0 0 10px #fff, 0 0 20px #ff9966, 0 0 30px #ff5e62;
+			}
+			to {
+				text-shadow: 0 0 20px #fff, 0 0 30px #ff9966, 0 0 40px #ff5e62;
+			}
+		}
+		
+		.instructions {
+			background-color: rgba(255, 255, 255, 0.2);
+			padding: 15px;
+			border-radius: 10px;
+			max-width: 800px;
+			margin: 0 auto 20px;
+			text-align: center;
+			font-size: 1.1rem;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+		}
+		
+		.game-container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 20px;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+		
+		.bubble {
+			width: 200px;
+			height: 200px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 15px;
+			cursor: pointer;
+			font-weight: bold;
+			font-size:2rem;
+			color: #333;
+			box-shadow: 
+				inset 0 -8px 20px rgba(0, 0, 0, 0.2),
+				inset 0 8px 20px rgba(255, 255, 255, 0.5),
+				0 0 20px rgba(255, 255, 255, 0.5);
+			transition: transform 0.3s, box-shadow 0.3s;
+			user-select: none;
+			position: relative;
+			overflow: hidden;
+		}
+		
+		.bubble::before {
+			content: '';
+			position: absolute;
+			top: -10%;
+			left: -10%;
+			width: 120%;
+			height: 120%;
+			background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+			opacity: 0.6;
+		}
+		
+		.bubble:hover {
+			transform: scale(1.05);
+			box-shadow: 
+				inset 0 -8px 20px rgba(0, 0, 0, 0.2),
+				inset 0 8px 20px rgba(255, 255, 255, 0.7),
+				0 0 25px rgba(255, 255, 255, 0.7);
+		}
+		
+		.bubble.selected {
+			transform: scale(1.1);
+			box-shadow: 
+				inset 0 -8px 20px rgba(0, 0, 0, 0.2),
+				inset 0 8px 20px rgba(255, 255, 255, 0.7),
+				0 0 30px rgba(255, 215, 0, 0.8);
+		}
+		
+		.bubble.matched {
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0.5s, opacity 0.5s;
+		}
+		
+		.victory-message {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.8);
+			display: none;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+		}
+		
+		.victory-text {
+			font-size: 4rem;
+			color: gold;
+			text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+			margin-bottom: 30px;
+			animation: bounce 1s ease infinite alternate;
+		}
+		
+		@keyframes bounce {
+			from { transform: scale(1); }
+			to { transform: scale(1.1); }
+		}
+		
+		.restart-btn {
+			padding: 15px 40px;
+			font-size: 1.5rem;
+			background: linear-gradient(to right, #ff9966, #ff5e62);
+			border: none;
+			border-radius: 50px;
+			color: white;
+			cursor: pointer;
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+			transition: transform 0.3s, box-shadow 0.3s;
+		}
+		
+		.restart-btn:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+		}
+		
+		.counter {
+			font-size: 1.5rem;
+			margin-top: 20px;
+			background-color: rgba(255, 255, 255, 0.2);
+			padding: 10px 20px;
+			border-radius: 50px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+		}
+		
+		/* 泡泡颜色 */
+		.bubble:nth-child(1) { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+		.bubble:nth-child(2) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+		.bubble:nth-child(3) { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+		.bubble:nth-child(4) { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+		.bubble:nth-child(5) { background: linear-gradient(135deg, #d4fc79, #96e6a1); }
+		.bubble:nth-child(6) { background: linear-gradient(135deg, #a6c0fe, #f68084); }
+		.bubble:nth-child(7) { background: linear-gradient(135deg, #fccb90, #d57eeb); }
+		.bubble:nth-child(8) { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); }
+		.bubble:nth-child(9) { background: linear-gradient(135deg, #f6d365, #fda085); }
+		.bubble:nth-child(10) { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
+		.bubble:nth-child(11) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+		.bubble:nth-child(12) { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+	</style>
+</head>
+<body>
+	<div class="header">
+		<h1>新旧三民主义历史消消乐</h1>
+		<div class="instructions">
+			<p>游戏规则：点击两个泡泡进行匹配，只有新旧三民主义的具体内容和解释言论匹配正确，泡泡才会消失。</p>
+			<p>全部匹配完成后，游戏胜利！</p>
+		</div>
+		<div class="counter">已匹配: <span id="match-count">0</span> / 6 对</div>
+	</div>
+	
+	<div class="game-container" id="game-container">
+		<!-- 泡泡将通过JavaScript动态生成 -->
+	</div>
+	
+	<div class="victory-message" id="victory-message">
+		<div class="victory-text">恭喜你挑战成功！</div>=
+		<button class="restart-btn" onclick="restartGame()">再玩一次</button>
+	</div>
+	
+	<!-- 音效 -->
+	<audio id="click-sound" preload="auto">
+		<source src="./mp3/click.wav" type="audio/mpeg">
+	</audio>
+	<audio id="pop-sound" preload="auto">
+		<source src="./mp3/match.wav" type="audio/mpeg">
+	</audio>
+	<audio id="victory-sound" preload="auto">
+		<source src="./mp3/victory.wav" type="audio/mpeg">
+	</audio>
+	
+	<script>
+		// 游戏数据 - 6个概念和6个解释
+		const items = [
+			// 概念
+			{ id: 1, type: "概念", title: "旧三民民族主义", content: "民族主义" },
+			{ id: 2, type: "概念", title: "旧三民民权主义", content: "民权主义" },
+			{ id: 3, type: "概念", title: "旧三民民生主义", content: "民生主义" },
+			{ id: 4, type: "概念", title: "新三民民族主义", content: "民族主义" },
+			{ id: 5, type: "概念", title: "新三民民权主义", content: "民权主义" },
+			{ id: 6, type: "概念", title: "新三民民生主义", content: "民生主义" },
+			
+			// 解释
+			{ id: 7, type: "解释", title: "旧三民民族主义解释", content: "驱除鞑虏，恢复中华" },
+			{ id: 8, type: "解释", title: "旧三民民权主义解释", content: "创立民国" },
+			{ id: 9, type: "解释", title: "旧三民民生主义解释", content: "平均地权" },
+			{ id: 10, type: "解释", title: "新三民民族主义解释", content: "反对帝国主义" },
+			{ id: 11, type: "解释", title: "新三民民权主义解释", content: "民主权利应为一般平民所共有。" },
+			{ id: 12, type: "解释", title: "新三民民生主义解释", content: "平均地权，节制资本，耕者有其田" }
+		];
+		
+		// 匹配关
+		const matches = {
+			1: 7,  // 旧三民民族主义 -> 驱除鞑虏，恢复中华
+			7: 1,
+			2: 8,  // 旧三民民权主义 -> 创立民国
+			8: 2,
+			3: 9,  // 旧三民民生主义 -> 平均地权
+			9: 3,
+			4: 10, // 新三民民族主义 -> 反对帝国主义
+			10: 4,
+			5: 11, // 新三民民权主义 -> 民主权利应为一般平民所共
+			11: 5,
+			6: 12, // 新三民民生主义 -> 平均地权，节制资本，耕者有其田
+			12: 6
+		};
+		
+		// 游戏状态变量
+		let selectedBubble = null;
+		let matchCount = 0;
+		let canClick = true;
+		
+		// 初始化游戏
+		function initGame() {
+			const gameContainer = document.getElementById('game-container');
+			gameContainer.innerHTML = '';
+			
+			// 复制并打乱概念数组
+			const shuffledItems = [...items].sort(() => Math.random() - 0.5);
+			
+			// 创建泡泡元素
+			shuffledItems.forEach(item => {
+				const bubble = document.createElement('div');
+				bubble.className = 'bubble';
+				bubble.dataset.id = item.id;
+				
+				// 创建泡泡内容
+				const content = document.createElement('div');
+				if (item.type === "概念") {
+					content.innerHTML = `<strong>${item.title}</strong>`;
+				} else {
+					content.innerHTML = `${item.content}`;
+				}
+				bubble.appendChild(content);
+				
+				// 添加点击事件
+				bubble.addEventListener('click', () => handleBubbleClick(bubble));
+				
+				gameContainer.appendChild(bubble);
+			});
+			
+			// 重置游戏状态
+			selectedBubble = null;
+			matchCount = 0;
+			document.getElementById('match-count').textContent = matchCount;
+			document.getElementById('victory-message').style.display = 'none';
+		}
+		
+		// 处理泡泡点击
+		function handleBubbleClick(bubble) {
+			if (!canClick || bubble.classList.contains('matched') || bubble === selectedBubble) {
+				return;
+			}
+			
+			// 播放点击音效
+			document.getElementById('click-sound').play();
+			
+			// 添加选中效果
+			bubble.classList.add('selected');
+			
+			if (!selectedBubble) {
+				// 第一次选择
+				selectedBubble = bubble;
+			} else {
+				// 第二次选择，检查是否匹配
+				canClick = false;
+				const firstId = parseInt(selectedBubble.dataset.id);
+				const secondId = parseInt(bubble.dataset.id);
+				
+				if (matches[firstId] === secondId) {
+					// 匹配成功
+					setTimeout(() => {
+						selectedBubble.classList.add('matched');
+						bubble.classList.add('matched');
+						selectedBubble.classList.remove('selected');
+						bubble.classList.remove('selected');
+						
+						// 播放匹配成功音效
+						document.getElementById('pop-sound').play();
+						
+						matchCount++;
+						document.getElementById('match-count').textContent = matchCount;
+						
+						// 检查游戏是否结束
+						if (matchCount === items.length / 2) {
+							setTimeout(() => {
+								document.getElementById('victory-sound').play();
+								document.getElementById('victory-message').style.display = 'flex';
+							}, 500);
+						}
+						
+						selectedBubble = null;
+						canClick = true;
+					}, 500);
+				} else {
+					// 匹配失败
+					setTimeout(() => {
+						selectedBubble.classList.remove('selected');
+						bubble.classList.remove('selected');
+						selectedBubble = null;
+						canClick = true;
+					}, 1000);
+				}
+			}
+		}
+		
+		// 重新开始游戏
+		function restartGame() {
+			initGame();
+		}
+		
+		// 页面加载时初始化游戏
+		window.onload = initGame;
+	</script>
+</body>
+</html>
