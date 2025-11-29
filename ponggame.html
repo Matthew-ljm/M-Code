@@ -1,424 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>乒乓球游戏</title>
-    <link rel="shortcut icon" href="icon/ponggame.ico" type="image/x-icon">
-    <style>
-        body {
-            background: #111;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+	<meta charset="UTF-8">
+	<title>乒乓球游戏</title>
+	<link rel="shortcut icon" href="icon/ponggame.ico" type="image/x-icon">
+	<style>
+		body {
+			background: #111;
+			color: #fff;
+			font-family: Arial, sans-serif;
+			text-align: center;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+		}
 
-        h1 {
-            margin: 20px 0 10px;
-        }
+		h1 {
+			margin: 20px 0 10px;
+		}
 
-        #menu, #gameOver {
-            background: #222;
-            padding: 30px;
-            border-radius: 10px;
-            margin: 20px auto;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 4px 24px #000;
-        }
+		#menu, #gameOver {
+			background: #222;
+			padding: 30px;
+			border-radius: 10px;
+			margin: 20px auto;
+			max-width: 400px;
+			width: 90%;
+			box-shadow: 0 4px 24px #000;
+		}
 
-        .option-group {
-            margin: 20px 0;
-        }
+		.option-group {
+			margin: 20px 0;
+		}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+		label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: bold;
+		}
 
-        select, input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #444;
-            border-radius: 5px;
-            background: #333;
-            color: #fff;
-            font-size: 16px;
-        }
+		select, input {
+			width: 100%;
+			padding: 10px;
+			border: 2px solid #444;
+			border-radius: 5px;
+			background: #333;
+			color: #fff;
+			font-size: 16px;
+		}
 
-        button {
-            background: #0ff;
-            border: none;
-            padding: 12px 24px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            margin-top: 10px;
-        }
+		button {
+			background: #0ff;
+			border: none;
+			padding: 12px 24px;
+			font-size: 18px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: all 0.3s;
+			font-weight: bold;
+			margin-top: 10px;
+		}
 
-        button:hover {
-            background: #0cc;
-            transform: scale(1.05);
-        }
+		button:hover {
+			background: #0cc;
+			transform: scale(1.05);
+		}
 
-        #pong {
-            background: #222;
-            display: none;
-            margin: 0 auto;
-            border: 3px solid #fff;
-            box-shadow: 0 4px 24px #000;
-        }
+		#pong {
+			background: #222;
+			display: none;
+			margin: 0 auto;
+			border: 3px solid #fff;
+			box-shadow: 0 4px 24px #000;
+		}
 
-        #gameInfo {
-            display: none;
-            margin: 10px auto;
-            font-size: 24px;
-            width: 800px;
-            display: flex;
-            justify-content: space-between;
-        }
+		#gameInfo {
+			display: none;
+			margin: 10px auto;
+			font-size: 24px;
+			width: 800px;
+			display: flex;
+			justify-content: space-between;
+		}
 
-        #countdown {
-            color: #f04;
-            font-weight: bold;
-        }
+		#countdown {
+			color: #f04;
+			font-weight: bold;
+		}
 
-        #gameOver {
-            display: none;
-        }
+		#gameOver {
+			display: none;
+		}
 
-        #winner {
-            font-size: 28px;
-            margin: 20px 0;
-            color: #0ff;
-        }
-    </style>
+		#winner {
+			font-size: 28px;
+			margin: 20px 0;
+			color: #0ff;
+		}
+	</style>
 </head>
 <body>
-    <h1>乒乓球游戏</h1>
-    
-    <div id="menu">
-        <h2>游戏设置</h2>
-        <div class="option-group">
-            <label for="difficulty">难度</label>
-            <select id="difficulty">
-                <option value="easy">简单</option>
-                <option value="medium" selected>中等</option>
-                <option value="hard">困难</option>
-            </select>
-        </div>
-        <div class="option-group">
-            <label for="gameTime">游戏时间（秒）</label>
-            <input type="number" id="gameTime" min="5" max="60" value="30">
-        </div>
-        <button id="startBtn">开始游戏</button>
-    </div>
+	<h1>乒乓球游戏</h1>
+	
+	<div id="menu">
+		<h2>游戏设置</h2>
+		<div class="option-group">
+			<label for="difficulty">难度</label>
+			<select id="difficulty">
+				<option value="easy">简单</option>
+				<option value="medium" selected>中等</option>
+				<option value="hard">困难</option>
+			</select>
+		</div>
+		<div class="option-group">
+			<label for="gameTime">游戏时间（秒）</label>
+			<input type="number" id="gameTime" min="5" max="60" value="30">
+		</div>
+		<button id="startBtn">开始游戏</button>
+	</div>
 
-    <div id="gameInfo">
-        <span>玩家: <span id="playerScore">0</span></span>
-        <span id="countdown">30</span>
-        <span>电脑: <span id="aiScore">0</span></span>
-    </div>
+	<div id="gameInfo">
+		<span>玩家: <span id="playerScore">0</span></span>
+		<span id="countdown">30</span>
+		<span>电脑: <span id="aiScore">0</span></span>
+	</div>
 
-    <canvas id="pong" width="800" height="500"></canvas>
+	<canvas id="pong" width="800" height="500"></canvas>
 
-    <div id="gameOver">
-        <h2>游戏结束!</h2>
-        <div id="winner">玩家获胜!</div>
-        <div>最终得分: <span id="finalPlayerScore">0</span> - <span id="finalAiScore">0</span></div>
-        <button id="restartBtn">再来一局</button>
-    </div>
+	<div id="gameOver">
+		<h2>游戏结束!</h2>
+		<div id="winner">玩家获胜!</div>
+		<div>最终得分: <span id="finalPlayerScore">0</span> - <span id="finalAiScore">0</span></div>
+		<button id="restartBtn">再来一局</button>
+	</div>
 
-    <script>
-        const canvas = document.getElementById('pong');
-        const ctx = canvas.getContext('2d');
-        const menu = document.getElementById('menu');
-        const gameOver = document.getElementById('gameOver');
-        const gameInfo = document.getElementById('gameInfo');
-        const countdownElement = document.getElementById('countdown');
-        const playerScoreElement = document.getElementById('playerScore');
-        const aiScoreElement = document.getElementById('aiScore');
-        const startBtn = document.getElementById('startBtn');
-        const restartBtn = document.getElementById('restartBtn');
-        const difficultySelect = document.getElementById('difficulty');
-        const gameTimeInput = document.getElementById('gameTime');
+	<script>
+		const canvas = document.getElementById('pong');
+		const ctx = canvas.getContext('2d');
+		const menu = document.getElementById('menu');
+		const gameOver = document.getElementById('gameOver');
+		const gameInfo = document.getElementById('gameInfo');
+		const countdownElement = document.getElementById('countdown');
+		const playerScoreElement = document.getElementById('playerScore');
+		const aiScoreElement = document.getElementById('aiScore');
+		const startBtn = document.getElementById('startBtn');
+		const restartBtn = document.getElementById('restartBtn');
+		const difficultySelect = document.getElementById('difficulty');
+		const gameTimeInput = document.getElementById('gameTime');
 
-        const WIDTH = canvas.width;
-        const HEIGHT = canvas.height;
+		const WIDTH = canvas.width;
+		const HEIGHT = canvas.height;
 
-        let gameDifficulty = 'medium';
-        let gameDuration = 30;
-        let timeRemaining = 0;
-        let gameInterval;
-        let isGameActive = false;
+		let gameDifficulty = 'medium';
+		let gameDuration = 30;
+		let timeRemaining = 0;
+		let gameInterval;
+		let isGameActive = false;
 
-        const PADDLE_WIDTH = 10;
-        const PADDLE_HEIGHT = 100;
-        const PADDLE_MARGIN = 20;
-        const PADDLE_SPEED_BASE = 6;
-        let paddleSpeed = PADDLE_SPEED_BASE;
+		const PADDLE_WIDTH = 10;
+		const PADDLE_HEIGHT = 100;
+		const PADDLE_MARGIN = 20;
+		const PADDLE_SPEED_BASE = 6;
+		let paddleSpeed = PADDLE_SPEED_BASE;
 
-        const BALL_SIZE = 16;
-        const BALL_SPEED_BASE = 6;
-        let ballSpeed = BALL_SPEED_BASE;
+		const BALL_SIZE = 16;
+		const BALL_SPEED_BASE = 6;
+		let ballSpeed = BALL_SPEED_BASE;
 
-        let player = {
-            x: PADDLE_MARGIN,
-            y: HEIGHT/2 - PADDLE_HEIGHT/2,
-            width: PADDLE_WIDTH,
-            height: PADDLE_HEIGHT,
-            score: 0
-        };
+		let player = {
+			x: PADDLE_MARGIN,
+			y: HEIGHT/2 - PADDLE_HEIGHT/2,
+			width: PADDLE_WIDTH,
+			height: PADDLE_HEIGHT,
+			score: 0
+		};
 
-        let ai = {
-            x: WIDTH - PADDLE_MARGIN - PADDLE_WIDTH,
-            y: HEIGHT/2 - PADDLE_HEIGHT/2,
-            width: PADDLE_WIDTH,
-            height: PADDLE_HEIGHT,
-            score: 0
-        };
+		let ai = {
+			x: WIDTH - PADDLE_MARGIN - PADDLE_WIDTH,
+			y: HEIGHT/2 - PADDLE_HEIGHT/2,
+			width: PADDLE_WIDTH,
+			height: PADDLE_HEIGHT,
+			score: 0
+		};
 
-        let ball = {
-            x: WIDTH/2 - BALL_SIZE/2,
-            y: HEIGHT/2 - BALL_SIZE/2,
-            size: BALL_SIZE,
-            speedX: 0,
-            speedY: 0,
-        };
+		let ball = {
+			x: WIDTH/2 - BALL_SIZE/2,
+			y: HEIGHT/2 - BALL_SIZE/2,
+			size: BALL_SIZE,
+			speedX: 0,
+			speedY: 0,
+		};
 
-        startBtn.addEventListener('click', startGame);
-        restartBtn.addEventListener('click', restartGame);
+		startBtn.addEventListener('click', startGame);
+		restartBtn.addEventListener('click', restartGame);
 
-        canvas.addEventListener('mousemove', function(evt) {
-            if (!isGameActive) return;
-            
-            const rect = canvas.getBoundingClientRect();
-            let mouseY = evt.clientY - rect.top;
-            player.y = mouseY - player.height/2;
-            if (player.y < 0) player.y = 0;
-            if (player.y + player.height > HEIGHT) player.y = HEIGHT - player.height;
-        });
+		canvas.addEventListener('mousemove', function(evt) {
+			if (!isGameActive) return;
+			
+			const rect = canvas.getBoundingClientRect();
+			let mouseY = evt.clientY - rect.top;
+			player.y = mouseY - player.height/2;
+			if (player.y < 0) player.y = 0;
+			if (player.y + player.height > HEIGHT) player.y = HEIGHT - player.height;
+		});
 
-        canvas.addEventListener('touchmove', function(evt) {
-            if (!isGameActive) return;
-            evt.preventDefault();
-            
-            const rect = canvas.getBoundingClientRect();
-            let touchY = evt.touches[0].clientY - rect.top;
-            player.y = touchY - player.height/2;
-            if (player.y < 0) player.y = 0;
-            if (player.y + player.height > HEIGHT) player.y = HEIGHT - player.height;
-        }, { passive: false });
+		canvas.addEventListener('touchmove', function(evt) {
+			if (!isGameActive) return;
+			evt.preventDefault();
+			
+			const rect = canvas.getBoundingClientRect();
+			let touchY = evt.touches[0].clientY - rect.top;
+			player.y = touchY - player.height/2;
+			if (player.y < 0) player.y = 0;
+			if (player.y + player.height > HEIGHT) player.y = HEIGHT - player.height;
+		}, { passive: false });
 
-        function setDifficulty(difficulty) {
-            switch(difficulty) {
-                case 'easy':
-                    paddleSpeed = PADDLE_SPEED_BASE * 0.3;
-                    ballSpeed = BALL_SPEED_BASE * 0.6;
-                    break;
-                case 'medium':
-                    paddleSpeed = PADDLE_SPEED_BASE * 0.8;
-                    ballSpeed = BALL_SPEED_BASE * 1.0;
-                    break;
-                case 'hard':
-                    paddleSpeed = PADDLE_SPEED_BASE * 1.8;
-                    ballSpeed = BALL_SPEED_BASE * 2.0;
-                    break;
-            }
-        }
+		function setDifficulty(difficulty) {
+			switch(difficulty) {
+				case 'easy':
+					paddleSpeed = PADDLE_SPEED_BASE * 0.7;
+					ballSpeed = BALL_SPEED_BASE * 1.0;
+					break;
+				case 'medium':
+					paddleSpeed = PADDLE_SPEED_BASE * 1.6;
+					ballSpeed = BALL_SPEED_BASE * 1.7;
+					break;
+				case 'hard':
+					paddleSpeed = PADDLE_SPEED_BASE * 2.4;
+					ballSpeed = BALL_SPEED_BASE * 2.5;
+					break;
+			}
+		}
 
-        function startGame() {
-            gameDifficulty = difficultySelect.value;
-            gameDuration = Math.min(60, Math.max(5, parseInt(gameTimeInput.value) || 30));
-            
-            setDifficulty(gameDifficulty);
-            
-            resetGame();
-            
-            menu.style.display = 'none';
-            canvas.style.display = 'block';
-            gameInfo.style.display = 'flex';
-            gameOver.style.display = 'none';
-            
-            timeRemaining = gameDuration;
-            countdownElement.textContent = timeRemaining;
-            
-            isGameActive = true;
-            gameInterval = setInterval(updateCountdown, 1000);
-            gameLoop();
-        }
+		function startGame() {
+			gameDifficulty = difficultySelect.value;
+			gameDuration = Math.min(60, Math.max(5, parseInt(gameTimeInput.value) || 30));
+			
+			setDifficulty(gameDifficulty);
+			
+			resetGame();
+			
+			menu.style.display = 'none';
+			canvas.style.display = 'block';
+			gameInfo.style.display = 'flex';
+			gameOver.style.display = 'none';
+			
+			timeRemaining = gameDuration;
+			countdownElement.textContent = timeRemaining;
+			
+			isGameActive = true;
+			gameInterval = setInterval(updateCountdown, 1000);
+			gameLoop();
+		}
 
-        function restartGame() {
-            clearInterval(gameInterval);
-            gameOver.style.display = 'none';
-            menu.style.display = 'block';
-        }
+		function restartGame() {
+			clearInterval(gameInterval);
+			gameOver.style.display = 'none';
+			menu.style.display = 'block';
+		}
 
-        function updateCountdown() {
-            timeRemaining--;
-            countdownElement.textContent = timeRemaining;
-            
-            if (timeRemaining <= 0) {
-                endGame();
-            }
-        }
+		function updateCountdown() {
+			timeRemaining--;
+			countdownElement.textContent = timeRemaining;
+			
+			if (timeRemaining <= 0) {
+				endGame();
+			}
+		}
 
-        function endGame() {
-            isGameActive = false;
-            clearInterval(gameInterval);
-            
-            canvas.style.display = 'none';
-            gameInfo.style.display = 'none';
-            gameOver.style.display = 'block';
-            
-            const winnerElement = document.getElementById('winner');
-            if (player.score > ai.score) {
-                winnerElement.textContent = "玩家获胜!";
-                winnerElement.style.color = "#0ff";
-            } else if (ai.score > player.score) {
-                winnerElement.textContent = "电脑获胜!";
-                winnerElement.style.color = "#f04";
-            } else {
-                winnerElement.textContent = "平局!";
-                winnerElement.style.color = "#ff0";
-            }
-            
-            document.getElementById('finalPlayerScore').textContent = player.score;
-            document.getElementById('finalAiScore').textContent = ai.score;
-        }
+		function endGame() {
+			isGameActive = false;
+			clearInterval(gameInterval);
+			
+			canvas.style.display = 'none';
+			gameInfo.style.display = 'none';
+			gameOver.style.display = 'block';
+			
+			const winnerElement = document.getElementById('winner');
+			if (player.score > ai.score) {
+				winnerElement.textContent = "玩家获胜!";
+				winnerElement.style.color = "#0ff";
+			} else if (ai.score > player.score) {
+				winnerElement.textContent = "电脑获胜!";
+				winnerElement.style.color = "#f04";
+			} else {
+				winnerElement.textContent = "平局!";
+				winnerElement.style.color = "#ff0";
+			}
+			
+			document.getElementById('finalPlayerScore').textContent = player.score;
+			document.getElementById('finalAiScore').textContent = ai.score;
+		}
 
-        function resetGame() {
-            player.score = 0;
-            ai.score = 0;
-            playerScoreElement.textContent = '0';
-            aiScoreElement.textContent = '0';
-            
-            player.y = HEIGHT/2 - PADDLE_HEIGHT/2;
-            ai.y = HEIGHT/2 - PADDLE_HEIGHT/2;
-            resetBall();
-        }
+		function resetGame() {
+			player.score = 0;
+			ai.score = 0;
+			playerScoreElement.textContent = '0';
+			aiScoreElement.textContent = '0';
+			
+			player.y = HEIGHT/2 - PADDLE_HEIGHT/2;
+			ai.y = HEIGHT/2 - PADDLE_HEIGHT/2;
+			resetBall();
+		}
 
-        function resetBall() {
-            ball.x = WIDTH/2 - BALL_SIZE/2;
-            ball.y = HEIGHT/2 - BALL_SIZE/2;
-            ball.speedX = ballSpeed * (Math.random() > 0.5 ? 1 : -1);
-            ball.speedY = ballSpeed * (Math.random() * 2 - 1);
-        }
+		function resetBall() {
+			ball.x = WIDTH/2 - BALL_SIZE/2;
+			ball.y = HEIGHT/2 - BALL_SIZE/2;
+			ball.speedX = ballSpeed * (Math.random() > 0.5 ? 1 : -1);
+			ball.speedY = ballSpeed * (Math.random() * 2 - 1);
+		}
 
-        function draw() {
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		function draw() {
+			ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-            ctx.setLineDash([10, 15]);
-            ctx.strokeStyle = "#fff";
-            ctx.beginPath();
-            ctx.moveTo(WIDTH/2, 0);
-            ctx.lineTo(WIDTH/2, HEIGHT);
-            ctx.stroke();
-            ctx.setLineDash([]);
+			ctx.setLineDash([10, 15]);
+			ctx.strokeStyle = "#fff";
+			ctx.beginPath();
+			ctx.moveTo(WIDTH/2, 0);
+			ctx.lineTo(WIDTH/2, HEIGHT);
+			ctx.stroke();
+			ctx.setLineDash([]);
 
-            ctx.fillStyle = '#0ff';
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-            ctx.fillStyle = '#f04';
-            ctx.fillRect(ai.x, ai.y, ai.width, ai.height);
+			ctx.fillStyle = '#0ff';
+			ctx.fillRect(player.x, player.y, player.width, player.height);
+			ctx.fillStyle = '#f04';
+			ctx.fillRect(ai.x, ai.y, ai.width, ai.height);
 
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(ball.x, ball.y, ball.size, ball.size);
-        }
+			ctx.fillStyle = '#fff';
+			ctx.fillRect(ball.x, ball.y, ball.size, ball.size);
+		}
 
-        function isColliding(paddle, ball) {
-            return (
-                ball.x < paddle.x + paddle.width &&
-                ball.x + ball.size > paddle.x &&
-                ball.y < paddle.y + paddle.height &&
-                ball.y + ball.size > paddle.y
-            );
-        }
+		function isColliding(paddle, ball) {
+			return (
+				ball.x < paddle.x + paddle.width &&
+				ball.x + ball.size > paddle.x &&
+				ball.y < paddle.y + paddle.height &&
+				ball.y + ball.size > paddle.y
+			);
+		}
 
-        function update() {
-            if (!isGameActive) return;
+		function update() {
+			if (!isGameActive) return;
 
-            ball.x += ball.speedX;
-            ball.y += ball.speedY;
+			ball.x += ball.speedX;
+			ball.y += ball.speedY;
 
-            if (ball.y <= 0 || ball.y + ball.size >= HEIGHT) {
-                ball.speedY = -ball.speedY;
-                ball.y = ball.y <= 0 ? 0 : HEIGHT - ball.size;
-            }
+			if (ball.y <= 0 || ball.y + ball.size >= HEIGHT) {
+				ball.speedY = -ball.speedY;
+				ball.y = ball.y <= 0 ? 0 : HEIGHT - ball.size;
+			}
 
-            if (isColliding(player, ball)) {
-                let collidePoint = (ball.y + ball.size/2) - (player.y + player.height/2);
-                collidePoint = collidePoint / (player.height/2);
-                let angle = collidePoint * Math.PI/4;
-                
-                ball.speedX = ballSpeed * Math.cos(angle);
-                ball.speedY = ballSpeed * Math.sin(angle);
-                
-                ball.x = player.x + player.width;
-            }
+			if (isColliding(player, ball)) {
+				let collidePoint = (ball.y + ball.size/2) - (player.y + player.height/2);
+				collidePoint = collidePoint / (player.height/2);
+				let angle = collidePoint * Math.PI/4;
+				
+				ball.speedX = ballSpeed * Math.cos(angle);
+				ball.speedY = ballSpeed * Math.sin(angle);
+				
+				ball.x = player.x + player.width;
+			}
 
-            if (isColliding(ai, ball)) {
-                let collidePoint = (ball.y + ball.size/2) - (ai.y + ai.height/2);
-                collidePoint = collidePoint / (ai.height/2);
-                let angle = collidePoint * Math.PI/4;
-                
-                ball.speedX = -ballSpeed * Math.cos(angle);
-                ball.speedY = ballSpeed * Math.sin(angle);
-                
-                ball.x = ai.x - ball.size;
-            }
+			if (isColliding(ai, ball)) {
+				let collidePoint = (ball.y + ball.size/2) - (ai.y + ai.height/2);
+				collidePoint = collidePoint / (ai.height/2);
+				let angle = collidePoint * Math.PI/4;
+				
+				ball.speedX = -ballSpeed * Math.cos(angle);
+				ball.speedY = ballSpeed * Math.sin(angle);
+				
+				ball.x = ai.x - ball.size;
+			}
 
-            if (ball.x + ball.size < 0) {
-                ai.score++;
-                aiScoreElement.textContent = ai.score;
-                resetBall();
-            } else if (ball.x > WIDTH) {
-                player.score++;
-                playerScoreElement.textContent = player.score;
-                resetBall();
-            }
+			if (ball.x + ball.size < 0) {
+				ai.score++;
+				aiScoreElement.textContent = ai.score;
+				resetBall();
+			} else if (ball.x > WIDTH) {
+				player.score++;
+				playerScoreElement.textContent = player.score;
+				resetBall();
+			}
 
-            let aiTargetY = ball.y + ball.size/2 - ai.height/2;
-            
-            let randomOffset = 0;
-            switch(gameDifficulty) {
-                case 'easy':
-                    randomOffset = (Math.random() - 0.5) * 150;
-                    break;
-                case 'medium':
-                    randomOffset = (Math.random() - 0.5) * 80;
-                    break;
-                case 'hard':
-                    randomOffset = (Math.random() - 0.5) * 30;
-                    break;
-            }
-            
-            aiTargetY += randomOffset;
-            
-            if (ai.y + ai.height/2 < aiTargetY - 5) {
-                ai.y += paddleSpeed;
-            } else if (ai.y + ai.height/2 > aiTargetY + 5) {
-                ai.y -= paddleSpeed;
-            }
-            
-            if (ai.y < 0) ai.y = 0;
-            if (ai.y + ai.height > HEIGHT) ai.y = HEIGHT - ai.height;
-        }
+			let aiTargetY = ball.y + ball.size/2 - ai.height/2;
+			
+			let randomOffset = 0;
+			switch(gameDifficulty) {
+				case 'easy':
+					randomOffset = (Math.random() - 0.5) * 150;
+					break;
+				case 'medium':
+					randomOffset = (Math.random() - 0.5) * 80;
+					break;
+				case 'hard':
+					randomOffset = (Math.random() - 0.5) * 30;
+					break;
+			}
+			
+			aiTargetY += randomOffset;
+			
+			if (ai.y + ai.height/2 < aiTargetY - 5) {
+				ai.y += paddleSpeed;
+			} else if (ai.y + ai.height/2 > aiTargetY + 5) {
+				ai.y -= paddleSpeed;
+			}
+			
+			if (ai.y < 0) ai.y = 0;
+			if (ai.y + ai.height > HEIGHT) ai.y = HEIGHT - ai.height;
+		}
 
-        function gameLoop() {
-            update();
-            draw();
-            if (isGameActive) {
-                requestAnimationFrame(gameLoop);
-            }
-        }
-    </script>
+		function gameLoop() {
+			update();
+			draw();
+			if (isGameActive) {
+				requestAnimationFrame(gameLoop);
+			}
+		}
+	</script>
 </body>
 </html>
