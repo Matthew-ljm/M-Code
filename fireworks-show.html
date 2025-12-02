@@ -19,47 +19,6 @@
             user-select: none;
         }
 
-        /* 新增：IP拦截弹窗样式 */
-        .ip-block-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-        
-        .ip-block-modal {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .ip-block-modal h2 {
-            color: #dc2626;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-        
-        .ip-block-modal p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .countdown {
-            color: #888;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
         audio {
             opacity: 0;
         }
@@ -170,15 +129,6 @@
 
 <body onselectstart="return false">
 
-    <!-- 新增：IP拦截弹窗 -->
-    <div class="ip-block-overlay" id="ipBlockOverlay">
-        <div class="ip-block-modal">
-            <h2>访问被限制</h2>
-            <p>您的IP地址或网段已被限制访问！</p>
-            <p class="countdown" id="countdown">5秒后自动返回主页...</p>
-        </div>
-    </div>
-
     <div id="backgroundRendering" style="z-index: 0;"></div>
 
     <canvas id="fireworks" style="z-index: 9999;">
@@ -236,60 +186,6 @@
         }
         
         setupTracking();
-
-        start_window();
-
-        // 修复后的IP拦截逻辑
-        function checkIPAccess() {
-            fetch('https://test.m-code.top/api/check-ip')
-                .then(response => {
-                    // 如果返回403错误，直接显示拦截弹窗
-                    if (response.status === 403) {
-                        showBlockModal();
-                        return null;
-                    }
-                    
-                    if (!response.ok) {
-                        throw new Error('API响应失败');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // 如果data为null（因为403错误），直接返回
-                    if (data === null) return;
-                    
-                    // 直接解析JSON中的allow字段
-                    if (data.allow === false) {
-                        // IP被限制，显示拦截弹窗
-                        showBlockModal();
-                    }
-                })
-                .catch(error => {
-                    console.log('IP校验出错，默认允许访问:', error);
-                    // API请求失败时，默认允许访问
-                });
-        }
-
-        function showBlockModal() {
-            const overlay = document.getElementById('ipBlockOverlay');
-            const countdownElement = document.getElementById('countdown');
-            
-            // 显示弹窗
-            overlay.style.display = 'flex';
-            
-            // 倒计时逻辑
-            let countdown = 5;
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                countdownElement.textContent = `${countdown}秒后自动返回主页...`;
-                
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    window.location.href = 'index.html';
-                }
-            }, 1000);
-        }
-        checkIPAccess();
         
         const iconUrls = [
             "icon/favicon-f.ico",
@@ -325,7 +221,7 @@
         let fireworksExplosion = [];
         let autoPlayFlag = false;
 
-        function start_window() {
+        window.addEventListener('load', () => {
             Swal.fire({
                 title: '您想要播放背景音乐吗?',
                 icon: 'warning',
@@ -375,7 +271,7 @@
                     }, i * 60 + 16600);
                 }
             });
-        }
+        });
 
         let lastTime;
 
