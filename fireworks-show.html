@@ -3,7 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>2025新年烟花</title>
+    <meta name="keywords" content="M-Code,烟花,新年,2026,Happy New Year,Fireworks">
+    <meta name="copyright" content="© 2026 m-code.top All Rights Reserved">
+    <meta name="author" content="Matthew">
+    <meta name="description" content="本站由Matthew开发，相关代码开源在GitHub：https://github.com/Matthew-ljm/M-Code，欢迎访问M-Code官网：https://m-code.top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026新年烟花</title>
     <link rel="icon" type="image/x-icon" href="icon/favicon-f.ico">
     <link rel="stylesheet" href="documents/sweetalert2.min.css">
     <style>
@@ -30,7 +35,7 @@
             display: flex;
             align-items: center;
             width: 160px;
-            background-color: rgba(0, 0, 0, 0.52);
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 0px 17px;
             top: 25px;
             border-radius: 6px;
@@ -43,6 +48,50 @@
             line-height: 1;
             font-size: 14px;
             color: #ffffff;
+        }
+
+       .click-tip {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            width: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 5px 20px;
+            top: 25px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+       .click-tip p {
+            line-height: 1;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+       #back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 30px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 10px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.5s, width 0.5s, border-radius 0.5s;
+            z-index: 1001;
+            font-size: 20px;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
        .spark {
@@ -134,11 +183,15 @@
     <canvas id="fireworks" style="z-index: 9999;">
     </canvas>
 
+    <div class="message" style="opacity:0;"><p></p></div>
+    <div class="click-tip" style="opacity:0;"><p>点击屏幕也可以释放烟花~</p></div>
+    <div id="back-button">←</div>
+
     <audio id="bgm" src="music/music-f.mp3" loop>
     </audio>
 
     <div style="display: none">
-        <div class="shape">🏮2025新年快乐🏮</div>
+        <div class="shape">🏮2026新年快乐🏮</div>
         <div class="shape">🏮恭喜发财🏮</div>
         <div class="shape">🏮万事如意🏮</div>
         <div class="shape">🏮吉庆有余🏮</div>
@@ -187,6 +240,34 @@
         
         setupTracking();
         
+        // 返回主页按钮逻辑
+        let hideTimer;
+        document.addEventListener('mousemove', () => {
+            document.getElementById('back-button').style.opacity = '1';
+            clearTimeout(hideTimer);
+            hideTimer = setTimeout(() => {
+                document.getElementById('back-button').style.opacity = '0';
+            }, 3000);
+        });
+        
+        document.getElementById('back-button').addEventListener('mouseenter', () => {
+            let btn = document.getElementById('back-button');
+            btn.innerHTML = '←‍‍返回主页';
+            btn.style.width = '120px';
+            btn.style.borderRadius = '20px 0 0 20px';
+        });
+        
+        document.getElementById('back-button').addEventListener('mouseleave', () => {
+            let btn = document.getElementById('back-button');
+            btn.innerHTML = '←';
+            btn.style.width = '40px';
+            btn.style.borderRadius = '50%';
+        });
+        
+        document.getElementById('back-button').addEventListener('click', () => {
+            window.location.href = 'https://m-code.top';
+        });
+        
         const iconUrls = [
             "icon/favicon-f.ico",
             "icon/favicon-f.png",
@@ -204,7 +285,7 @@
         var generateStars = function generateStars(f) {
             for (var e = 0; e < f; e++) {
                 var single = document.createElement("div");
-                single.className = e % 20 == 0? "spark big-spark" : e % 9 == 0? "spark medium-spark" : "star";
+                single.className = e % 20 == 0? "spark big-spark" : e % 9 == 0? "spark medium-spark" : "spark";
                 single.setAttribute("style", "top:" + Math.round(Math.random() * wH) + "px;left:" + Math.round(Math.random() * wW) + "px;animation-duration:" + (Math.round(Math.random() * 3000) + 3000) + "ms;animation-delay:" + Math.round(Math.random() * 3000) + "ms;");
                 backgroundRendering.appendChild(single);
             }
@@ -224,7 +305,7 @@
         window.addEventListener('load', () => {
             Swal.fire({
                 title: '您想要播放背景音乐吗?',
-                icon: 'warning',
+                icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -270,6 +351,22 @@
                         document.querySelector("body > div.message").style.opacity = 1 - i / 10;
                     }, i * 60 + 16600);
                 }
+
+                // 添加点击提示
+                setTimeout(() => {
+                    for (let i = 0; i <= 10; i++) {
+                        setTimeout(function () {
+                            document.querySelector(".click-tip").style.opacity = i / 10;
+                        }, i * 100);
+                    }
+                    setTimeout(() => {
+                        for (let i = 0; i <= 10; i++) {
+                            setTimeout(function () {
+                                document.querySelector(".click-tip").style.opacity = 1 - i / 10;
+                            }, i * 100);
+                        }
+                    }, 5000);
+                }, 3000);
             });
         });
 
