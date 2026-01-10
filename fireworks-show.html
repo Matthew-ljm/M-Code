@@ -243,15 +243,19 @@
 		
 		document.getElementById('back-button').addEventListener('mouseleave', () => {
 			let btn = document.getElementById('back-button');
-			btn.style.fontSize = '20px';
-			btn.innerHTML = '←';
-			btn.style.fontWeight = '1000';// 增粗提示文字
 			btn.style.width = '30px';
 			btn.style.borderRadius = '50%';
+			setTimeout(() => {
+				btn.style.fontSize = '20px';
+				btn.innerHTML = '←';
+				btn.style.fontWeight = '1000';// 增粗提示文字
+			}, 300);
 		});
 		
 		document.getElementById('back-button').addEventListener('click', () => {
-			window.location.href = 'https://m-code.top';
+			setTimeout(() => {
+				window.location.href = 'https://m-code.top';
+			}, 300);
 		});
 		
 		const iconUrls = [
