@@ -1,8 +1,3 @@
 {
-  "rewrites": [
-    {
-      "source": "/:dir((?!\\.[a-zA-Z0-9]+$).*)",
-      "destination": "/:dir/index.html"
-    }
-  ]
+  "trailingSlash": true
 }
