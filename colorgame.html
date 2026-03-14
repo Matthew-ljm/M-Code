@@ -117,6 +117,15 @@
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             padding: 2px;
+            opacity: 0;
+            visibility: hidden;
+            height: 0;
+        }
+
+        .game-grid.show {
+            opacity: 1;
+            visibility: visible;
+            height: auto;
         }
 
         .color-block {
@@ -136,8 +145,7 @@
 
         .color-block.correct-highlight {
             border: 3px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 
-                        inset 0 0 15px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.5);
             animation: pulse 0.7s ease-in-out;
             z-index: 10;
         }
@@ -233,22 +241,18 @@
             display: none;
         }
 
-        /* 响应式适配 */
         @media (max-width: 576px) {
             .game-container {
                 padding: 30px 20px;
             }
-            
             .game-title {
                 font-size: 26px;
             }
-            
             .btn {
                 padding: 12px 24px;
                 min-width: 120px;
                 font-size: 14px;
             }
-            
             .game-grid {
                 max-width: 95%;
                 gap: 4px;
@@ -261,10 +265,10 @@
         <div class="game-header">
             <div class="level-info">
                 <span>关卡: <span id="current-level">1</span>/10</span>
-                <span class="timer">时间: <span id="timer">0.00</span>s</span>
+                <span class="timer">时间: <span id="timer">0.0</span>s</span>
             </div>
             <h1 class="game-title">色彩敏感度挑战</h1>
-            <p class="game-desc">找出颜色不同的方块，挑战你的色彩分辨极限，每一关都会更具挑战性</p>
+            <p class="game-desc">找出颜色不同的方块，挑战你的色彩分辨极限</p>
         </div>
 
         <div id="game-grid" class="game-grid"></div>
@@ -332,6 +336,7 @@
             elements.result.textContent = '';
             elements.result.classList.remove('success', 'failure');
             
+            elements.grid.classList.add('show');
             loadLevel(gameConfig.currentLevel);
         }
 
@@ -441,7 +446,7 @@
             gameConfig.startTime = Date.now();
             gameConfig.timerInterval = setInterval(() => {
                 const elapsed = (Date.now() - gameConfig.startTime) / 1000;
-                elements.timer.textContent = elapsed.toFixed(2);
+                elements.timer.textContent = elapsed.toFixed(1);
             }, 10);
         }
 
