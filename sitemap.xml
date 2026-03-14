@@ -11,7 +11,7 @@
   <priority>0.90</priority>
 </url>
 <url>
-  <loc>https://m-code.top/fireworks-show.html</loc>
+  <loc>https://m-code.top/fireworks.html</loc>
   <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
@@ -52,6 +52,11 @@
 </url>
 <url>
   <loc>https://m-code.top/ponggame.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
+</url>
+<url>
+  <loc>https://m-code.top/colorgame.html</loc>
   <changefreq>yearly</changefreq>
   <priority>0.60</priority>
 </url>
