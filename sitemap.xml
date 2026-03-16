@@ -61,6 +61,11 @@
   <priority>0.60</priority>
 </url>
 <url>
+  <loc>https://m-code.top/sudoku.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
+</url>
+<url>
   <loc>https://m-code.top/2fa.html</loc>
   <changefreq>yearly</changefreq>
   <priority>0.60</priority>

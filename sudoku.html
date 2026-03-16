@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数独挑战</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 30px auto;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+        }
+        .game-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #f0f4f8;
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+        .difficulty {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: #f0f4f8;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        .hint-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .hint-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        .hint-btn .hint-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e53e3e;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.4);
+        }
+        .check-btn {
+            background: linear-gradient(135deg, #38a169 0%, #38b2ac 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+        }
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 161, 105, 0.5);
+        }
+        .sudoku-board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 0;
+            border: 3px solid #2d3748;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .cell {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        .cell.fixed {
+            font-weight: 700;
+            color: #2d3748;
+            background: #f8f9fa;
+        }
+        .cell.selected {
+            background-color: #e0e7ff;
+            border: 2px solid #6366f1;
+            z-index: 2;
+        }
+        .cell.hinted {
+            color: #6366f1;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+        .cell.error {
+            background-color: #fee2e2;
+            color: #ef4444;
+            animation: shake 0.5s;
+        }
+        .cell:nth-child(3n) {
+            border-right: 3px solid #2d3748;
+        }
+        .sudoku-board .row:nth-child(3n) .cell {
+            border-bottom: 3px solid #2d3748;
+        }
+        .row {
+            display: contents;
+        }
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 35px;
+            padding: 0 10px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .bottom-left {
+            display: flex;
+            gap: 15px;
+        }
+        .bottom-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #f0f4f8;
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .bottom-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+        .new-game-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .new-game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        .difficulty-page {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .difficulty-page h1 {
+            font-size: 48px;
+            color: #4a5568;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+        .difficulty-page p {
+            font-size: 20px;
+            margin-bottom: 50px;
+            color: #718096;
+            line-height: 1.6;
+        }
+        .difficulty-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        .diff-btn {
+            padding: 25px 40px;
+            border-radius: 12px;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+        }
+        .diff-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .diff-btn.easy {
+            background: linear-gradient(135deg, #38a169 0%, #38b2ac 100%);
+        }
+        .diff-btn.medium {
+            background: linear-gradient(135deg, #d69e2e 0%, #ed8936 100%);
+        }
+        .diff-btn.hard {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        }
+        .rules {
+            font-size: 18px;
+            color: #718096;
+            line-height: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .number-popup {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            width: 180px;
+            z-index: 100;
+            padding: 10px;
+            margin-top: 8px;
+        }
+        .number-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: white;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .number-btn:hover {
+            background: #f0f4f8;
+            transform: scale(1.05);
+        }
+        .complete-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 200;
+            max-width: 500px;
+            width: 90%;
+        }
+        .complete-modal h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #4a5568;
+        }
+        .complete-modal p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #718096;
+            line-height: 1.6;
+        }
+        .complete-modal button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: #6366f1;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .complete-modal button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 150;
+            backdrop-filter: blur(5px);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        @media (max-width: 768px) {
+            .sudoku-board {
+                max-width: 100%;
+            }
+            .cell {
+                font-size: 18px;
+            }
+            .difficulty-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .diff-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            .game-top {
+                justify-content: center;
+            }
+            .bottom-bar {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="difficultyPage">
+    <div class="difficulty-page">
+        <h1>数独挑战</h1>
+        <p>选择难度，挑战你的逻辑思维！</p>
+        <div class="difficulty-buttons">
+            <button class="diff-btn easy" onclick="startGame('简单')">
+                简单<br><small>适合初学者</small>
+            </button>
+            <button class="diff-btn medium" onclick="startGame('中等')">
+                中等<br><small>需要一些技巧</small>
+            </button>
+            <button class="diff-btn hard" onclick="startGame('困难')">
+                困难<br><small>挑战你的极限</small>
+            </button>
+        </div>
+        <div class="rules">
+            规则：每行、每列和每个 3×3 宫格内的数字不能重复<br>
+            点击空格填入数字，完成整个数独谜题
+        </div>
+    </div>
+</div>
+
+<div class="container" id="gamePage" style="display: none;">
+    <div class="game-top">
+        <button class="back-btn" onclick="goBack()">返回</button>
+        <div class="difficulty">难度：<span id="diffText">简单</span></div>
+        <div class="timer">
+            <span id="timer">00:00</span>
+        </div>
+        <button class="hint-btn" onclick="useHint()">
+            提示
+            <span class="hint-count" id="hintCount">3</span>
+        </button>
+        <button class="check-btn" onclick="checkSudoku()">检查答案</button>
+    </div>
+
+    <div class="sudoku-board" id="board"></div>
+
+    <div class="bottom-bar">
+        <div class="bottom-left">
+            <button class="bottom-btn" onclick="eraseCell()">擦除</button>
+        </div>
+        <button class="new-game-btn" onclick="newGame()">新游戏</button>
+    </div>
+</div>
+
+<div class="overlay" id="overlay" style="display: none;"></div>
+<div class="complete-modal" id="completeModal" style="display: none;">
+    <h2 id="modalTitle">数独完成！</h2>
+    <p id="modalDesc">你成功完成了数独挑战，用时：<span id="modalTime">00:00</span></p>
+    <button onclick="closeModal()">关闭</button>
+    <button onclick="newGame()">新游戏</button>
+</div>
+
+<script>
+    let currentBoard = [];
+    let solutionBoard = [];
+    let timerInterval;
+    let seconds = 0;
+    let selectedRow = -1;
+    let selectedCol = -1;
+    let hintCount = 0;
+    let currentDifficulty = '';
+
+    function isSafe(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+            if (board[row][i] === num) return false;
+        }
+        for (let i = 0; i < 9; i++) {
+            if (board[i][col] === num) return false;
+        }
+        const startRow = row - row % 3;
+        const startCol = col - col % 3;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[startRow + i][startCol + j] === num) return false;
+            }
+        }
+        return true;
+    }
+
+    function generateFullBoard() {
+        const board = Array(9).fill().map(() => Array(9).fill(0));
+        
+        function fillBoard(row, col) {
+            if (row === 9) return true;
+            if (col === 9) return fillBoard(row + 1, 0);
+            
+            const nums = [1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+            
+            for (let num of nums) {
+                if (isSafe(board, row, col, num)) {
+                    board[row][col] = num;
+                    if (fillBoard(row, col + 1)) return true;
+                    board[row][col] = 0;
+                }
+            }
+            return false;
+        }
+        
+        fillBoard(0, 0);
+        return board;
+    }
+
+    function generatePuzzle(fullBoard, difficulty) {
+        const puzzle = JSON.parse(JSON.stringify(fullBoard));
+        let emptyCount;
+        
+        switch(difficulty) {
+            case '简单': emptyCount = 30; break;
+            case '中等': emptyCount = 40; break;
+            case '困难': emptyCount = 50; break;
+            default: emptyCount = 30;
+        }
+        
+        let count = 0;
+        while (count < emptyCount) {
+            const row = Math.floor(Math.random() * 9);
+            const col = Math.floor(Math.random() * 9);
+            
+            if (puzzle[row][col] !== 0) {
+                puzzle[row][col] = 0;
+                count++;
+            }
+        }
+        
+        return puzzle;
+    }
+
+    function startGame(diff) {
+        document.getElementById('difficultyPage').style.display = 'none';
+        document.getElementById('gamePage').style.display = 'block';
+        document.getElementById('diffText').textContent = diff;
+        currentDifficulty = diff;
+        
+        solutionBoard = generateFullBoard();
+        currentBoard = generatePuzzle(solutionBoard, diff);
+        
+        switch(diff) {
+            case '简单': hintCount = 3; break;
+            case '中等': hintCount = 5; break;
+            case '困难': hintCount = 8; break;
+            default: hintCount = 3;
+        }
+        
+        updateHintCount();
+        seconds = 0;
+        
+        renderBoard();
+        startTimer();
+    }
+
+    function goBack() {
+        document.getElementById('gamePage').style.display = 'none';
+        document.getElementById('difficultyPage').style.display = 'block';
+        stopTimer();
+        seconds = 0;
+        document.getElementById('timer').textContent = '00:00';
+        document.querySelectorAll('.cell.error').forEach(cell => cell.classList.remove('error'));
+    }
+
+    function newGame() {
+        stopTimer();
+        seconds = 0;
+        document.getElementById('timer').textContent = '00:00';
+        closeModal();
+        document.querySelectorAll('.cell.error').forEach(cell => cell.classList.remove('error'));
+        startGame(currentDifficulty);
+    }
+
+    function renderBoard() {
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+        
+        for (let row = 0; row < 9; row++) {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'row';
+            
+            for (let col = 0; col < 9; col++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+
+                if (currentBoard[row][col] !== 0) {
+                    cell.textContent = currentBoard[row][col];
+                    cell.classList.add('fixed');
+                } else {
+                    cell.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        selectCell(row, col);
+                    });
+                }
+
+                rowDiv.appendChild(cell);
+            }
+            board.appendChild(rowDiv);
+        }
+
+        document.addEventListener('click', closeNumberPopup);
+    }
+
+    function selectCell(row, col) {
+        document.querySelectorAll('.cell.selected').forEach(c => c.classList.remove('selected'));
+        selectedRow = row;
+        selectedCol = col;
+        
+        const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+        if (cell && !cell.classList.contains('fixed')) {
+            cell.classList.add('selected');
+            showNumberPopup(cell, row, col);
+        }
+    }
+
+    function showNumberPopup(cell, row, col) {
+        closeNumberPopup();
+        
+        const popup = document.createElement('div');
+        popup.className = 'number-popup';
+        popup.dataset.row = row;
+        popup.dataset.col = col;
+        
+        for (let i = 1; i <= 9; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'number-btn';
+            btn.textContent = i;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fillNumber(row, col, i);
+                closeNumberPopup();
+                checkIfComplete();
+            });
+            popup.appendChild(btn);
+        }
+        
+        cell.appendChild(popup);
+    }
+
+    function closeNumberPopup() {
+        document.querySelectorAll('.number-popup').forEach(popup => popup.remove());
+    }
+
+    function fillNumber(row, col, num) {
+        if (currentBoard[row][col] === 0 || !document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.contains('fixed')) {
+            currentBoard[row][col] = num;
+            const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+            cell.textContent = num;
+            cell.classList.remove('hinted', 'error');
+        }
+    }
+
+    function eraseCell() {
+        if (selectedRow >= 0 && selectedCol >= 0) {
+            const cell = document.querySelector(`.cell[data-row="${selectedRow}"][data-col="${selectedCol}"]`);
+            if (cell && !cell.classList.contains('fixed')) {
+                currentBoard[selectedRow][selectedCol] = 0;
+                cell.textContent = '';
+                cell.classList.remove('hinted', 'error');
+            }
+        }
+    }
+
+    function useHint() {
+        if (hintCount <= 0) {
+            alert('提示次数已用完！');
+            return;
+        }
+
+        let emptyCell = null;
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (currentBoard[row][col] === 0) {
+                    emptyCell = { row, col };
+                    break;
+                }
+            }
+            if (emptyCell) break;
+        }
+
+        if (emptyCell) {
+            const { row, col } = emptyCell;
+            const correctNum = solutionBoard[row][col];
+            
+            currentBoard[row][col] = correctNum;
+            const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+            cell.textContent = correctNum;
+            cell.classList.add('hinted');
+            cell.classList.remove('error');
+            
+            hintCount--;
+            updateHintCount();
+            
+            selectCell(row, col);
+            
+            checkIfComplete();
+        } else {
+            alert('数独已完成，无需提示！');
+        }
+    }
+
+    function updateHintCount() {
+        document.getElementById('hintCount').textContent = hintCount;
+    }
+
+    function startTimer() {
+        stopTimer();
+        timerInterval = setInterval(() => {
+            seconds++;
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${mins}:${secs}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    function checkSudoku() {
+        let isAllFilled = true;
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (currentBoard[row][col] === 0) {
+                    isAllFilled = false;
+                    alert('数独还未填满，请先填满所有空格！');
+                    return;
+                }
+            }
+        }
+        
+        let isCorrect = true;
+        const errorCells = [];
+        
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (currentBoard[row][col] !== solutionBoard[row][col]) {
+                    isCorrect = false;
+                    errorCells.push({ row, col });
+                }
+            }
+        }
+        
+        document.querySelectorAll('.cell.error').forEach(cell => cell.classList.remove('error'));
+        if (!isCorrect) {
+            errorCells.forEach(cell => {
+                const el = document.querySelector(`.cell[data-row="${cell.row}"][data-col="${cell.col}"]`);
+                el.classList.add('error');
+            });
+            alert('存在错误的数字，请检查标红的格子！');
+        } else {
+            showCompleteModal();
+        }
+    }
+
+    function checkIfComplete() {
+        let isAllFilled = true;
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (currentBoard[row][col] === 0) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) break;
+        }
+        
+        if (isAllFilled) {
+            checkSudoku();
+        }
+    }
+
+    function showCompleteModal() {
+        stopTimer();
+        const modal = document.getElementById('completeModal');
+        const overlay = document.getElementById('overlay');
+        const modalTime = document.getElementById('modalTime');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        
+        modalTitle.textContent = '数独完成！';
+        const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const secs = (seconds % 60).toString().padStart(2, '0');
+        modalTime.textContent = `${mins}:${secs}`;
+        modalDesc.textContent = `你成功完成了${currentDifficulty}难度数独挑战，用时：${mins}:${secs}`;
+        
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('completeModal').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+</script>
+</body>
+</html>
