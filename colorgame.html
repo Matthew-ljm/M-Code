@@ -300,6 +300,7 @@
             currentLevel: 0,
             gameActive: false,
             startTime: 0,
+            totalTime: 0,
             timerInterval: null,
             targetBlockIndex: -1,
             baseColor: {},
@@ -331,6 +332,7 @@
             }
             
             gameConfig.currentLevel = 0;
+            gameConfig.totalTime = 0;
             elements.startBtn.classList.add('hidden');
             elements.restartBtn.classList.add('hidden');
             elements.nextBtn.classList.add('hidden');
@@ -413,12 +415,14 @@
             stopTimer();
 
             if (isCorrect) {
-                elements.result.textContent = `正确! 用时: ${elements.timer.textContent}`;
+                const currentTime = parseFloat(elements.timer.textContent);
+                gameConfig.totalTime += currentTime;
+                elements.result.textContent = `正确! 用时: ${currentTime.toFixed(1)}s`;
                 elements.result.classList.add('success');
                 elements.result.classList.remove('failure');
 
                 if (gameConfig.currentLevel === 9) {
-                    elements.result.textContent = `🎉 恭喜通关! 总用时: ${elements.timer.textContent}`;
+                    elements.result.textContent = `🎉 恭喜通关! 总用时: ${gameConfig.totalTime.toFixed(1)}s`;
                     elements.nextBtn.disabled = true;
                     elements.restartBtn.classList.remove('hidden');
                 } else {
