@@ -51,10 +51,34 @@
 <body>
     <div class="text-on-top">下载录屏软件</div>
     <img src="../icon/background.jpg" alt="Background Image">
-    <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='index.html'"><返回下载页面</button>
+    <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='download.html'"><返回下载页面</button>
     <button class="download-button" style="left:10%;top:20%;" onclick="window.location.href='https://files.m-code.top/lprj/录屏软件v2.2安装包.exe'">录屏软件v2.2</button>
     <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='https://files.m-code.top/lprj/录屏软件v2.3安装包.7z'">录屏软件v2.3</button>
     <button class="download-button" style="left:70%;top:20%;" onclick="window.location.href='https://files.m-code.top/lprj/录屏软件v3.0安装包.exe'">录屏软件v3.0</button>
 </body>
+
+<script>
+    function trackPageVisit() {
+        const currentPageUrl = window.location.href;
+        const trackerUrl = 'https://mail.m-code.top/';
+        const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+        var iframe = document.createElement('iframe');
+        iframe.src = fullTrackerUrl;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+    }
+
+    function setupTracking() {
+        if (document.readyState === 'complete') {
+            setTimeout(trackPageVisit, 1000);
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(trackPageVisit, 1000);
+            });
+        }
+    }
+    
+    setupTracking();
+</script>
 
 </html>
