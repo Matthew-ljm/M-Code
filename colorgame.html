@@ -340,6 +340,10 @@
             elements.result.style.fontSize = '';
             elements.result.style.marginTop = '';
             elements.result.classList.remove('success', 'failure');
+
+            elements.restartBtn.textContent = '重新开始';
+            // elements.restartBtn.classList.remove('btn');
+            elements.restartBtn.classList.add('btn-danger');
             
             elements.grid.classList.add('show');
             loadLevel(gameConfig.currentLevel);
@@ -451,9 +455,6 @@
                     gameConfig.highlightTimer = null;
                 }, 1600);
                 
-                elements.restartBtn.textContent = '重新开始';
-                elements.restartBtn.classList.remove('btn');
-                elements.restartBtn.classList.add('btn-danger');
                 elements.restartBtn.classList.remove('hidden');
             }
         }
