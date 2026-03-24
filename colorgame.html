@@ -337,6 +337,8 @@
             elements.restartBtn.classList.add('hidden');
             elements.nextBtn.classList.add('hidden');
             elements.result.textContent = '';
+            elements.result.style.fontSize = '';
+            elements.result.style.marginTop = '';
             elements.result.classList.remove('success', 'failure');
             
             elements.grid.classList.add('show');
@@ -423,7 +425,13 @@
 
                 if (gameConfig.currentLevel === 9) {
                     elements.result.textContent = `🎉 恭喜通关! 总用时: ${gameConfig.totalTime.toFixed(1)}s`;
+                    elements.result.style.fontSize = '28px';
+                    elements.result.style.marginTop = '60px';
+                    elements.grid.classList.remove('show');
                     elements.nextBtn.disabled = true;
+                    elements.restartBtn.textContent = '再来一局';
+                    elements.restartBtn.classList.remove('btn-danger');
+                    elements.restartBtn.classList.add('btn');
                     elements.restartBtn.classList.remove('hidden');
                 } else {
                     elements.nextBtn.disabled = false;
