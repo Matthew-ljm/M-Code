@@ -5,216 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高清3文件下载 - 致我们的青春回忆</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(to bottom, #f0f9ff 0%, #e6f7ff 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            align-items: center;
-        }
-
-        .main-title {
-            font-size: 36px;
-            color: #2d3436;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .youth-text {
-            font-size: 17px;
-            color: #636e72;
-            line-height: 1.8;
-            padding: 0 10px;
-            white-space: pre-line;
-        }
-
-        .file-box {
-            background: #fff;
-            padding: 18px 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            font-size: 15px;
-            color: #2d3436;
-            width: 100%;
-        }
-
-        .download-btn {
-            display: inline-block;
-            padding: 20px 45px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
-            background: linear-gradient(90deg, #27ae60, #2ecc71);
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 6px 18px rgba(39, 174, 96, 0.25);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .download-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 22px rgba(39, 174, 96, 0.35);
-        }
-
-        .download-btn:active {
-            transform: translateY(0);
-        }
-
-        .back-btn {
-            display: inline-block;
-            padding: 14px 35px;
-            font-size: 16px;
-            color: #fff;
-            background: #7f8c8d;
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(127, 140, 141, 0.2);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        .back-btn:hover {
-            background: #6a7879;
-            transform: translateY(-2px);
-        }
-
-        #pwd {
-            width: 100%;
-            padding: 16px 20px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            outline: none;
-            transition: border 0.3s ease;
-        }
-
-        #pwd:focus {
-            border-color: #27ae60;
-        }
-
-        #result {
-            width: 100%;
-            font-size: 16px;
-            color: #2d3436;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: 30px;
-            }
-            .download-btn {
-                padding: 17px 40px;
-                font-size: 18px;
-            }
-            .back-btn {
-                padding: 12px 30px;
-                font-size: 15px;
-            }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei","PingFang SC",sans-serif}
+        body{min-height:100vh;background:linear-gradient(to bottom,#f0f9ff 0%,#e6f7ff 100%);display:flex;justify-content:center;align-items:center;padding:20px}
+        .container{width:100%;max-width:480px;text-align:center;display:flex;flex-direction:column;gap:25px;align-items:center}
+        .main-title{font-size:36px;color:#2d3436;font-weight:bold;letter-spacing:2px}
+        .youth-text{font-size:17px;color:#636e72;line-height:1.8;padding:0 10px;white-space:pre-line}
+        .file-box{background:#fff;padding:18px 25px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.06);font-size:15px;color:#2d3436;width:100%}
+        .download-btn{display:inline-block;padding:20px 45px;font-size:20px;font-weight:bold;color:#fff;background:linear-gradient(90deg,#27ae60,#2ecc71);border-radius:50px;text-decoration:none;box-shadow:0 6px 18px rgba(39,174,96,0.25);transition:all 0.3s ease;border:none;cursor:pointer;margin-top:10px}
+        .download-btn:hover{transform:translateY(-4px);box-shadow:0 8px 22px rgba(39,174,96,0.35)}
+        .download-btn:active{transform:translateY(0)}
+        .back-btn{display:inline-block;padding:14px 35px;font-size:16px;color:#fff;background:#7f8c8d;border-radius:50px;text-decoration:none;box-shadow:0 4px 12px rgba(127,140,141,0.2);transition:all 0.3s ease;border:none;cursor:pointer;margin-top:5px}
+        .back-btn:hover{background:#6a7879;transform:translateY(-2px)}
+        #pwd{width:100%;padding:16px 20px;font-size:16px;border:1px solid #ddd;border-radius:12px;outline:none;transition:border 0.3s ease}
+        #pwd:focus{border-color:#27ae60}
+        #result{width:100%;font-size:16px;line-height:1.6;font-weight:500;color:#e74c3c}
+        #result.success{color:#27ae60}
+        @media (max-width:480px){
+            .main-title{font-size:30px}
+            .download-btn{padding:17px 40px;font-size:18px}
+            .back-btn{padding:12px 30px;font-size:15px}
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1 class="main-title">高清3文件下载</h1>
-        
         <p class="youth-text">致我们的青春回忆
 时光匆匆，岁月无声
 那些一起走过、笑过的日子
 都藏在这份珍贵的记忆里
 愿青春不散，回忆永存</p>
-
         <div class="file-box">
             文件：高清3.7z 压缩包<br>
             珍藏青春 | 高清完整版
         </div>
-
         <input type="password" id="pwd" placeholder="请输入密码">
-        
         <button class="download-btn" onclick="getLink()">立即下载</button>
-
         <div id="result"></div>
-
-        <a href="index.html" class="back-btn">
-            返回主页
-        </a>
+        <a href="index.html" class="back-btn">返回主页</a>
     </div>
-
-</body>
 <script>
-    function trackPageVisit() {
-        const currentPageUrl = window.location.href;
-        const trackerUrl = 'https://mail.m-code.top/';
-        const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
-        var iframe = document.createElement('iframe');
-        iframe.src = fullTrackerUrl;
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-    }
-
-    function setupTracking() {
-        if (document.readyState === 'complete') {
-            setTimeout(trackPageVisit, 1000);
-        } else {
-            window.addEventListener('load', () => {
-                setTimeout(trackPageVisit, 1000);
-            });
-        }
-    }
-    
+    function trackPageVisit(){const currentPageUrl=window.location.href;const trackerUrl='https://mail.m-code.top/';const fullTrackerUrl=`${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;var iframe=document.createElement('iframe');iframe.src=fullTrackerUrl;iframe.style.display='none';document.body.appendChild(iframe)}
+    function setupTracking(){if(document.readyState==='complete'){setTimeout(trackPageVisit,1000)}else{window.addEventListener('load',()=>{setTimeout(trackPageVisit,1000)})}}
     setupTracking();
-
-    async function getLink() {
-      const pwd = document.getElementById('pwd').value;
-      const result = document.getElementById('result');
-      try {
-        const res = await fetch('https://files.m-code.top/api/generate-link', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: pwd })
-        });
-        
-        const data = await res.json();
-        
-        if (res.ok && data.ok) {
-          result.innerText = "下载已开始";
-          const a = document.createElement('a');
-          a.href = data.url;
-          a.download = '';
-          a.target = '_blank';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        } else {
-          result.innerText = data.error || '密码错误，请重试';
-        }
-      } catch (err) {
-        result.innerText = '请求失败，请稍后重试';
-      }
-    }
+    async function getLink(){const pwd=document.getElementById('pwd').value;const result=document.getElementById('result');try{const res=await fetch('https://files.m-code.top/api/generate-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pwd})});const data=await res.json();if(!res.ok||!data.ok){result.innerText=data.error||'密码错误，请重试';result.classList.remove('success');return}result.innerText='验证成功，开始下载';result.classList.add('success');const a=document.createElement('a');a.href=data.url;a.download='高清3.7z';document.body.appendChild(a);a.click();document.body.removeChild(a)}catch(error){result.innerText='网络请求失败，请重试';result.classList.remove('success')}}
 </script>
+</body>
 </html>
