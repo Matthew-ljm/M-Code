@@ -101,6 +101,27 @@
             transform: translateY(-2px);
         }
 
+        #pwd {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        #pwd:focus {
+            border-color: #27ae60;
+        }
+
+        #result {
+            width: 100%;
+            font-size: 16px;
+            color: #2d3436;
+            line-height: 1.6;
+        }
+
         @media (max-width: 480px) {
             .main-title {
                 font-size: 30px;
@@ -132,9 +153,11 @@
             珍藏青春 | 高清完整版
         </div>
 
-        <a href="https://small4.bakstotre.com/202603271813/3eb911485ba2edcb36972c3bdc426d27/disk/2026/03/27/1931572/11774605236451.rar?filename=%E9%AB%98%E6%B8%853.7z" class="download-btn" target="_blank">
-            立即下载
-        </a>
+        <input type="password" id="pwd" placeholder="请输入密码">
+        
+        <button class="download-btn" onclick="getLink()">立即下载</button>
+
+        <div id="result"></div>
 
         <a href="index.html" class="back-btn">
             返回主页
@@ -164,5 +187,34 @@
     }
     
     setupTracking();
+
+    async function getLink() {
+      const pwd = document.getElementById('pwd').value;
+      const result = document.getElementById('result');
+      try {
+        const res = await fetch('https://files.m-code.top/api/generate-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pwd })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok && data.ok) {
+          result.innerText = "下载已开始";
+          const a = document.createElement('a');
+          a.href = data.url;
+          a.download = '';
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else {
+          result.innerText = data.error || '密码错误，请重试';
+        }
+      } catch (err) {
+        result.innerText = '请求失败，请稍后重试';
+      }
+    }
 </script>
 </html>
