@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,7 +127,31 @@
             color: #27ae60
         }
 
-        @media (max-width:480px) {
+        .download-hint {
+            font-size: 14px;
+            color: #95a5a6;
+            margin-top: 10px;
+        }
+
+        .download-hint a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .download-hint a:hover {
+            text-decoration: underline;
+        }
+
+        .link-display {
+            font-size: 14px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+
+        @media (max-width: 480px) {
             .main-title {
                 font-size: 30px
             }
@@ -145,15 +168,14 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1 class="main-title">高清3文件下载</h1>
         <p class="youth-text">致我们的青春回忆
-            时光匆匆，岁月无声
-            那些一起走过、笑过的日子
-            都藏在这份珍贵的记忆里
-            愿青春不散，回忆永存</p>
+时光匆匆，岁月无声
+那些一起走过、笑过的日子
+都藏在这份珍贵的记忆里
+愿青春不散，回忆永存</p>
         <div class="file-box">
             文件：高清3.7z 压缩包<br>
             珍藏青春 | 高清完整版
@@ -163,12 +185,81 @@
         <div id="result"></div>
         <a href="index.html" class="back-btn">返回主页</a>
     </div>
-    <script>
-        function trackPageVisit() { const currentPageUrl = window.location.href; const trackerUrl = 'https://mail.m-code.top/'; const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`; var iframe = document.createElement('iframe'); iframe.src = fullTrackerUrl; iframe.style.display = 'none'; document.body.appendChild(iframe) }
-        function setupTracking() { if (document.readyState === 'complete') { setTimeout(trackPageVisit, 1000) } else { window.addEventListener('load', () => { setTimeout(trackPageVisit, 1000) }) } }
-        setupTracking();
-        async function getLink() { const pwd = document.getElementById('pwd').value; const result = document.getElementById('result'); try { const res = await fetch('https://files.m-code.top/api/generate-link/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwd }) }); const data = await res.json(); if (!res.ok || !data.ok) { result.innerText = data.error || '密码错误，请重试'; result.classList.remove('success'); return } result.innerText = '验证成功，开始下载'; result.classList.add('success'); const a = document.createElement('a'); a.href = data.url; a.download = '高清3.7z'; document.body.appendChild(a); a.click(); document.body.removeChild(a) } catch (error) { result.innerText = '网络请求失败，请重试'; result.classList.remove('success') } }
-    </script>
-</body>
 
+<script>
+    function trackPageVisit() {
+        const currentPageUrl = window.location.href;
+        const trackerUrl = 'https://mail.m-code.top/';
+        const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+        var iframe = document.createElement('iframe');
+        iframe.src = fullTrackerUrl;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe)
+    }
+
+    function setupTracking() {
+        if (document.readyState === 'complete') {
+            setTimeout(trackPageVisit, 1000)
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(trackPageVisit, 1000)
+            })
+        }
+    }
+
+    setupTracking();
+
+    async function getLink() {
+        const pwd = document.getElementById('pwd').value;
+        const result = document.getElementById('result');
+        
+        // 检查密码是否为空或只包含空格
+        if (!pwd || pwd.trim() === '') {
+            result.innerText = '密码错误，请重试';
+            result.classList.remove('success');
+            return;
+        }
+        
+        try {
+            const res = await fetch('https://files.m-code.top/api/generate-link', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    password: pwd
+                })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.ok) {
+                // 根据状态码显示不同的错误信息
+                let errorMessage = data.error || '密码错误，请重试';
+                if (res.status === 429) {
+                    errorMessage = '请求过于频繁，请稍后再试';
+                }
+                result.innerText = errorMessage;
+                result.classList.remove('success');
+                return
+            }
+            result.innerHTML = `正在下载...<br>
+                <div class="download-hint">
+                    下载没有开始？<a href="${data.url}" target="_blank">点击此处试试</a>
+                </div>
+                <div class="link-display">
+                    ${data.url}
+                </div>`;
+            result.classList.add('success');
+            const a = document.createElement('a');
+            a.href = data.url;
+            a.download = '高清3.7z';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a)
+        } catch (error) {
+            result.innerText = '网络请求失败，请重试';
+            result.classList.remove('success')
+        }
+    }
+</script>
+</body>
 </html>
