@@ -213,7 +213,6 @@
         const pwd = document.getElementById('pwd').value;
         const result = document.getElementById('result');
         
-        // 检查密码是否为空或只包含空格
         if (!pwd || pwd.trim() === '') {
             result.innerText = '密码错误，请重试';
             result.classList.remove('success');
@@ -232,7 +231,6 @@
             });
             const data = await res.json();
             if (!res.ok || !data.ok) {
-                // 根据状态码显示不同的错误信息
                 let errorMessage = data.error || '密码错误，请重试';
                 if (res.status === 429) {
                     errorMessage = '请求过于频繁，请稍后再试';
@@ -241,7 +239,7 @@
                 result.classList.remove('success');
                 return
             }
-            result.innerHTML = `正在下载...<br>
+            result.innerHTML = `验证成功，开始下载...<br>
                 <div class="download-hint">
                     下载没有开始？<a href="${data.url}" target="_blank">点击此处试试</a>
                 </div>
