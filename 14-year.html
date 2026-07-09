@@ -267,7 +267,7 @@ let capTicket=''
 const apiBase = "https://test.m-code.top/api"
 
 async function getCap(){
-    const r=await fetch(`${apiBase}/captcha`)
+    const r=await fetch(`${apiBase}/captcha/`)
     const d=await r.json()
     capTicket=d.data.ticket
     document.getElementById('capimg').innerHTML=`<img src="${d.data.image}" alt="验证码">`
@@ -292,7 +292,7 @@ async function submitAll(){
     resultDom.innerText='链接生成中，请稍候...'
 
     try{
-        const r=await fetch(`${apiBase}/get-data`,{
+        const r=await fetch(`${apiBase}/get-data/`,{
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({captcha:cv,ticket:capTicket,password:pwd})
