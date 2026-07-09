@@ -197,6 +197,64 @@
             transform: translateY(-2px)
         }
 
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-dialog {
+            width: min(92vw, 440px);
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            color: #2d3436;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: #636e72;
+            margin-bottom: 16px;
+        }
+
+        .download-option {
+            width: 100%;
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+            color: #1d4ed8;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .download-option:hover {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            transform: translateY(-1px);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
         @media (max-width: 580px) {
             .main-title {
                 font-size: 30px
@@ -234,11 +292,24 @@
             <input id="pwdval" type="password" placeholder="请输入访问密码">
         </div>
 
-        <button id="submitBtn" class="action-btn submit-btn" onclick="submitAll()">立即下载</button>
+        <button id="submitBtn" class="action-btn submit-btn" onclick="showDownloadTypeSelector()">立即下载</button>
 
         <div id="result"></div>
 
         <a href="index.html" class="back-btn">返回主页</a>
+    </div>
+
+    <div id="downloadModal" class="modal-overlay">
+        <div class="modal-dialog">
+            <h3 class="modal-title">下载文件选择</h3>
+            <p class="modal-desc">请选择要下载的文件</p>
+            <button class="download-option" onclick="startDownload(1)">1. 小时候的照片视频合集</button>
+            <button class="download-option" onclick="startDownload(2)">2. 14岁班会小短片</button>
+            <button class="download-option" onclick="startDownload(3)">3. 14岁班会照片</button>
+            <div class="modal-actions">
+                <button class="back-btn" onclick="closeDownloadModal()">取消</button>
+            </div>
+        </div>
     </div>
 
 <script>
@@ -273,7 +344,20 @@ async function getCap(){
     document.getElementById('capimg').innerHTML=`<img src="${d.data.image}" alt="验证码">`
 }
 
-async function submitAll(){
+function showDownloadTypeSelector(){
+    document.getElementById('downloadModal').style.display = 'flex';
+}
+
+function closeDownloadModal(){
+    document.getElementById('downloadModal').style.display = 'none';
+}
+
+async function startDownload(type){
+    closeDownloadModal();
+    await submitAll(type);
+}
+
+async function submitAll(type=1){
     const submitBtn = document.getElementById('submitBtn');
     const cv=document.getElementById('capval').value.trim()
     const pwd=document.getElementById('pwdval').value.trim()
@@ -295,7 +379,7 @@ async function submitAll(){
         const r=await fetch(`${apiBase}/get-data/`,{
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({captcha:cv,ticket:capTicket,password:pwd})
+            body:JSON.stringify({captcha:cv,ticket:capTicket,password:pwd,type:Number(type)})
         })
         const res=await r.json()
 
