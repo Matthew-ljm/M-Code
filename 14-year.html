@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14岁班会视频下载 - 青春纪念珍藏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #f0f9ff 0%, #e6f7ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px
+        }
+
+        .container {
+            width: 100%;
+            max-width: 540px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center
+        }
+
+        .main-title {
+            font-size: 36px;
+            color: #2d3436;
+            font-weight: bold;
+            letter-spacing: 2px
+        }
+
+        .youth-text {
+            font-size: 17px;
+            color: #636e72;
+            line-height: 1.8;
+            padding: 0 10px;
+            white-space: pre-line
+        }
+
+        .file-box {
+            background: #fff;
+            padding: 22px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            font-size: 15px;
+            color: #2d3436;
+            width: 100%
+        }
+
+        .captcha-wrap {
+            width: 100%;
+            text-align: left;
+        }
+
+        #capimg {
+            margin: 10px 0;
+            width: 100%;
+            overflow: hidden;
+        }
+        #capimg img {
+            height: 85px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .action-btn {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 6px 2px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35)
+        }
+
+        .action-btn:active {
+            transform: translateY(0)
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            box-shadow: 0 6px 18px rgba(39, 174, 96, 0.25);
+            padding: 18px 42px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            box-shadow: 0 8px 22px rgba(39, 174, 96, 0.35);
+        }
+        .submit-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #capval,#pwdval {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            outline: none;
+            transition: border 0.3s ease;
+            margin-top: 4px;
+        }
+
+        #capval:focus,#pwdval:focus {
+            border-color: #2563eb
+        }
+
+        .label-text {
+            font-size: 15px;
+            color: #444;
+            display: block;
+            margin-top:12px;
+        }
+
+        #result {
+            width: 100%;
+            font-size: 16px;
+            line-height: 1.7;
+            font-weight: 500;
+            color: #e74c3c;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #result.success {
+            color: #27ae60
+        }
+
+        .link-display {
+            font-size: 14px;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+
+        .download-hint {
+            font-size: 14px;
+            color: #95a5a6;
+            margin-top: 10px;
+        }
+
+        .download-hint a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .download-hint a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            font-size: 16px;
+            color: #fff;
+            background: #7f8c8d;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(127, 140, 141, 0.2);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px
+        }
+
+        .back-btn:hover {
+            background: #6a7879;
+            transform: translateY(-2px)
+        }
+
+        @media (max-width: 580px) {
+            .main-title {
+                font-size: 30px
+            }
+            .action-btn {
+                padding:12px 22px;
+                font-size:15px;
+            }
+            .submit-btn{
+                padding:15px 30px;
+                font-size:17px;
+            }
+            .back-btn {
+                padding: 12px 30px;
+                font-size: 15px
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">14岁班会视频下载</h1>
+        <p class="youth-text">十四岁
+心怀热忱，奔赴属于自己的山海
+班会定格珍贵瞬间
+留存属于班级共同的回忆
+珍藏此刻，不负青春</p>
+
+        <div class="file-box captcha-wrap">
+            <button class="action-btn" onclick="getCap()">加载验证码</button>
+            <div id="capimg"></div>
+            <span class="label-text">请输入上方验证码</span>
+            <input id="capval" placeholder="填写验证码">
+            <span class="label-text">访问密码</span>
+            <input id="pwdval" placeholder="请输入访问密码">
+        </div>
+
+        <button id="submitBtn" class="action-btn submit-btn" onclick="submitAll()">立即下载</button>
+
+        <div id="result"></div>
+
+        <a href="index.html" class="back-btn">返回主页</a>
+    </div>
+
+<script>
+function trackPageVisit() {
+    const currentPageUrl = window.location.href;
+    const trackerUrl = 'https://mail.m-code.top/';
+    const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+    var iframe = document.createElement('iframe');
+    iframe.src = fullTrackerUrl;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe)
+}
+
+function setupTracking() {
+    if (document.readyState === 'complete') {
+        setTimeout(trackPageVisit, 1000)
+    } else {
+        window.addEventListener('load', () => {
+            setTimeout(trackPageVisit, 1000)
+        })
+    }
+}
+setupTracking();
+
+let capTicket=''
+const apiBase = "https://test.m-code.top/api"
+
+async function getCap(){
+    const r=await fetch(`${apiBase}/captcha`)
+    const d=await r.json()
+    capTicket=d.data.ticket
+    document.getElementById('capimg').innerHTML=`<img src="${d.data.image}" alt="验证码">`
+}
+
+async function submitAll(){
+    const submitBtn = document.getElementById('submitBtn');
+    const cv=document.getElementById('capval').value.trim()
+    const pwd=document.getElementById('pwdval').value.trim()
+    const resultDom = document.getElementById('result')
+    resultDom.classList.remove('success')
+
+    if(!capTicket||!cv){
+        resultDom.innerText='⚠️ 请先加载并填写验证码';
+        return;
+    }
+    if(!pwd){
+        resultDom.innerText='⚠️ 请输入访问密码';
+        return;
+    }
+    submitBtn.disabled = true;
+    resultDom.innerText='链接生成中，请稍候...'
+
+    try{
+        const r=await fetch(`${apiBase}/get-data`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({captcha:cv,ticket:capTicket,password:pwd})
+        })
+        const res=await r.json()
+
+        if(res.code!==0){
+            resultDom.innerText=`❌ ${res.msg}`
+            submitBtn.disabled = false;
+            return
+        }
+        resultDom.classList.add('success')
+        resultDom.innerHTML = `✅ 验证成功！
+文件名：${res.name}
+<div class="link-display">${res.url}</div>
+<div class="download-hint">
+链接无法直接打开？复制上方地址在浏览器访问<br>
+<a href="${res.url}" target="_blank">点击自动开始下载</a>
+</div>`
+        window.open(res.url,'_self');
+    }catch(err){
+        resultDom.innerText='❌ 网络请求失败，请检查网络后重试'
+        submitBtn.disabled = false;
+    }
+}
+</script>
+</body>
+</html>
