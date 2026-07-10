@@ -220,13 +220,14 @@
         }
         
         try {
-            const res = await fetch('https://files.m-code.top/api/generate-link/', {
+            const res = await fetch('https://test.m-code.top/api/generate-link/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    password: pwd
+                    password: pwd,
+                    type: 0
                 })
             });
             const data = await res.json();
