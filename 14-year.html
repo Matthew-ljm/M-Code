@@ -56,24 +56,6 @@
             width: 100%
         }
 
-        .captcha-wrap {
-            width: 100%;
-            text-align: left;
-        }
-
-        #capimg {
-            margin: 10px 0;
-            width: 100%;
-            overflow: hidden;
-        }
-        #capimg img {
-            height: 85px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-            max-width: 100%;
-            object-fit: contain;
-        }
-
         .action-btn {
             display: inline-block;
             padding: 14px 28px;
@@ -117,7 +99,7 @@
             box-shadow: none;
         }
 
-        #capval,#pwdval {
+        #pwdval {
             width: 100%;
             padding: 16px 20px;
             font-size: 16px;
@@ -128,7 +110,7 @@
             margin-top: 4px;
         }
 
-        #capval:focus,#pwdval:focus {
+        #pwdval:focus {
             border-color: #2563eb
         }
 
@@ -283,12 +265,7 @@
 留存属于班级共同的回忆
 珍藏此刻，不负青春</p>
 
-        <div class="file-box captcha-wrap">
-            <button class="action-btn" onclick="getCap()">加载验证码</button>
-            <div id="capimg"></div>
-            <span class="label-text">请输入上方验证码</span>
-            <input id="capval" placeholder="填写验证码">
-            <span class="label-text">访问密码</span>
+        <div class="file-box">
             <input id="pwdval" type="password" placeholder="请输入访问密码">
         </div>
 
@@ -334,15 +311,7 @@ function setupTracking() {
 }
 setupTracking();
 
-let capTicket=''
 const apiBase = "https://test.m-code.top/api"
-
-async function getCap(){
-    const r=await fetch(`${apiBase}/captcha/`)
-    const d=await r.json()
-    capTicket=d.data.ticket
-    document.getElementById('capimg').innerHTML=`<img src="${d.data.image}" alt="验证码">`
-}
 
 function showDownloadTypeSelector(){
     document.getElementById('downloadModal').style.display = 'flex';
@@ -359,15 +328,10 @@ async function startDownload(type){
 
 async function submitAll(type=1){
     const submitBtn = document.getElementById('submitBtn');
-    const cv=document.getElementById('capval').value.trim()
     const pwd=document.getElementById('pwdval').value.trim()
     const resultDom = document.getElementById('result')
     resultDom.classList.remove('success')
 
-    if(!capTicket||!cv){
-        resultDom.innerText='⚠️ 请先加载并填写验证码';
-        return;
-    }
     if(!pwd){
         resultDom.innerText='⚠️ 请输入访问密码';
         return;
@@ -379,7 +343,7 @@ async function submitAll(type=1){
         const r=await fetch(`${apiBase}/get-data/`,{
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({captcha:cv,ticket:capTicket,password:pwd,type:Number(type)})
+            body:JSON.stringify({password:pwd,type:Number(type)})
         })
         const res=await r.json()
 
