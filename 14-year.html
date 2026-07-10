@@ -23,7 +23,7 @@
 
         .container {
             width: 100%;
-            max-width: 540px;
+            max-width: 480px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -48,7 +48,7 @@
 
         .file-box {
             background: #fff;
-            padding: 22px 25px;
+            padding: 18px 25px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
             font-size: 15px;
@@ -56,107 +56,29 @@
             width: 100%
         }
 
-        .action-btn {
+        .download-btn {
             display: inline-block;
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: 500;
+            padding: 20px 45px;
+            font-size: 20px;
+            font-weight: bold;
             color: #fff;
-            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
             border-radius: 50px;
             text-decoration: none;
-            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 6px 18px rgba(39, 174, 96, 0.25);
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-            margin: 6px 2px;
+            margin-top: 10px
         }
 
-        .action-btn:hover {
+        .download-btn:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35)
+            box-shadow: 0 8px 22px rgba(39, 174, 96, 0.35)
         }
 
-        .action-btn:active {
+        .download-btn:active {
             transform: translateY(0)
-        }
-
-        .submit-btn {
-            background: linear-gradient(90deg, #27ae60, #2ecc71);
-            box-shadow: 0 6px 18px rgba(39, 174, 96, 0.25);
-            padding: 18px 42px;
-            font-size: 18px;
-            font-weight: bold;
-            width: 100%;
-        }
-        .submit-btn:hover {
-            box-shadow: 0 8px 22px rgba(39, 174, 96, 0.35);
-        }
-        .submit-btn:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        #pwdval {
-            width: 100%;
-            padding: 16px 20px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            outline: none;
-            transition: border 0.3s ease;
-            margin-top: 4px;
-        }
-
-        #pwdval:focus {
-            border-color: #2563eb
-        }
-
-        .label-text {
-            font-size: 15px;
-            color: #444;
-            display: block;
-            margin-top:12px;
-        }
-
-        #result {
-            width: 100%;
-            font-size: 16px;
-            line-height: 1.7;
-            font-weight: 500;
-            color: #e74c3c;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-
-        #result.success {
-            color: #27ae60
-        }
-
-        .link-display {
-            font-size: 14px;
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            word-break: break-all;
-        }
-
-        .download-hint {
-            font-size: 14px;
-            color: #95a5a6;
-            margin-top: 10px;
-        }
-
-        .download-hint a {
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        .download-hint a:hover {
-            text-decoration: underline;
         }
 
         .back-btn {
@@ -177,6 +99,56 @@
         .back-btn:hover {
             background: #6a7879;
             transform: translateY(-2px)
+        }
+
+        #pwd {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            outline: none;
+            transition: border 0.3s ease
+        }
+
+        #pwd:focus {
+            border-color: #27ae60
+        }
+
+        #result {
+            width: 100%;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 500;
+            color: #e74c3c
+        }
+
+        #result.success {
+            color: #27ae60
+        }
+
+        .download-hint {
+            font-size: 14px;
+            color: #95a5a6;
+            margin-top: 10px;
+        }
+
+        .download-hint a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .download-hint a:hover {
+            text-decoration: underline;
+        }
+
+        .link-display {
+            font-size: 14px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            word-break: break-all;
         }
 
         .modal-overlay {
@@ -237,18 +209,16 @@
             margin-top: 8px;
         }
 
-        @media (max-width: 580px) {
+        @media (max-width: 480px) {
             .main-title {
                 font-size: 30px
             }
-            .action-btn {
-                padding:12px 22px;
-                font-size:15px;
+
+            .download-btn {
+                padding: 17px 40px;
+                font-size: 18px
             }
-            .submit-btn{
-                padding:15px 30px;
-                font-size:17px;
-            }
+
             .back-btn {
                 padding: 12px 30px;
                 font-size: 15px
@@ -266,10 +236,10 @@
 珍藏此刻，不负青春</p>
 
         <div class="file-box">
-            <input id="pwdval" type="password" placeholder="请输入访问密码">
+            <input id="pwd" type="password" placeholder="请输入访问密码">
         </div>
 
-        <button id="submitBtn" class="action-btn submit-btn" onclick="showDownloadTypeSelector()">立即下载</button>
+        <button id="submitBtn" class="download-btn" onclick="showDownloadTypeSelector()">立即下载</button>
 
         <div id="result"></div>
 
@@ -290,82 +260,97 @@
     </div>
 
 <script>
-function trackPageVisit() {
-    const currentPageUrl = window.location.href;
-    const trackerUrl = 'https://mail.m-code.top/';
-    const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
-    var iframe = document.createElement('iframe');
-    iframe.src = fullTrackerUrl;
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe)
-}
+    function trackPageVisit() {
+        const currentPageUrl = window.location.href;
+        const trackerUrl = 'https://mail.m-code.top/';
+        const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+        var iframe = document.createElement('iframe');
+        iframe.src = fullTrackerUrl;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe)
+    }
 
-function setupTracking() {
-    if (document.readyState === 'complete') {
-        setTimeout(trackPageVisit, 1000)
-    } else {
-        window.addEventListener('load', () => {
+    function setupTracking() {
+        if (document.readyState === 'complete') {
             setTimeout(trackPageVisit, 1000)
-        })
-    }
-}
-setupTracking();
-
-const apiBase = "https://test.m-code.top/api"
-
-function showDownloadTypeSelector(){
-    document.getElementById('downloadModal').style.display = 'flex';
-}
-
-function closeDownloadModal(){
-    document.getElementById('downloadModal').style.display = 'none';
-}
-
-async function startDownload(type){
-    closeDownloadModal();
-    await submitAll(type);
-}
-
-async function submitAll(type=1){
-    const submitBtn = document.getElementById('submitBtn');
-    const pwd=document.getElementById('pwdval').value.trim()
-    const resultDom = document.getElementById('result')
-    resultDom.classList.remove('success')
-
-    if(!pwd){
-        resultDom.innerText='⚠️ 请输入访问密码';
-        return;
-    }
-    submitBtn.disabled = true;
-    resultDom.innerText='链接生成中，请稍候...'
-
-    try{
-        const r=await fetch(`${apiBase}/generate-link/`,{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({password:pwd,type:Number(type)})
-        })
-        const res=await r.json()
-
-        if(res.code!==0){
-            resultDom.innerText=`❌ ${res.msg}`
-            submitBtn.disabled = false;
-            return
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(trackPageVisit, 1000)
+            })
         }
-        resultDom.classList.add('success')
-        resultDom.innerHTML = `✅ 验证成功！
-文件名：${res.name}
-<div class="link-display">${res.url}</div>
-<div class="download-hint">
-链接无法直接打开？复制上方地址在浏览器访问<br>
-<a href="${res.url}" target="_blank">点击自动开始下载</a>
-</div>`
-        window.open(res.url,'_self');
-    }catch(err){
-        resultDom.innerText='❌ 网络请求失败，请检查网络后重试'
-        submitBtn.disabled = false;
     }
-}
+
+    function showDownloadTypeSelector() {
+        const modal = document.getElementById('downloadModal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    function closeDownloadModal() {
+        const modal = document.getElementById('downloadModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    setupTracking();
+
+    async function getLink(type = 0) {
+        const pwd = document.getElementById('pwd').value;
+        const result = document.getElementById('result');
+        
+        if (!pwd || pwd.trim() === '') {
+            result.innerText = '密码错误，请重试';
+            result.classList.remove('success');
+            return;
+        }
+        
+        try {
+            const res = await fetch('https://test.m-code.top/api/generate-link/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    password: pwd,
+                    type: type
+                })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.ok) {
+                let errorMessage = data.error || '密码错误，请重试';
+                if (res.status === 429) {
+                    errorMessage = '请求过于频繁，请稍后再试';
+                }
+                result.innerText = errorMessage;
+                result.classList.remove('success');
+                return
+            }
+            result.innerHTML = `验证成功，开始下载...<br>
+                <div class="download-hint">
+                    下载没有自动开始？<a href="${data.url}" target="_blank">点击此处试试</a>
+                </div>
+                <div class="link-display">
+                    ${data.url}
+                </div>`;
+            result.classList.add('success');
+            const a = document.createElement('a');
+            a.href = data.url;
+            a.download = '高清3.7z';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a)
+        } catch (error) {
+            result.innerText = '网络请求失败，请重试';
+            result.classList.remove('success')
+        }
+    }
+
+    async function startDownload(type) {
+        closeDownloadModal();
+        await getLink(type);
+    }
 </script>
 </body>
 </html>
