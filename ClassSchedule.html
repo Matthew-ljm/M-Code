@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>下载课程表进度条</title>
+    <link rel="shortcut icon" href="../icon/课程表进度条.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+        }
+
+       .download-button {
+            position: absolute;
+            top: 20%;
+            padding: 15px 30px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+       .download-button:hover {
+            background-color: goldenrod;
+        }
+
+       .text-on-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 3rem;
+            color: #FFD700;
+            z-index: 2;
+        }
+
+        /* v2.1.6 版本选择弹窗样式 */
+        #versionModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+            background: none;
+            border: none;
+        }
+
+        .close-button:hover {
+            color: #333;
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .option {
+            width: 45%;
+            min-width: 250px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            border-color: #4CAF50;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option.selected {
+            border-color: #4CAF50;
+            background-color: #f9fff9;
+        }
+
+        .exe-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: #6b6b6b;
+        }
+
+        .option-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .option-description {
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .download-confirm {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-confirm:hover {
+            background-color: #45a049;
+        }
+
+        .download-confirm:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .github-note {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .github-note a {
+            color: #999;
+            text-decoration: underline;
+        }
+
+        .github-note a:hover {
+            color: #666;
+        }
+
+        /* 媒体查询 - 针对小屏幕设备 */
+        @media (max-width: 768px) {
+            .options-container {
+                flex-direction: column;
+            }
+
+            .option {
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text-on-top">下载课程表进度条</div>
+    <img src="../icon/background.jpg" alt="Background Image">
+    <!-- v2.1.6 版本选择弹窗 -->
+    <div id="versionModal">
+        <div class="modal-content">
+            <button class="close-button" id="modalCloseButton">&times;</button>
+            <h2>选择课程表进度条 v2.1.6 版本</h2>
+            <div class="options-container">
+                <div class="option" data-value="windows">
+                    <div class="exe-icon">EXE</div>
+                    <div class="option-title">Windows 版</div>
+                    <div class="option-description">
+                        <p>适用于 Windows 系统</p>
+                        <p>安装包格式：.exe</p>
+                    </div>
+                </div>
+                <div class="option" data-value="uos">
+                    <div class="exe-icon">ZIP</div>
+                    <div class="option-title">统信 UOS 版</div>
+                    <div class="option-description">
+                        <p>适用于统信 UOS 系统</p>
+                        <p>压缩包格式：.zip</p>
+                    </div>
+                </div>
+            </div>
+            <button class="download-confirm" id="downloadConfirmBtn" disabled>下载选中版本</button>
+            <div class="github-note">GitHub仓库：<a href="https://github.com/Matthew-ljm/ClassSchedule" target="_blank" rel="noopener noreferrer">https://github.com/Matthew-ljm/ClassSchedule</a></div>
+        </div>
+    </div>
+
+    <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='download.html'"><返回下载页面</button>
+    <button class="download-button" style="left:10%;top:20%;" onclick="showVersionModal()">课程表进度条v2.1.6</button>
+    <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='https://github.com/Matthew-ljm/ClassSchedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe'">课程表进度条v3.1.1</button>
+</body>
+
+<script>
+    function trackPageVisit() {
+        const currentPageUrl = window.location.href;
+        const trackerUrl = 'https://mail.m-code.top/';
+        const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
+        var iframe = document.createElement('iframe');
+        iframe.src = fullTrackerUrl;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+    }
+
+    function setupTracking() {
+        if (document.readyState === 'complete') {
+            setTimeout(trackPageVisit, 1000);
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(trackPageVisit, 1000);
+            });
+        }
+    }
+    
+    setupTracking();
+
+    const versionModal = document.getElementById('versionModal');
+    const downloadConfirmBtn = document.getElementById('downloadConfirmBtn');
+
+    function showVersionModal() {
+        versionModal.style.display = 'flex';
+    }
+
+    function resetVersionModal() {
+        document.querySelectorAll('#versionModal .option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        downloadConfirmBtn.disabled = true;
+    }
+
+    document.getElementById('modalCloseButton').addEventListener('click', function() {
+        versionModal.style.display = 'none';
+        resetVersionModal();
+    });
+
+    versionModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+            resetVersionModal();
+        }
+    });
+
+    document.querySelectorAll('#versionModal .option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('#versionModal .option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            downloadConfirmBtn.disabled = false;
+        });
+    });
+
+    downloadConfirmBtn.addEventListener('click', function() {
+        const selectedOption = document.querySelector('#versionModal .option.selected');
+        if (!selectedOption) return;
+
+        const version = selectedOption.getAttribute('data-value');
+        if (version === 'windows') {
+            window.location.href = 'https://github.com/Matthew-ljm/ClassSchedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-Windows-Installer.exe';
+        } else if (version === 'uos') {
+            window.location.href = 'https://github.com/Matthew-ljm/ClassSchedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-UOS.zip';
+        }
+
+        versionModal.style.display = 'none';
+        resetVersionModal();
+    });
+</script>
+
+</html>
