@@ -1,466 +1,721 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>软件下载</title>
     <link rel="shortcut icon" href="icon/download.ico" type="image/x-icon">
     <style>
-        html, body {
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden;
+            box-sizing: border-box;
         }
-
-        img {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            display: block;
+        html {
+            scroll-behavior: smooth;
         }
-
-       .download-button {
-            position: absolute;
-            top: 20%;
-            padding: 15px 30px;
-            background-color: orange;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            z-index: 3;
+        body {
+            font-family: "Segoe UI", "Microsoft YaHei", -apple-system, sans-serif;
+            min-height: 100vh;
+            color: #1f2937;
+            background-color: #f4f5f7;
+            overflow-x: hidden;
         }
-
-       .download-button:hover {
-            background-color: goldenrod;
-        }
-
-       .text-on-top {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 4rem;
-            color: #FFD700;
-            z-index: 2;
-        }
-
-        #footerText {
-            position: absolute;
-            bottom: 0.5%;
-            left: 5%;
-            width: 90%;
-            text-align: center;
-            color: white;
-            font-size: 0.8rem;
-            z-index: 2;
-        }
-
-        #footerText2 {
-            position: absolute;
-            bottom: 5%;
-            left: 5%;
-            width: 90%;
-            text-align: center;
-            color: yellow;
-            font-size: 12px;
-            z-index: 100;
-        }
-
-       .highlighted-link {
-            position: absolute;
-            bottom: 1.5%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: yellow;
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .highlighted-link2 {
-            color: greenyellow;
-            z-index: 100;
-        }
-
-        #tipButton {
-            position: absolute;
-            bottom: 23%;
-            left: 37%;
-            transform: translateX(-50%);
-            background: url('icon/提示.png') no-repeat center center/cover;
-            width: 50px;
-            height: 50px;
-            border: none;
-            cursor: pointer;
-            z-index: 2;
-            opacity: 0.8;
-            transition: all 0.3s;
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
-        }
-
-        #tipButton:hover {
-            opacity: 1;
-            transform: translateX(-50%) scale(1.1);
-        }
-
-        #tipBox {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70%;
-            max-width: 650px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 10;
-            border-radius: 12px;
-            color: #333;
-            text-align: center;
-            font-size: 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            animation: slideUp 0.3s;
-        }
-
-        /* 音乐下载器选择弹窗样式 */
-        #musicDownloaderModal {
+        .topbar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+        }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 18px;
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .nav-btn:hover {
+            background: #e8ecf3;
+            color: #111827;
+        }
+        .nav-btn img {
+            width: 16px;
+            height: 16px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 24px 40px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease both;
+        }
+        .hero h1 {
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #111827;
+        }
+        .hero p {
+            margin-top: 10px;
+            font-size: 14.5px;
+            color: #8a93a3;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 36px 0 18px;
+        }
+        .section-title .count {
+            font-size: 12.5px;
+            font-weight: 400;
+            color: #9aa2af;
+        }
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 16px;
+        }
+        .collection-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 22px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .collection-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(90, 120, 230, 0.35);
+            box-shadow: 0 12px 28px rgba(50, 70, 150, 0.12);
+        }
+        .collection-icon {
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #6a8dff, #9b7bff);
+        }
+        .collection-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        .collection-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+        .collection-info p {
+            font-size: 12.5px;
+            color: #9aa2af;
+        }
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(208px, 1fr));
+            gap: 16px;
+        }
+        .sw-card {
+            position: relative;
+            padding: 20px 18px 15px;
+            min-height: 182px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: fadeInUp 0.5s ease both;
+        }
+        .sw-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(90, 120, 230, 0.35);
+            box-shadow: 0 14px 30px rgba(50, 65, 140, 0.13);
+        }
+        .sw-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #f4f6fa;
+            margin-bottom: 13px;
+            transition: transform 0.3s ease;
+        }
+        .sw-card:hover .sw-icon {
+            transform: scale(1.08);
+        }
+        .sw-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        .sw-name {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.4;
+            margin-bottom: auto;
+        }
+        .sw-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 13px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .badge-windows {
+            background: #eef3ff;
+            color: #3d63dd;
+            border: 1px solid #dbe6ff;
+        }
+        .badge-android {
+            background: #e9f8ef;
+            color: #1f9d57;
+            border: 1px solid #d4f0df;
+        }
+        .sw-date {
+            font-size: 11px;
+            color: #a6adba;
+            font-variant-numeric: tabular-nums;
+        }
+        .sw-desc {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 30px 18px 14px;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: #4b5563;
+            background: linear-gradient(0deg, rgba(255, 255, 255, 0.99) 45%, rgba(255, 255, 255, 0.9) 72%, rgba(255, 255, 255, 0));
+            border-radius: 0 0 14px 14px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .sw-card:hover .sw-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .sw-download-hint {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            opacity: 0.45;
+            transition: all 0.3s ease;
+        }
+        .sw-download-hint img {
+            width: 16px;
+            height: 16px;
+        }
+        .sw-card:hover .sw-download-hint {
+            opacity: 0.85;
+            transform: translateY(2px);
+        }
+        .help-tip-wrap {
+            position: absolute;
+            top: 13px;
+            right: 42px;
+            z-index: 999;
+        }
+        .help-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffc846;
+            color: #7a5600;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        .help-q {
+            display: inline-block;
+            transform: translateX(1px);
+        }
+        .help-pop {
+            position: absolute;
+            width: 250px;
+            top: 27px;
+            right: 0;
+            padding: 12px 14px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.09);
+            border-radius: 10px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.13);
+            font-size: 12px;
+            line-height: 1.65;
+            color: #4b5563;
+            display: none;
+        }
+        .help-circle:hover .help-pop {
+            display: block;
+        }
+        #musicDownloaderModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 38, 60, 0.4);
+            backdrop-filter: blur(4px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 100;
         }
-
         .modal-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            width: 80%;
-            max-width: 900px; /* 增加最大宽度以适应并排布局 */
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
+            width: 86%;
+            max-width: 860px;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 32px;
             position: relative;
+            text-align: center;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(30, 40, 80, 0.25);
+            animation: modalIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
-
+        .modal-content h2 {
+            font-size: 21px;
+            color: #1f2937;
+            margin-bottom: 7px;
+        }
+        .modal-sub {
+            font-size: 13px;
+            color: #9aa2af;
+        }
         .close-button {
             position: absolute;
             top: 15px;
-            right: 15px;
-            font-size: 24px;
+            right: 18px;
+            font-size: 26px;
             cursor: pointer;
-            color: #888;
+            color: #b3bac5;
             background: none;
             border: none;
+            line-height: 1;
+            transition: all 0.2s;
         }
-
         .close-button:hover {
-            color: #333;
+            color: #4b5563;
+            transform: rotate(90deg);
         }
-
         .options-container {
             display: flex;
             justify-content: space-around;
-            margin: 25px 0;
+            gap: 16px;
+            margin: 26px 0 6px;
             flex-wrap: wrap;
         }
-
         .option {
-            width: 45%;
+            flex: 1;
             min-width: 250px;
-            padding: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
+            padding: 22px 20px;
+            border: 1.5px solid rgba(0, 0, 0, 0.09);
+            border-radius: 14px;
             cursor: pointer;
+            transition: all 0.28s ease;
+            text-align: left;
+            background: #fafbfc;
         }
-
         .option:hover {
-            border-color: #4CAF50;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: rgba(106, 141, 255, 0.55);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(50, 70, 150, 0.1);
         }
-
         .option.selected {
-            border-color: #4CAF50;
-            background-color: #f9fff9;
+            border-color: #6a8dff;
+            background: #f2f6ff;
+            box-shadow: 0 0 0 1px rgba(106, 141, 255, 0.35);
         }
-
         .exe-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            background-color: #f1f1f1;
-            border-radius: 10px;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            border-radius: 13px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 40px;
-            color: #6b6b6b;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #6a8dff, #9b7bff);
         }
-
         .option-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 18px;
+            font-weight: 700;
+            font-size: 15.5px;
+            color: #1f2937;
+            margin-bottom: 9px;
         }
-
         .option-description {
-            text-align: left;
-            font-size: 14px;
-            color: #555;
-            line-height: 1.5;
+            font-size: 12.5px;
+            color: #6b7280;
+            line-height: 1.65;
         }
-
+        .option-description p {
+            margin-bottom: 5px;
+        }
         .download-confirm {
-            margin-top: 20px;
-            padding: 12px 25px;
-            background-color: #4CAF50;
-            color: white;
+            margin-top: 22px;
+            padding: 12px 38px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 999px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            background: linear-gradient(120deg, #5d80f5, #8b6cf0);
+            box-shadow: 0 7px 18px rgba(99, 120, 240, 0.35);
+            transition: all 0.28s ease;
         }
-
-        .download-confirm:hover {
-            background-color: #45a049;
+        .download-confirm:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 11px 24px rgba(99, 120, 240, 0.45);
         }
-
         .download-confirm:disabled {
-            background-color: #cccccc;
+            background: #e5e7eb;
+            color: #a6adba;
+            box-shadow: none;
             cursor: not-allowed;
         }
-
-        @keyframes slideUp {
-            from { opacity: 0; bottom: 0%; }
-            to { opacity: 1; bottom: 10%; }
+        .footer {
+            margin-top: 46px;
+            padding: 24px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            text-align: center;
         }
-
-        /* 媒体查询 - 针对小屏幕设备 */
-        @media (max-width: 768px) {
-            .options-container {
-                flex-direction: column;
-            }
-            
-            .option {
-                width: 100%;
-            }
-            
-            .modal-content {
-                width: 90%;
-                padding: 20px;
-            }
+        .footer .tools {
+            font-size: 13px;
+            line-height: 2.1;
+            color: #8a93a3;
         }
-        
-        /* 针对大屏幕设备的优化 */
-        @media (min-width: 769px) {
-            .options-container {
-                flex-direction: row;
+        .footer .tools a {
+            color: #4b5563;
+            text-decoration: none;
+            margin: 0 3px;
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        .footer .tools a:hover {
+            color: #2f6bff;
+            border-bottom-color: #2f6bff;
+        }
+        .footer .copyright {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #b3bac5;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.94) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 86px 14px 30px;
             }
-            
-            .option {
-                width: 45%;
-                margin-bottom: 0;
+            .software-grid {
+                grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+                gap: 12px;
             }
-            
+            .sw-card {
+                min-height: 168px;
+                padding: 16px 14px 12px;
+            }
+            .sw-icon {
+                width: 46px;
+                height: 46px;
+            }
+            .sw-icon img {
+                width: 24px;
+                height: 24px;
+            }
+            .sw-name {
+                font-size: 13px;
+            }
+            .topbar {
+                height: 54px;
+                padding: 0 14px;
+            }
             .modal-content {
-                max-height: 80vh;
-                overflow-y: auto;
+                padding: 24px 18px;
+            }
+            .option {
+                min-width: 100%;
+            }
+            .help-pop {
+                width: 210px;
             }
         }
     </style>
 </head>
-
 <body>
-    <div class="text-on-top">软件下载</div>
-    <img src="icon/background.jpg" alt="Background Image">
-    <a class="highlighted-link" href="test-file.html">访问 https://m-code.top/test-file.html 可查看测试文件及内部应用</a>
-    <div id="footerText2">更多线上工具：<a class="highlighted-link2" href="png-ico.html">PNG转ICO</a>，<a class="highlighted-link2" href="cardmatch.html">翻牌消消乐</a>，<a class="highlighted-link2" href="https://ip.m-code.top">IP信息发送服务</a>，<a class="highlighted-link2" href="https://step.m-code.top">Zepp步数提交系统</a>，<a class="highlighted-link2" href="2fa.html">2FA验证码生成器</a>，<a class="highlighted-link2" href="ponggame.html">乒乓球游戏</a>，<a class="highlighted-link2" href="colorgame.html">色彩敏感度挑战</a>，<a class="highlighted-link2" href="sudoku.html">数独游戏</a> </div>
-    <div id="footerText">更多内容敬请期待</div>
-    <button id="tipButton"></button>
-    <div id="tipBox">提示：VSCode C++ 运行和调试工具是一款为 Visual Studio Code（VSCode）开发的功能性插件，该插件能够输出更为详尽的 C++ 程序调试信息，同时具备对中文路径的良好支持能力。关于该插件的完整配置教程，请访问<a href="VSCodeSettings.html">https://m-code.top/VSCodeSettings.html</a></div>
-    
-    <!-- 音乐下载器选择弹窗 -->
+    <div class="topbar">
+        <a class="nav-btn" href="index.html"><返回主页</a>
+    </div>
+    <div class="container">
+        <header class="hero">
+            <h1>软件下载中心</h1>
+            <p>自制实用小工具 · 全部免费使用</p>
+        </header>
+        <h2 class="section-title">应用合集 <span class="count">含多版本 / 多平台</span></h2>
+        <div class="collection-grid">
+            <a class="collection-card" href="lprj.html">
+                <div class="collection-icon">
+                    <img src="icon/software/lprj.png" alt="">
+                </div>
+                <div class="collection-info">
+                    <h3>录屏软件</h3>
+                    <p>多版本可选 · Windows</p>
+                </div>
+            </a>
+            <a class="collection-card" href="cqzs.html">
+                <div class="collection-icon">
+                    <img src="icon/software/cqzs.png" alt="">
+                </div>
+                <div class="collection-info">
+                    <h3>抽签助手</h3>
+                    <p>多版本可选 · Windows</p>
+                </div>
+            </a>
+            <a class="collection-card" href="ClassSchedule.html">
+                <div class="collection-icon">
+                    <img src="icon/software/class-schedule.png" alt="">
+                </div>
+                <div class="collection-info">
+                    <h3>课程表进度条</h3>
+                    <p>v2.1.6 / v3.1.1 · Windows / 统信 UOS</p>
+                </div>
+            </a>
+        </div>
+        <h2 class="section-title">全部软件 <span class="count" id="softwareCount"></span></h2>
+        <div class="software-grid" id="softwareGrid"></div>
+        <footer class="footer">
+            <div class="tools">
+                <a href="test-file.html">📁 访问测试文件及内部应用页面</a><br>
+                更多线上工具：
+                <a href="png-ico.html">PNG转ICO</a>·
+                <a href="cardmatch.html">翻牌消消乐</a>·
+                <a href="https://ip.m-code.top">IP信息发送服务</a>·
+                <a href="https://step.m-code.top">Zepp步数提交系统</a>·
+                <a href="2fa.html">2FA验证码生成器</a>·
+                <a href="ponggame.html">乒乓球游戏</a>·
+                <a href="colorgame.html">色彩敏感度挑战</a>·
+                <a href="sudoku.html">数独游戏</a>
+            </div>
+            <div class="copyright">更多内容敬请期待 · © M-Code</div>
+        </footer>
+    </div>
     <div id="musicDownloaderModal">
         <div class="modal-content">
-            <button class="close-button">&times;</button>
+            <button class="close-button" id="modalCloseBtn">&times;</button>
             <h2>选择音乐下载器版本</h2>
+            <div class="modal-sub">两个版本均基于 Python 开发 · Windows</div>
             <div class="options-container">
                 <div class="option" data-value="default">
                     <div class="exe-icon">EXE</div>
                     <div class="option-title">音乐下载器（默认音源）</div>
                     <div class="option-description">
-                        <p><strong>功能强大</strong>（支持多平台搜索下载、批量下载、通过指定歌曲URL下载音乐、通过指定歌单URL下载音乐、搜索数量限制、指定输出目录、详细输出模式、同时下载歌词、同时下载封面、对搜索结果进行去重操作等）</p>
-                        <p><strong>稳定性差</strong>（小部分VIP歌曲可能会下载失败）</p>
-                        <p><strong>基于Python开发</strong></p>
+                        <p><strong>功能强大</strong>：多平台搜索下载、批量下载、指定歌曲 / 歌单 URL 下载、搜索数量限制、指定输出目录、歌词封面同时下载、结果去重等</p>
+                        <p><strong>稳定性较差</strong>：小部分 VIP 歌曲可能下载失败</p>
                     </div>
                 </div>
                 <div class="option" data-value="thirdparty">
                     <div class="exe-icon">EXE</div>
                     <div class="option-title">音乐下载器（第三方音源）</div>
                     <div class="option-description">
-                        <p><strong>功能较少</strong>（仅支持通过搜索下载歌曲）</p>
-                        <p><strong>更稳定</strong>（几乎支持所有歌曲的下载，下载成功率达99%）</p>
-                        <p><strong>基于Python开发</strong></p>
+                        <p><strong>功能较少</strong>：仅支持通过搜索下载歌曲</p>
+                        <p><strong>更加稳定</strong>：几乎支持所有歌曲，下载成功率约 99%</p>
                     </div>
                 </div>
             </div>
-            <button class="download-confirm" disabled>下载选中版本</button>
+            <button class="download-confirm" id="downloadConfirmBtn" disabled>下载选中版本</button>
         </div>
     </div>
-    
-    <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='index.html'"><返回主页</button>
-    <button class="download-button" style="left:10%;" onclick="window.location.href='lprj.html'">录屏软件</button>
-    <button class="download-button" style="left:40%;" onclick="window.location.href='cqzs.html'">抽签助手</button>
-    <button class="download-button" style="left:70%;" onclick="window.location.href='ClassSchedule.html'">课程表进度条</button>
-    <button class="download-button" style="left:10%;top:30%;" onclick="window.location.href='https://files.m-code.top/software/有理数计算大闯关安装包.exe'">有理数计算大闯关</button>
-    <button class="download-button" style="left:40%;top:30%;" onclick="window.location.href='https://files.m-code.top/software/成语填空大挑战安装包.exe'">成语填空大挑战</button>
-    <button class="download-button" style="left:70%;top:30%;" onclick="window.location.href='https://files.m-code.top/software/编码解码辅助工具.exe'">编码解码辅助工具</button>
-    <button class="download-button" style="left:10%;top:40%;" onclick="window.location.href='https://files.m-code.top/software/U盘备份程序安装包.exe'">U盘备份程序</button>
-    <button class="download-button" style="left:40%;top:40%;" onclick="window.location.href='https://files.m-code.top/software/视频下载器.exe'">视频下载器</button>
-    <button class="download-button" style="left:70%;top:40%;" onclick="showMusicDownloaderModal()">音乐下载器</button>
-    <button class="download-button" style="left:10%;top:50%;" onclick="window.location.href='https://files.m-code.top/software/音乐播放器安装包.exe'">音乐播放器</button>
-    <button class="download-button" style="left:40%;top:50%;" onclick="window.location.href='https://files.m-code.top/software/C++打包程序安装包.exe'">C++ 打包程序</button>
-    <button class="download-button" style="left:70%;top:50%;" onclick="window.location.href='https://files.m-code.top/software/文件夹同步助手安装包.exe'">文件夹同步助手</button>
-    <button class="download-button" style="left:10%;top:60%;" onclick="window.location.href='https://files.m-code.top/software/窗口置顶程序.exe'">窗口置顶程序</button>
-    <button class="download-button" style="left:40%;top:60%;" onclick="window.location.href='https://files.m-code.top/software/Proxy Monitor.exe'">代理监视器</button>
-    <button class="download-button" style="left:70%;top:60%;" onclick="window.location.href='https://files.m-code.top/software/error408升级版.7z'">error408升级版</button>
-    <button class="download-button" style="left:10%;top:70%;" onclick="window.location.href='https://files.m-code.top/software/桌面保护程序安装包.exe'">桌面保护程序</button>
-    <button class="download-button" style="left:40%;top:70%;" onclick="window.location.href='https://files.m-code.top/software/鲁班锁教学演示安装包.exe'">鲁班锁教学演示</button>
-    <button class="download-button" style="left:70%;top:70%;" onclick="window.location.href='https://files.m-code.top/software/RunAndDebug.exe'">VSCode C++ 运行和调试插件</button>
-    <button class="download-button" style="left:10%;top:80%;" onclick="window.location.href='https://files.m-code.top/software/蓝屏小助手.exe'">蓝屏小助手</button>
-    <button class="download-button" style="left:40%;top:80%;" onclick="window.location.href='https://files.m-code.top/software/IP拦截器.apk'">IP拦截器（安卓版）</button>
-    <button class="download-button" style="left:70%;top:80%;" onclick="window.location.href='https://files.m-code.top/software/AI图像生成器.exe'">AI图像生成器</button>
-</body>
-
 <script>
-    console.error = function() {};
-    console.warn = function() {};
-    console.info = function() {};
-    console.debug = function() {};
-    console.table = function() {};
-    console.dir = function() {};
-    console.trace = function() {};
-    console.group = function() {};
-    console.groupEnd = function() {};
-    console.groupCollapsed = function() {};
-    console.time = function() {};
-    console.timeEnd = function() {};
-    console.count = function() {};
-    console.clear = function() {};
-    console.assert = function() {};
-    
+    const softwareList = [
+        { name: "有理数计算大闯关", icon: "icon/software/calc.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/有理数计算大闯关安装包.exe", desc: "适合小学生的有理数计算练习软件，闯关模式边玩边学。" },
+        { name: "成语填空大挑战", icon: "icon/software/cytk.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/成语填空大挑战安装包.exe", desc: "趣味成语填空游戏，丰富的词库，寓教于乐，积累成语知识。" },
+        { name: "编码解码辅助工具", icon: "icon/software/code.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/编码解码辅助工具.exe", desc: "支持多种编码格式的编码与解码，开发调试好帮手。" },
+        { name: "U盘备份程序", icon: "icon/software/disk-backup.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/U盘备份程序安装包.exe", desc: "插入 U盘 后自动备份重要文件，防止数据丢失。" },
+        { name: "视频下载器", icon: "icon/software/downloader.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/视频下载器.exe", desc: "支持多平台视频解析与下载，简单易用。" },
+        { name: "音乐下载器", icon: "icon/software/music.png", platform: "windows", date: "2026-XX-XX", special: "music", desc: "支持多平台音乐搜索与批量下载。" },
+        { name: "音乐播放器", icon: "icon/software/player.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/音乐播放器安装包.exe", desc: "轻量本地音乐播放器，支持歌词滚动显示，界面简洁，支持常见音频格式。" },
+        { name: "C++ 打包程序", icon: "icon/software/C++Package.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/C%2B%2B%E6%89%93%E5%8C%85%E7%A8%8B%E5%BA%8F%E5%AE%89%E8%A3%85%E5%8C%85.exe", desc: "一款快速将 C++ 源码打包为可独立运行程序的软件。" },
+        { name: "文件夹同步助手", icon: "icon/software/folder-sync.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/文件夹同步助手安装包.exe", desc: "两个文件夹内容高效同步，备份文件轻松搞定。" },
+        { name: "窗口置顶程序", icon: "icon/software/window.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/窗口置顶程序.exe", desc: "将任意窗口置顶显示，工作多任务处理更高效。" },
+        { name: "Proxy Monitor", icon: "icon/software/server.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/Proxy Monitor.exe", desc: "全系统代理，实时拦截黑名单中的网络请求，可用于学校或公司网络规范管理，保护隐私。" },
+        { name: "error408升级版", icon: "icon/software/error.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/error408升级版.7z", desc: "病毒error408 的升级版本（.7z 压缩包，解压后使用）。" },
+        { name: "桌面保护程序", icon: "icon/software/folder.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/桌面保护程序安装包.exe", desc: "锁定桌面文件、自动还原、保护隐私，离开座位时防止他人操作电脑。" },
+        { name: "鲁班锁教学演示", icon: "icon/software/LuBanLock.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/鲁班锁教学演示安装包.exe", desc: "鲁班锁（孔明锁）3D 拆解教学演示软件。" },
+        { name: "VSCode C++ 运行和调试插件", icon: "icon/software/Run.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/RunAndDebug.exe", desc: "输出更详尽的 C++ 调试信息，良好支持中文路径。", helpText:"VSCode C++ 运行和调试工具是一款为 Visual Studio Code 开发的功能性插件，可输出更详尽的 C++ 程序调试信息，并对中文路径有良好支持。完整配置教程请访问 VSCodeSettings.html" },
+        { name: "蓝屏小助手", icon: "icon/software/blue.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/蓝屏小助手.exe", desc: "快速让系统蓝屏，重启无法恢复。⚠请谨慎运行！" },
+        { name: "IP拦截器", icon: "icon/software/Android.jpg", platform: "android", date: "2026-XX-XX", url: "https://files.m-code.top/software/IP拦截器.apk", desc: "安卓平台 IP 拦截工具，可拦截指定 IP 地址的网络请求，保护隐私。" },
+        { name: "AI图像生成器", icon: "icon/software/AI.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/AI图像生成器.exe", desc: "基于云端 AI 的图像生成工具，输入描述即可生成图片，可自定义多种参数。" }
+    ];
+    const platformMeta = {
+        windows: { label: "Windows", cls: "badge-windows" },
+        android: { label: "Android", cls: "badge-android" }
+    };
+    const grid = document.getElementById('softwareGrid');
+    softwareList.forEach((sw, i) => {
+        const p = platformMeta[sw.platform] || platformMeta.windows;
+        const card = document.createElement('div');
+        card.className = 'sw-card';
+        card.style.animationDelay = (i * 0.035) + 's';
+        let helpHtml = '';
+        if(sw.helpText){
+            helpHtml = `
+                <div class="help-tip-wrap">
+                    <div class="help-circle"><span class="help-q">?</span>
+                        <div class="help-pop">${sw.helpText}</div>
+                    </div>
+                </div>
+            `;
+        }
+        card.innerHTML = `
+            ${helpHtml}
+            <span class="sw-download-hint"><img src="icon/download.png" alt=""></span>
+            <div class="sw-icon">
+                <img src="${sw.icon}" alt="">
+            </div>
+            <div class="sw-name">${sw.name}</div>
+            <div class="sw-meta">
+                <span class="badge ${p.cls}">${p.label}</span>
+                <span class="sw-date">${sw.date}</span>
+            </div>
+            <div class="sw-desc">${sw.desc}</div>
+        `;
+        card.addEventListener('click', () => {
+            if (sw.special === 'music') {
+                showMusicDownloaderModal();
+            } else {
+                window.location.href = sw.url;
+            }
+        });
+        const helpWrap = card.querySelector('.help-tip-wrap');
+        if (helpWrap) {
+            helpWrap.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+        grid.appendChild(card);
+    });
+    document.getElementById('softwareCount').textContent = `共 ${softwareList.length} 款`;
+    const modal = document.getElementById('musicDownloaderModal');
+    const confirmBtn = document.getElementById('downloadConfirmBtn');
+    function showMusicDownloaderModal() {
+        modal.style.display = 'flex';
+    }
+    function resetModal() {
+        document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+        confirmBtn.disabled = true;
+    }
+    document.getElementById('modalCloseBtn').addEventListener('click', () => {
+        modal.style.display = 'none';
+        resetModal();
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            resetModal();
+        }
+    });
+    document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', function () {
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            confirmBtn.disabled = false;
+        });
+    });
+    confirmBtn.addEventListener('click', function () {
+        const selected = document.querySelector('.option.selected');
+        if (!selected) return;
+        const version = selected.getAttribute('data-value');
+        if (version === 'default') {
+            window.location.href = 'https://files.m-code.top/software/音乐下载器安装包.exe';
+        } else if (version === 'thirdparty') {
+            window.location.href = 'https://files.m-code.top/software/MusicDownloaderInstaller.exe';
+        }
+        modal.style.display = 'none';
+        resetModal();
+    });
     function trackPageVisit() {
         const currentPageUrl = window.location.href;
         const trackerUrl = 'https://mail.m-code.top/';
         const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
-        var iframe = document.createElement('iframe');
+        const iframe = document.createElement('iframe');
         iframe.src = fullTrackerUrl;
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
     }
-
     function setupTracking() {
         if (document.readyState === 'complete') {
             setTimeout(trackPageVisit, 1000);
         } else {
-            window.addEventListener('load', () => {
-                setTimeout(trackPageVisit, 1000);
-            });
+            window.addEventListener('load', () => setTimeout(trackPageVisit, 1000));
         }
     }
-    
     setupTracking();
-
-    // 提示按钮功能
-    const tipButton = document.getElementById('tipButton');
-    const tipBox = document.getElementById('tipBox');
-    
-    tipButton.addEventListener('click', function() {
-        if (tipBox.style.display === 'block') {
-            tipBox.style.display = 'none';
-        } else {
-            tipBox.style.display = 'block';
-        }
-    });
-
-    // 音乐下载器弹窗功能
-    function showMusicDownloaderModal() {
-        const modal = document.getElementById('musicDownloaderModal');
-        modal.style.display = 'flex';
-    }
-
-    // 关闭弹窗
-    document.querySelector('.close-button').addEventListener('click', function() {
-        document.getElementById('musicDownloaderModal').style.display = 'none';
-        // 重置选择状态
-        document.querySelectorAll('.option').forEach(opt => {
-            opt.classList.remove('selected');
-        });
-        document.querySelector('.download-confirm').disabled = true;
-    });
-
-    // 点击弹窗外部关闭
-    document.getElementById('musicDownloaderModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.style.display = 'none';
-            // 重置选择状态
-            document.querySelectorAll('.option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            document.querySelector('.download-confirm').disabled = true;
-        }
-    });
-
-    // 选择版本功能
-    document.querySelectorAll('.option').forEach(option => {
-        option.addEventListener('click', function() {
-            // 移除其他选项的选中状态
-            document.querySelectorAll('.option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            // 添加当前选项的选中状态
-            this.classList.add('selected');
-            
-            // 启用下载按钮
-            document.querySelector('.download-confirm').disabled = false;
-        });
-    });
-
-    // 确认下载功能
-    document.querySelector('.download-confirm').addEventListener('click', function() {
-        const selectedOption = document.querySelector('.option.selected');
-        if (selectedOption) {
-            const version = selectedOption.getAttribute('data-value');
-            if (version === 'default') {
-                window.location.href = 'https://files.m-code.top/software/音乐下载器安装包.exe';
-            } else if (version === 'thirdparty') {
-                window.location.href = 'https://files.m-code.top/software/MusicDownloaderInstaller.exe';
-            }
-            // 关闭弹窗
-            document.getElementById('musicDownloaderModal').style.display = 'none';
-            // 重置选择状态
-            document.querySelectorAll('.option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            this.disabled = true;
-        }
-    });
 </script>
-
+</body>
 </html>
