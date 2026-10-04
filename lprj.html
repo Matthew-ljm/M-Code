@@ -1,84 +1,359 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>下载录屏软件</title>
-    <link rel="shortcut icon" href="../icon/录屏软件.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="icon/录屏软件.ico" type="image/x-icon">
     <style>
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-
-        img {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            display: block;
+        html {
+            scroll-behavior: smooth;
         }
-
-       .download-button {
-            position: absolute;
-            top: 20%;
-            padding: 15px 30px;
-            background-color: orange;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        body {
+            font-family: "Segoe UI", "Microsoft YaHei", -apple-system, sans-serif;
+            min-height: 100vh;
+            color: #1f2937;
+            background-color: #f4f5f7;
+            overflow-x: hidden;
         }
-
-       .download-button:hover {
-            background-color: goldenrod;
-        }
-
-       .text-on-top {
-            position: absolute;
+        .topbar {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+        }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 18px;
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .nav-btn:hover {
+            background: #e8ecf3;
+            color: #111827;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 24px 40px;
+        }
+        .hero {
             text-align: center;
-            font-size: 3rem;
-            color: #FFD700;
-            z-index: 2;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease both;
+        }
+        .hero h1 {
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #111827;
+        }
+        .hero p {
+            margin-top: 10px;
+            font-size: 14.5px;
+            color: #8a93a3;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 36px 0 18px;
+        }
+        .section-title .count {
+            font-size: 12.5px;
+            font-weight: 400;
+            color: #9aa2af;
+        }
+        .version-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .ver-card {
+            position: relative;
+            padding: 20px 18px 15px;
+            min-height: 182px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: fadeInUp 0.5s ease both;
+        }
+        .ver-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(90, 120, 230, 0.35);
+            box-shadow: 0 14px 30px rgba(50, 65, 140, 0.13);
+        }
+        .ver-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #f4f6fa;
+            margin-bottom: 13px;
+            transition: transform 0.3s ease;
+        }
+        .ver-card:hover .ver-icon {
+            transform: scale(1.08);
+        }
+        .ver-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        .ver-name {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.4;
+            margin-bottom: auto;
+        }
+        .ver-ext {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 1px 7px;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: "Consolas", "SFMono-Regular", monospace;
+            letter-spacing: 0.5px;
+            color: #8a93a3;
+            background: #f1f3f7;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            vertical-align: 2px;
+            white-space: nowrap;
+        }
+        .ver-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 13px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .badge-windows {
+            background: #eef3ff;
+            color: #3d63dd;
+            border: 1px solid #dbe6ff;
+        }
+        .ver-date {
+            font-size: 11px;
+            color: #a6adba;
+            font-variant-numeric: tabular-nums;
+        }
+        .ver-desc {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 30px 18px 14px;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: #4b5563;
+            background: linear-gradient(0deg, rgba(255, 255, 255, 0.99) 45%, rgba(255, 255, 255, 0.9) 72%, rgba(255, 255, 255, 0));
+            border-radius: 0 0 14px 14px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .ver-card:hover .ver-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .ver-download-hint {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            opacity: 0.45;
+            transition: all 0.3s ease;
+        }
+        .ver-download-hint img {
+            width: 16px;
+            height: 16px;
+        }
+        .ver-card:hover .ver-download-hint {
+            opacity: 0.85;
+            transform: translateY(2px);
+        }
+        .footer {
+            margin-top: 46px;
+            padding: 24px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            text-align: center;
+        }
+        .footer .tools {
+            font-size: 13px;
+            line-height: 2.1;
+            color: #8a93a3;
+        }
+        .footer .tools a {
+            color: #4b5563;
+            text-decoration: none;
+            margin: 0 3px;
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        .footer .tools a:hover {
+            color: #2f6bff;
+            border-bottom-color: #2f6bff;
+        }
+        .footer .copyright {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #b3bac5;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 86px 14px 30px;
+            }
+            .version-grid {
+                grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+                gap: 12px;
+            }
+            .ver-card {
+                min-height: 168px;
+                padding: 16px 14px 12px;
+            }
+            .ver-icon {
+                width: 46px;
+                height: 46px;
+            }
+            .ver-icon img {
+                width: 24px;
+                height: 24px;
+            }
+            .ver-name {
+                font-size: 13px;
+            }
+            .ver-ext {
+                font-size: 9px;
+                padding: 1px 5px;
+            }
+            .topbar {
+                height: 54px;
+                padding: 0 14px;
+            }
         }
     </style>
 </head>
-
 <body>
-    <div class="text-on-top">下载录屏软件</div>
-    <img src="../icon/background.jpg" alt="Background Image">
-    <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='download.html'"><返回下载页面</button>
-    <button class="download-button" style="left:10%;top:20%;" onclick="window.location.href='https://files.m-code.top/lprj/录屏软件v2.2安装包.exe'">录屏软件v2.2</button>
-    <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='https://files.m-code.top/lprj/录屏软件v2.3安装包.7z'">录屏软件v2.3</button>
-    <button class="download-button" style="left:70%;top:20%;" onclick="window.location.href='https://files.m-code.top/lprj/录屏软件v3.0安装包.exe'">录屏软件v3.0</button>
-</body>
-
+    <div class="topbar">
+        <a class="nav-btn" href="download.html"><返回下载中心</a>
+    </div>
+    <div class="container">
+        <header class="hero">
+            <h1>录屏软件</h1>
+            <p>多版本可选 · Windows</p>
+        </header>
+        <h2 class="section-title">版本列表 <span class="count" id="versionCount"></span></h2>
+        <div class="version-grid" id="versionGrid"></div>
+        <footer class="footer">
+            <div class="tools">
+                <a href="download.html">返回软件下载中心</a>
+            </div>
+            <div class="copyright">更多内容敬请期待 · © M-Code</div>
+        </footer>
+    </div>
 <script>
+    const versionList = [
+        { name: "录屏软件 v2.2", platform: "windows", ext: "exe", date: "2024-05-14", url: "https://files.m-code.top/lprj/录屏软件v2.2安装包.exe", desc: "早期版本，.exe 安装包，基础录屏功能稳定可用。" },
+        { name: "录屏软件 v2.3", platform: "windows", ext: "7z", date: "2024-06-16", url: "https://files.m-code.top/lprj/录屏软件v2.3安装包.7z", desc: ".7z 压缩包，体积更小，需解压后运行安装。" },
+        { name: "录屏软件 v3.0", platform: "windows", ext: "exe", date: "2024-12-16", url: "https://files.m-code.top/lprj/录屏软件v3.0安装包.exe", desc: "较新版本，功能更完善，推荐下载使用。" }
+    ];
+    const platformMeta = {
+        windows: { label: "Windows", cls: "badge-windows" }
+    };
+    const grid = document.getElementById('versionGrid');
+    versionList.forEach((sw, i) => {
+        const p = platformMeta[sw.platform] || platformMeta.windows;
+        const card = document.createElement('div');
+        card.className = 'ver-card';
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.innerHTML = `
+            <span class="ver-download-hint"><img src="icon/download.png" alt=""></span>
+            <div class="ver-icon">
+                <img src="icon/software/lprj.png" alt="">
+            </div>
+            <div class="ver-name">${sw.name}<span class="ver-ext">${sw.ext.toUpperCase()}</span></div>
+            <div class="ver-meta">
+                <span class="badge ${p.cls}">${p.label}</span>
+                ${sw.date ? `<span class="ver-date">${sw.date}</span>` : ''}
+            </div>
+            <div class="ver-desc">${sw.desc}</div>
+        `;
+        card.addEventListener('click', () => {
+            window.location.href = sw.url;
+        });
+        grid.appendChild(card);
+    });
+    document.getElementById('versionCount').textContent = `共 ${versionList.length} 个版本`;
     function trackPageVisit() {
         const currentPageUrl = window.location.href;
         const trackerUrl = 'https://mail.m-code.top/';
         const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
-        var iframe = document.createElement('iframe');
+        const iframe = document.createElement('iframe');
         iframe.src = fullTrackerUrl;
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
     }
-
     function setupTracking() {
         if (document.readyState === 'complete') {
             setTimeout(trackPageVisit, 1000);
         } else {
-            window.addEventListener('load', () => {
-                setTimeout(trackPageVisit, 1000);
-            });
+            window.addEventListener('load', () => setTimeout(trackPageVisit, 1000));
         }
     }
-    
     setupTracking();
 </script>
-
+</body>
 </html>

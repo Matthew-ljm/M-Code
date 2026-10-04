@@ -1,208 +1,469 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>下载课程表进度条</title>
-    <link rel="shortcut icon" href="../icon/课程表进度条.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="icon/software/class-schedule.png" type="image/x-icon">
     <style>
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-
-        img {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            display: block;
+        html {
+            scroll-behavior: smooth;
         }
-
-       .download-button {
-            position: absolute;
-            top: 20%;
-            padding: 15px 30px;
-            background-color: orange;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        body {
+            font-family: "Segoe UI", "Microsoft YaHei", -apple-system, sans-serif;
+            min-height: 100vh;
+            color: #1f2937;
+            background-color: #f4f5f7;
+            overflow-x: hidden;
         }
-
-       .download-button:hover {
-            background-color: goldenrod;
-        }
-
-       .text-on-top {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 3rem;
-            color: #FFD700;
-            z-index: 2;
-        }
-
-        /* v2.1.6 版本选择弹窗样式 */
-        #versionModal {
+        .topbar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+        }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 18px;
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .nav-btn:hover {
+            background: #e8ecf3;
+            color: #111827;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 24px 40px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease both;
+        }
+        .hero h1 {
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #111827;
+        }
+        .hero p {
+            margin-top: 10px;
+            font-size: 14.5px;
+            color: #8a93a3;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 36px 0 18px;
+        }
+        .section-title .count {
+            font-size: 12.5px;
+            font-weight: 400;
+            color: #9aa2af;
+        }
+        .version-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .ver-card {
+            position: relative;
+            padding: 20px 18px 15px;
+            min-height: 182px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: fadeInUp 0.5s ease both;
+        }
+        .ver-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(90, 120, 230, 0.35);
+            box-shadow: 0 14px 30px rgba(50, 65, 140, 0.13);
+        }
+        .ver-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #f4f6fa;
+            margin-bottom: 13px;
+            transition: transform 0.3s ease;
+        }
+        .ver-card:hover .ver-icon {
+            transform: scale(1.08);
+        }
+        .ver-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        .ver-name {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.4;
+            margin-bottom: auto;
+        }
+        .ver-ext {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 1px 7px;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: "Consolas", "SFMono-Regular", monospace;
+            letter-spacing: 0.5px;
+            color: #8a93a3;
+            background: #f1f3f7;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            vertical-align: 2px;
+            white-space: nowrap;
+        }
+        .ver-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 13px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .badge-windows {
+            background: #eef3ff;
+            color: #3d63dd;
+            border: 1px solid #dbe6ff;
+        }
+        .ver-date {
+            font-size: 11px;
+            color: #a6adba;
+            font-variant-numeric: tabular-nums;
+        }
+        .ver-desc {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 30px 18px 14px;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: #4b5563;
+            background: linear-gradient(0deg, rgba(255, 255, 255, 0.99) 45%, rgba(255, 255, 255, 0.9) 72%, rgba(255, 255, 255, 0));
+            border-radius: 0 0 14px 14px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .ver-card:hover .ver-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .ver-download-hint {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            opacity: 0.45;
+            transition: all 0.3s ease;
+        }
+        .ver-download-hint img {
+            width: 16px;
+            height: 16px;
+        }
+        .ver-card:hover .ver-download-hint {
+            opacity: 0.85;
+            transform: translateY(2px);
+        }
+        /* v2.1.6 版本选择弹窗 */
+        #versionModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 38, 60, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 100;
         }
-
         .modal-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            width: 80%;
-            max-width: 900px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
+            width: 86%;
+            max-width: 860px;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 32px;
             position: relative;
+            text-align: center;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(30, 40, 80, 0.25);
+            animation: modalIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
-
+        .modal-content h2 {
+            font-size: 21px;
+            color: #1f2937;
+            margin-bottom: 7px;
+        }
+        .modal-sub {
+            font-size: 13px;
+            color: #9aa2af;
+        }
         .close-button {
             position: absolute;
             top: 15px;
-            right: 15px;
-            font-size: 24px;
+            right: 18px;
+            font-size: 26px;
             cursor: pointer;
-            color: #888;
+            color: #b3bac5;
             background: none;
             border: none;
+            line-height: 1;
+            transition: all 0.2s;
         }
-
         .close-button:hover {
-            color: #333;
+            color: #4b5563;
+            transform: rotate(90deg);
         }
-
         .options-container {
             display: flex;
             justify-content: space-around;
-            margin: 25px 0;
+            gap: 16px;
+            margin: 26px 0 6px;
             flex-wrap: wrap;
         }
-
         .option {
-            width: 45%;
+            flex: 1;
             min-width: 250px;
-            padding: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
+            padding: 22px 20px;
+            border: 1.5px solid rgba(0, 0, 0, 0.09);
+            border-radius: 14px;
             cursor: pointer;
+            transition: all 0.28s ease;
+            text-align: left;
+            background: #fafbfc;
         }
-
         .option:hover {
-            border-color: #4CAF50;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: rgba(106, 141, 255, 0.55);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(50, 70, 150, 0.1);
         }
-
         .option.selected {
-            border-color: #4CAF50;
-            background-color: #f9fff9;
+            border-color: #6a8dff;
+            background: #f2f6ff;
+            box-shadow: 0 0 0 1px rgba(106, 141, 255, 0.35);
         }
-
         .exe-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            background-color: #f1f1f1;
-            border-radius: 10px;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            border-radius: 13px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 40px;
-            color: #6b6b6b;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #6a8dff, #9b7bff);
         }
-
         .option-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 18px;
+            font-weight: 700;
+            font-size: 15.5px;
+            color: #1f2937;
+            margin-bottom: 9px;
         }
-
         .option-description {
-            text-align: left;
-            font-size: 14px;
-            color: #555;
-            line-height: 1.5;
+            font-size: 12.5px;
+            color: #6b7280;
+            line-height: 1.65;
         }
-
+        .option-description p {
+            margin-bottom: 5px;
+        }
         .download-confirm {
-            margin-top: 20px;
-            padding: 12px 25px;
-            background-color: #4CAF50;
-            color: white;
+            margin-top: 22px;
+            padding: 12px 38px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 999px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            background: linear-gradient(120deg, #5d80f5, #8b6cf0);
+            box-shadow: 0 7px 18px rgba(99, 120, 240, 0.35);
+            transition: all 0.28s ease;
         }
-
-        .download-confirm:hover {
-            background-color: #45a049;
+        .download-confirm:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 11px 24px rgba(99, 120, 240, 0.45);
         }
-
         .download-confirm:disabled {
-            background-color: #cccccc;
+            background: #e5e7eb;
+            color: #a6adba;
+            box-shadow: none;
             cursor: not-allowed;
         }
-
         .github-note {
             margin-top: 18px;
             font-size: 12px;
-            color: #999;
+            color: #9aa2af;
         }
-
         .github-note a {
-            color: #999;
-            text-decoration: underline;
+            color: #9aa2af;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(154, 162, 175, 0.5);
         }
-
         .github-note a:hover {
-            color: #666;
+            color: #6b7280;
+            border-bottom-color: #6b7280;
         }
-
-        /* 媒体查询 - 针对小屏幕设备 */
-        @media (max-width: 768px) {
-            .options-container {
-                flex-direction: column;
+        .footer {
+            margin-top: 46px;
+            padding: 24px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            text-align: center;
+        }
+        .footer .tools {
+            font-size: 13px;
+            line-height: 2.1;
+            color: #8a93a3;
+        }
+        .footer .tools a {
+            color: #4b5563;
+            text-decoration: none;
+            margin: 0 3px;
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        .footer .tools a:hover {
+            color: #2f6bff;
+            border-bottom-color: #2f6bff;
+        }
+        .footer .copyright {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #b3bac5;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.94) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 86px 14px 30px;
             }
-
-            .option {
-                width: 100%;
+            .version-grid {
+                grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+                gap: 12px;
             }
-
+            .ver-card {
+                min-height: 168px;
+                padding: 16px 14px 12px;
+            }
+            .ver-icon {
+                width: 46px;
+                height: 46px;
+            }
+            .ver-icon img {
+                width: 24px;
+                height: 24px;
+            }
+            .ver-name {
+                font-size: 13px;
+            }
+            .ver-ext {
+                font-size: 9px;
+                padding: 1px 5px;
+            }
+            .topbar {
+                height: 54px;
+                padding: 0 14px;
+            }
             .modal-content {
-                width: 90%;
-                padding: 20px;
+                padding: 24px 18px;
+            }
+            .option {
+                min-width: 100%;
             }
         }
     </style>
 </head>
-
 <body>
-    <div class="text-on-top">下载课程表进度条</div>
-    <img src="../icon/background.jpg" alt="Background Image">
+    <div class="topbar">
+        <a class="nav-btn" href="download.html"><返回下载中心</a>
+    </div>
+    <div class="container">
+        <header class="hero">
+            <h1>课程表进度条</h1>
+            <p>v2.1.6 / v3.1.1 · Windows / 统信 UOS</p>
+        </header>
+        <h2 class="section-title">版本列表 <span class="count" id="versionCount"></span></h2>
+        <div class="version-grid" id="versionGrid"></div>
+        <footer class="footer">
+            <div class="tools">
+                <a href="download.html">返回软件下载中心</a>·
+                <a href="https://github.com/Matthew-ljm/ClassSchedule" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+            </div>
+            <div class="copyright">更多内容敬请期待 · © M-Code</div>
+        </footer>
+    </div>
     <!-- v2.1.6 版本选择弹窗 -->
     <div id="versionModal">
         <div class="modal-content">
             <button class="close-button" id="modalCloseButton">&times;</button>
             <h2>选择课程表进度条 v2.1.6 版本</h2>
+            <div class="modal-sub">两个平台任选 · 安装包 / 压缩包</div>
             <div class="options-container">
                 <div class="option" data-value="windows">
                     <div class="exe-icon">EXE</div>
@@ -225,33 +486,58 @@
             <div class="github-note">GitHub仓库：<a href="https://github.com/Matthew-ljm/ClassSchedule" target="_blank" rel="noopener noreferrer">https://github.com/Matthew-ljm/ClassSchedule</a></div>
         </div>
     </div>
-
-    <button class="download-button" style="left: 0%; top: 93%;" onclick="window.location.href='download.html'"><返回下载页面</button>
-    <button class="download-button" style="left:10%;top:20%;" onclick="showVersionModal()">课程表进度条v2.1.6</button>
-    <button class="download-button" style="left:40%;top:20%;" onclick="window.location.href='https://github.com/Matthew-ljm/ClassSchedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe'">课程表进度条v3.1.1</button>
-</body>
-
 <script>
+    const versionList = [
+        { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "", special: "platform", desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
+        { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "", url: "https://github.com/Matthew-ljm/ClassSchedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "最新 Windows 版本，功能更完善，推荐下载。" }
+    ];
+    const platformMeta = {
+        windows: { label: "Windows", cls: "badge-windows" }
+    };
+    const grid = document.getElementById('versionGrid');
+    versionList.forEach((sw, i) => {
+        const p = platformMeta[sw.platform] || platformMeta.windows;
+        const card = document.createElement('div');
+        card.className = 'ver-card';
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.innerHTML = `
+            <span class="ver-download-hint"><img src="icon/download.png" alt=""></span>
+            <div class="ver-icon">
+                <img src="icon/software/class-schedule.png" alt="">
+            </div>
+            <div class="ver-name">${sw.name}<span class="ver-ext">${sw.ext.toUpperCase()}</span></div>
+            <div class="ver-meta">
+                <span class="badge ${p.cls}">${p.label}</span>
+                ${sw.date ? `<span class="ver-date">${sw.date}</span>` : ''}
+            </div>
+            <div class="ver-desc">${sw.desc}</div>
+        `;
+        card.addEventListener('click', () => {
+            if (sw.special === 'platform') {
+                showVersionModal();
+            } else {
+                window.location.href = sw.url;
+            }
+        });
+        grid.appendChild(card);
+    });
+    document.getElementById('versionCount').textContent = `共 ${versionList.length} 个版本`;
     function trackPageVisit() {
         const currentPageUrl = window.location.href;
         const trackerUrl = 'https://mail.m-code.top/';
         const fullTrackerUrl = `${trackerUrl}?url=${encodeURIComponent(currentPageUrl)}`;
-        var iframe = document.createElement('iframe');
+        const iframe = document.createElement('iframe');
         iframe.src = fullTrackerUrl;
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
     }
-
     function setupTracking() {
         if (document.readyState === 'complete') {
             setTimeout(trackPageVisit, 1000);
         } else {
-            window.addEventListener('load', () => {
-                setTimeout(trackPageVisit, 1000);
-            });
+            window.addEventListener('load', () => setTimeout(trackPageVisit, 1000));
         }
     }
-    
     setupTracking();
 
     const versionModal = document.getElementById('versionModal');
@@ -305,5 +591,5 @@
         resetVersionModal();
     });
 </script>
-
+</body>
 </html>
