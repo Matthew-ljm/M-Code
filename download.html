@@ -299,8 +299,16 @@
             color: #4b5563;
             display: none;
         }
-        .help-circle:hover .help-pop {
+        .help-pop.show {
             display: block;
+        }
+        .help-pop a {
+            color: #2f6bff;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(47, 107, 255, 0.4);
+        }
+        .help-pop a:hover {
+            border-bottom-color: #2f6bff;
         }
         #musicDownloaderModal {
             position: fixed;
@@ -593,24 +601,24 @@
     </div>
 <script>
     const softwareList = [
-        { name: "有理数计算大闯关", icon: "icon/software/calc.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/有理数计算大闯关安装包.exe", desc: "适合小学生的有理数计算练习软件，闯关模式边玩边学。" },
-        { name: "成语填空大挑战", icon: "icon/software/cytk.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/成语填空大挑战安装包.exe", desc: "趣味成语填空游戏，丰富的词库，寓教于乐，积累成语知识。" },
-        { name: "编码解码辅助工具", icon: "icon/software/code.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/编码解码辅助工具.exe", desc: "支持多种编码格式的编码与解码，开发调试好帮手。" },
-        { name: "U盘备份程序", icon: "icon/software/disk-backup.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/U盘备份程序安装包.exe", desc: "插入 U盘 后自动备份重要文件，防止数据丢失。" },
-        { name: "视频下载器", icon: "icon/software/downloader.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/视频下载器.exe", desc: "支持多平台视频解析与下载，简单易用。" },
-        { name: "音乐下载器", icon: "icon/software/music.png", platform: "windows", date: "2026-XX-XX", special: "music", desc: "支持多平台音乐搜索与批量下载。" },
-        { name: "音乐播放器", icon: "icon/software/player.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/音乐播放器安装包.exe", desc: "轻量本地音乐播放器，支持歌词滚动显示，界面简洁，支持常见音频格式。" },
-        { name: "C++ 打包程序", icon: "icon/software/C++Package.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/C%2B%2B%E6%89%93%E5%8C%85%E7%A8%8B%E5%BA%8F%E5%AE%89%E8%A3%85%E5%8C%85.exe", desc: "一款快速将 C++ 源码打包为可独立运行程序的软件。" },
-        { name: "文件夹同步助手", icon: "icon/software/folder-sync.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/文件夹同步助手安装包.exe", desc: "两个文件夹内容高效同步，备份文件轻松搞定。" },
-        { name: "窗口置顶程序", icon: "icon/software/window.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/窗口置顶程序.exe", desc: "将任意窗口置顶显示，工作多任务处理更高效。" },
-        { name: "Proxy Monitor", icon: "icon/software/server.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/Proxy Monitor.exe", desc: "全系统代理，实时拦截黑名单中的网络请求，可用于学校或公司网络规范管理，保护隐私。" },
-        { name: "error408升级版", icon: "icon/software/error.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/error408升级版.7z", desc: "病毒error408 的升级版本（.7z 压缩包，解压后使用）。" },
-        { name: "桌面保护程序", icon: "icon/software/folder.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/桌面保护程序安装包.exe", desc: "锁定桌面文件、自动还原、保护隐私，离开座位时防止他人操作电脑。" },
-        { name: "鲁班锁教学演示", icon: "icon/software/LuBanLock.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/鲁班锁教学演示安装包.exe", desc: "鲁班锁（孔明锁）3D 拆解教学演示软件。" },
-        { name: "VSCode C++ 运行和调试插件", icon: "icon/software/Run.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/RunAndDebug.exe", desc: "输出更详尽的 C++ 调试信息，良好支持中文路径。", helpText:"VSCode C++ 运行和调试工具是一款为 Visual Studio Code 开发的功能性插件，可输出更详尽的 C++ 程序调试信息，并对中文路径有良好支持。完整配置教程请访问 VSCodeSettings.html" },
-        { name: "蓝屏小助手", icon: "icon/software/blue.ico", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/蓝屏小助手.exe", desc: "快速让系统蓝屏，重启无法恢复。⚠请谨慎运行！" },
-        { name: "IP拦截器", icon: "icon/software/Android.jpg", platform: "android", date: "2026-XX-XX", url: "https://files.m-code.top/software/IP拦截器.apk", desc: "安卓平台 IP 拦截工具，可拦截指定 IP 地址的网络请求，保护隐私。" },
-        { name: "AI图像生成器", icon: "icon/software/AI.png", platform: "windows", date: "2026-XX-XX", url: "https://files.m-code.top/software/AI图像生成器.exe", desc: "基于云端 AI 的图像生成工具，输入描述即可生成图片，可自定义多种参数。" }
+        { name: "鲁班锁教学演示", icon: "icon/software/LuBanLock.ico", platform: "windows", date: "2024-04-09", url: "https://files.m-code.top/software/鲁班锁教学演示安装包.exe", desc: "鲁班锁（孔明锁）3D 拆解教学演示软件。" },
+        { name: "有理数计算大闯关", icon: "icon/software/calc.png", platform: "windows", date: "2024-10-20", url: "https://files.m-code.top/software/有理数计算大闯关安装包.exe", desc: "适合小学生的有理数计算练习软件，闯关模式边玩边学。" },
+        { name: "成语填空大挑战", icon: "icon/software/cytk.png", platform: "windows", date: "2024-10-25", url: "https://files.m-code.top/software/成语填空大挑战安装包.exe", desc: "趣味成语填空游戏，丰富的词库，寓教于乐，积累成语知识。" },
+        { name: "编码解码辅助工具", icon: "icon/software/code.png", platform: "windows", date: "2024", url: "https://files.m-code.top/software/编码解码辅助工具.exe", desc: "支持多种编码格式的编码与解码，开发调试好帮手。" },
+        { name: "U盘备份程序", icon: "icon/software/disk-backup.png", platform: "windows", date: "2025-01-11", url: "https://files.m-code.top/software/U盘备份程序安装包.exe", desc: "插入 U盘 后自动备份重要文件，防止数据丢失。" },
+        { name: "视频下载器", icon: "icon/software/downloader.png", platform: "windows", date: "2025", url: "https://files.m-code.top/software/视频下载器.exe", desc: "支持多平台视频解析与下载，简单易用。" },
+        { name: "音乐下载器", icon: "icon/software/music.png", platform: "windows", date: "2025-01-26", special: "music", desc: "支持多平台音乐搜索与批量下载。" },
+        { name: "音乐播放器", icon: "icon/software/player.png", platform: "windows", date: "2025-02-23", url: "https://files.m-code.top/software/音乐播放器安装包.exe", desc: "轻量本地音乐播放器，支持歌词滚动显示，界面简洁，支持常见音频格式。" },
+        { name: "C++ 打包程序", icon: "icon/software/C++Package.png", platform: "windows", date: "2025-03-01", url: "https://files.m-code.top/software/C%2B%2B%E6%89%93%E5%8C%85%E7%A8%8B%E5%BA%8F%E5%AE%89%E8%A3%85%E5%8C%85.exe", desc: "一款快速将 C++ 源码打包为可独立运行程序的软件。" },
+        { name: "桌面保护程序", icon: "icon/software/folder.png", platform: "windows", date: "2025-03-21", url: "https://files.m-code.top/software/桌面保护程序安装包.exe", desc: "锁定桌面文件、自动还原、保护隐私，离开座位时防止他人操作电脑。" },
+        { name: "Proxy Monitor", icon: "icon/software/server.png", platform: "windows", date: "2025-04-08", url: "https://files.m-code.top/software/Proxy Monitor.exe", desc: "全系统代理，实时拦截黑名单中的网络请求，可用于学校或公司网络规范管理，保护隐私。" },
+        { name: "文件夹同步助手", icon: "icon/software/folder-sync.png", platform: "windows", date: "2025-04-12", url: "https://files.m-code.top/software/文件夹同步助手安装包.exe", desc: "两个文件夹内容高效同步，备份文件轻松搞定。" },
+        { name: "窗口置顶程序", icon: "icon/software/window.png", platform: "windows", date: "2025", url: "https://files.m-code.top/software/窗口置顶程序.exe", desc: "将任意窗口置顶显示，工作多任务处理更高效。" },
+        { name: "error408升级版", icon: "icon/software/error.ico", platform: "windows", date: "2025-07-09", url: "https://files.m-code.top/software/error408升级版.7z", desc: "病毒error408 的升级版本（.7z 压缩包，解压后使用）。" },
+        { name: "VSCode C++ 运行和调试插件", icon: "icon/software/Run.ico", platform: "windows", date: "2025", url: "https://files.m-code.top/software/RunAndDebug.exe", desc: "输出更详尽的 C++ 调试信息，良好支持中文路径。", helpText:"VSCode C++ 运行和调试工具是一款为 Visual Studio Code 开发的功能性插件，可输出更详尽的 C++ 程序调试信息，并对中文路径有良好支持。完整配置教程请访问 <a href=\"VSCodeSettings.html\" target=\"_blank\">VSCodeSettings.html</a>" },
+        { name: "蓝屏小助手", icon: "icon/software/blue.ico", platform: "windows", date: "2025", url: "https://files.m-code.top/software/蓝屏小助手.exe", desc: "快速让系统蓝屏，重启无法恢复。⚠请谨慎运行！" },
+        { name: "IP拦截器", icon: "icon/software/Android.jpg", platform: "android", date: "2025-10-28", url: "https://files.m-code.top/software/IP拦截器.apk", desc: "安卓平台 IP 拦截工具，可拦截指定 IP 地址的网络请求，保护隐私。" },
+        { name: "AI图像生成器", icon: "icon/software/AI.png", platform: "windows", date: "2025-11-01", url: "https://files.m-code.top/software/AI图像生成器.exe", desc: "基于云端 AI 的图像生成工具，输入描述即可生成图片，可自定义多种参数。" }
     ];
     const platformMeta = {
         windows: { label: "Windows", cls: "badge-windows" },
@@ -656,9 +664,20 @@
         if (helpWrap) {
             helpWrap.addEventListener('click', (e) => {
                 e.stopPropagation();
+                if (e.target.closest('.help-pop')) return;
+                const pop = helpWrap.querySelector('.help-pop');
+                document.querySelectorAll('.help-pop.show').forEach(p => {
+                    if (p !== pop) p.classList.remove('show');
+                });
+                pop.classList.toggle('show');
             });
         }
         grid.appendChild(card);
+    });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.help-tip-wrap')) {
+            document.querySelectorAll('.help-pop.show').forEach(p => p.classList.remove('show'));
+        }
     });
     document.getElementById('softwareCount').textContent = `共 ${softwareList.length} 款`;
     const modal = document.getElementById('musicDownloaderModal');
