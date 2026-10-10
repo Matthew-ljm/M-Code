@@ -69,6 +69,12 @@
             font-weight: 800;
             letter-spacing: 1px;
             color: #111827;
+            cursor: pointer;
+            display: inline-block;
+            transition: color 0.25s ease;
+        }
+        .hero h1:hover {
+            color: #3d63dd;
         }
         .hero p {
             margin-top: 10px;
@@ -216,7 +222,6 @@
             opacity: 0.85;
             transform: translateY(2px);
         }
-        /* v2.1.6 版本选择弹窗 */
         #versionModal {
             position: fixed;
             inset: 0;
@@ -359,6 +364,159 @@
             color: #6b7280;
             border-bottom-color: #6b7280;
         }
+        .md-hint-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            margin-left: 7px;
+            cursor: pointer;
+            line-height: 0;
+            vertical-align: -4px;
+            opacity: 0.8;
+            transition: all 0.2s ease;
+        }
+        .md-hint-btn img {
+            width: 27px;
+            height: 27px;
+        }
+        .md-hint-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+        .card-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-actions .md-hint-btn {
+            margin-left: 0;
+        }
+        .card-actions .md-hint-btn img {
+            width: 23px;
+            height: 23px;
+        }
+        .card-actions .ver-download-hint {
+            position: static;
+        }
+        .linux-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border-radius: 999px;
+            background: #fff4e8;
+            color: #c46a12;
+            border: 1px solid #ffe2c4;
+            margin-left: -4px;
+            margin-right: auto;
+        }
+        #mdModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 38, 60, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+        .md-modal-content {
+            width: 86%;
+            max-width: 760px;
+            max-height: 84vh;
+            overflow-y: auto;
+            padding: 30px 32px;
+            position: relative;
+            text-align: left;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(30, 40, 80, 0.25);
+            animation: modalIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .md-modal-content h2 {
+            font-size: 19px;
+            color: #1f2937;
+            margin-bottom: 16px;
+            padding-right: 32px;
+        }
+        .md-body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #374151;
+            word-break: break-word;
+        }
+        .md-body h1, .md-body h2, .md-body h3, .md-body h4 {
+            margin: 18px 0 10px;
+            color: #1f2937;
+            line-height: 1.4;
+        }
+        .md-body h1 { font-size: 21px; }
+        .md-body h2 { font-size: 18px; }
+        .md-body h3 { font-size: 16px; }
+        .md-body h4 { font-size: 14.5px; }
+        .md-body p { margin: 9px 0; }
+        .md-body a { color: #3d63dd; text-decoration: none; border-bottom: 1px solid rgba(61, 99, 221, 0.35); }
+        .md-body a:hover { border-bottom-color: #3d63dd; }
+        .md-body ul, .md-body ol { margin: 9px 0; padding-left: 24px; }
+        .md-body li { margin: 4px 0; }
+        .md-body code {
+            font-family: "Consolas", "SFMono-Regular", monospace;
+            font-size: 12.5px;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 5px;
+        }
+        .md-body pre {
+            background: #1f2937;
+            padding: 14px 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .md-body pre code {
+            background: none;
+            color: #e5e7eb;
+            padding: 0;
+            font-size: 12.5px;
+        }
+        .md-body blockquote {
+            border-left: 3px solid #c7d2fe;
+            background: #f8faff;
+            border-radius: 0 8px 8px 0;
+            padding: 4px 14px;
+            margin: 12px 0;
+            color: #6b7280;
+        }
+        .md-body table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12px 0;
+            display: block;
+            overflow-x: auto;
+        }
+        .md-body th, .md-body td {
+            border: 1px solid #e5e7eb;
+            padding: 7px 12px;
+            text-align: left;
+        }
+        .md-body th { background: #f9fafb; }
+        .md-body img { max-width: 100%; border-radius: 8px; }
+        .md-body hr { border: none; border-top: 1px solid #e5e7eb; margin: 18px 0; }
+        .md-state {
+            text-align: center;
+            color: #9aa2af;
+            padding: 34px 0;
+            font-size: 14px;
+        }
+        .md-state.error { color: #d97757; }
+        .md-state small { display: block; margin-top: 8px; font-size: 12px; }
         .footer {
             margin-top: 46px;
             padding: 24px;
@@ -433,6 +591,9 @@
             .modal-content {
                 padding: 24px 18px;
             }
+            .md-modal-content {
+                padding: 24px 18px;
+            }
             .option {
                 min-width: 100%;
             }
@@ -445,7 +606,7 @@
     </div>
     <div class="container">
         <header class="hero">
-            <h1>课程表进度条</h1>
+            <h1 id="heroTitle" title="点击查看说明">课程表进度条</h1>
             <p>v2.1.6 / v3.1.1 · Windows / 统信 UOS</p>
         </header>
         <h2 class="section-title">版本列表 <span class="count" id="versionCount"></span></h2>
@@ -454,15 +615,16 @@
             <div class="tools">
                 <a href="download.html">返回软件下载中心</a>·
                 <a href="https://github.com/Matthew-ljm/ClassSchedule" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+                <a href="https://gitee.com/matthew-ljm/class-schedule" target="_blank" rel="noopener noreferrer">Gitee 仓库</a>·
+                <a href="https://test.m-code.top/class-schedule/README.md" target="_blank" rel="noopener noreferrer">简介＆使用说明</a>
             </div>
             <div class="copyright">更多内容敬请期待 · © M-Code</div>
         </footer>
     </div>
-    <!-- v2.1.6 版本选择弹窗 -->
     <div id="versionModal">
         <div class="modal-content">
             <button class="close-button" id="modalCloseButton">&times;</button>
-            <h2>选择课程表进度条 v2.1.6 版本</h2>
+            <h2>选择课程表进度条 v2.1.6 版本<button type="button" class="md-hint-btn" id="v216HintBtn" title="查看版本说明"><img src="icon/提示.png" alt="版本说明"></button></h2>
             <div class="modal-sub">两个平台任选 · 安装包 / 压缩包</div>
             <div class="options-container">
                 <div class="option" data-value="windows">
@@ -484,13 +646,27 @@
             </div>
             <button class="download-confirm" id="downloadConfirmBtn" disabled>下载选中版本</button>
             <div class="github-note">GitHub仓库：<a href="https://github.com/Matthew-ljm/ClassSchedule" target="_blank" rel="noopener noreferrer">https://github.com/Matthew-ljm/ClassSchedule</a></div>
+            <div class="github-note">Gitee仓库：<a href="https://gitee.com/matthew-ljm/class-schedule" target="_blank" rel="noopener noreferrer">https://gitee.com/matthew-ljm/class-schedule</a></div>
         </div>
     </div>
+    <div id="mdModal">
+        <div class="md-modal-content">
+            <button class="close-button" id="mdModalCloseButton">&times;</button>
+            <h2 id="mdModalTitle">版本说明</h2>
+            <div class="md-body" id="mdModalBody"></div>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
     const versionList = [
-        { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
-        { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "2026-10-02", url: "https://github.com/Matthew-ljm/ClassSchedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "最新 Windows 版本，功能更完善，推荐下载。" }
+        { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
+        { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "2026-10-02", mdNote: "v311", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "最新 Windows 版本，功能更完善，推荐下载。" }
     ];
+    const mdNoteUrls = {
+        v216: "https://test.m-code.top/class-schedule/CHANGELOG-v2.1.6.md",
+        v311: "https://test.m-code.top/class-schedule/CHANGELOG-v3.1.1.md",
+        readme: "https://test.m-code.top/class-schedule/README.md"
+    };
     const platformMeta = {
         windows: { label: "Windows", cls: "badge-windows" }
     };
@@ -501,17 +677,30 @@
         card.className = 'ver-card';
         card.style.animationDelay = (i * 0.05) + 's';
         card.innerHTML = `
-            <span class="ver-download-hint"><img src="icon/download.png" alt=""></span>
+            ${sw.mdNote ? `
+            <span class="card-actions">
+                <button type="button" class="md-hint-btn card-md-hint" data-md-note="${sw.mdNote}" title="查看版本说明"><img src="icon/提示.png" alt="版本说明"></button>
+                <span class="ver-download-hint"><img src="icon/download.png" alt=""></span>
+            </span>` : `
+            <span class="ver-download-hint"><img src="icon/download.png" alt=""></span>`}
             <div class="ver-icon">
                 <img src="icon/software/class-schedule.png" alt="">
             </div>
             <div class="ver-name">${sw.name}<span class="ver-ext">${sw.ext.toUpperCase()}</span></div>
             <div class="ver-meta">
                 <span class="badge ${p.cls}">${p.label}</span>
+                ${sw.linuxTag ? '<span class="linux-tag">Linux</span>' : ''}
                 ${sw.date ? `<span class="ver-date">${sw.date}</span>` : ''}
             </div>
             <div class="ver-desc">${sw.desc}</div>
         `;
+        const cardHintBtn = card.querySelector('.card-md-hint');
+        if (cardHintBtn) {
+            cardHintBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openMdModal(this.getAttribute('data-md-note'));
+            });
+        }
         card.addEventListener('click', () => {
             if (sw.special === 'platform') {
                 showVersionModal();
@@ -582,13 +771,73 @@
 
         const version = selectedOption.getAttribute('data-value');
         if (version === 'windows') {
-            window.location.href = 'https://github.com/Matthew-ljm/ClassSchedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-Windows-Installer.exe';
+            window.location.href = 'https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-Windows-Installer.exe';
         } else if (version === 'uos') {
-            window.location.href = 'https://github.com/Matthew-ljm/ClassSchedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-UOS.zip';
+            window.location.href = 'https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-UOS.zip';
         }
 
         versionModal.style.display = 'none';
         resetVersionModal();
+    });
+
+    const mdModal = document.getElementById('mdModal');
+    const mdModalTitle = document.getElementById('mdModalTitle');
+    const mdModalBody = document.getElementById('mdModalBody');
+    const mdNoteMeta = {
+        v216: { title: '课程表进度条 v2.1.6 版本说明' },
+        v311: { title: '课程表进度条 v3.1.1 版本说明' },
+        readme: { title: '课程表进度条说明' }
+    };
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function renderMarkdown(text) {
+        if (window.marked) {
+            return marked.parse(text, { breaks: true, gfm: true });
+        }
+        return '<pre style="margin:0;white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.8;">' + escapeHtml(text) + '</pre>';
+    }
+
+    async function openMdModal(key) {
+        const meta = mdNoteMeta[key] || { title: '版本说明' };
+        mdModalTitle.textContent = meta.title;
+        mdModalBody.innerHTML = '<div class="md-state">加载中...</div>';
+        mdModal.style.display = 'flex';
+
+        const url = mdNoteUrls[key];
+        if (!url) {
+            mdModalBody.innerHTML = '<div class="md-state">说明内容暂未提供，敬请期待</div>';
+            return;
+        }
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const text = await res.text();
+            mdModalBody.innerHTML = renderMarkdown(text);
+        } catch (err) {
+            mdModalBody.innerHTML = '<div class="md-state error">内容加载失败，请稍后重试<small>' + escapeHtml(err.message) + '</small></div>';
+        }
+    }
+
+    function closeMdModal() {
+        mdModal.style.display = 'none';
+        mdModalBody.innerHTML = '';
+    }
+
+    document.getElementById('v216HintBtn').addEventListener('click', function() {
+        openMdModal('v216');
+    });
+
+    document.getElementById('heroTitle').addEventListener('click', function() {
+        openMdModal('readme');
+    });
+
+    document.getElementById('mdModalCloseButton').addEventListener('click', closeMdModal);
+
+    mdModal.addEventListener('click', function(e) {
+        if (e.target === this) closeMdModal();
     });
 </script>
 </body>
