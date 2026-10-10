@@ -616,7 +616,7 @@
                 <a href="download.html">返回软件下载中心</a>·
                 <a href="https://github.com/Matthew-ljm/ClassSchedule" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
                 <a href="https://gitee.com/matthew-ljm/class-schedule" target="_blank" rel="noopener noreferrer">Gitee 仓库</a>·
-                <a href="https://test.m-code.top/class-schedule/README.md" target="_blank" rel="noopener noreferrer">简介＆使用说明</a>
+                <a href="#" id="footerReadmeLink">简介＆使用说明</a>
             </div>
             <div class="copyright">更多内容敬请期待 · © M-Code</div>
         </footer>
@@ -656,7 +656,6 @@
             <div class="md-body" id="mdModalBody"></div>
         </div>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
     const versionList = [
         { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
@@ -793,11 +792,19 @@
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    function renderMarkdown(text) {
-        if (window.marked) {
-            return marked.parse(text, { breaks: true, gfm: true });
+    let markedLoadingPromise = null;
+    function loadMarked() {
+        if (window.marked) return Promise.resolve(window.marked);
+        if (!markedLoadingPromise) {
+            markedLoadingPromise = new Promise(function(resolve, reject) {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+                script.onload = function() { resolve(window.marked); };
+                script.onerror = function() { reject(new Error('marked 加载失败')); };
+                document.head.appendChild(script);
+            });
         }
-        return '<pre style="margin:0;white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.8;">' + escapeHtml(text) + '</pre>';
+        return markedLoadingPromise;
     }
 
     async function openMdModal(key) {
@@ -812,10 +819,12 @@
             return;
         }
         try {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            const text = await res.text();
-            mdModalBody.innerHTML = renderMarkdown(text);
+            const contentPromise = fetch(url).then(function(res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.text();
+            });
+            const [text] = await Promise.all([contentPromise, loadMarked()]);
+            mdModalBody.innerHTML = marked.parse(text, { breaks: true, gfm: true });
         } catch (err) {
             mdModalBody.innerHTML = '<div class="md-state error">内容加载失败，请稍后重试<small>' + escapeHtml(err.message) + '</small></div>';
         }
@@ -831,6 +840,11 @@
     });
 
     document.getElementById('heroTitle').addEventListener('click', function() {
+        openMdModal('readme');
+    });
+
+    document.getElementById('footerReadmeLink').addEventListener('click', function(e) {
+        e.preventDefault();
         openMdModal('readme');
     });
 
