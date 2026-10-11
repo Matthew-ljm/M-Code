@@ -311,13 +311,13 @@
     </div>
 <script>
     const versionList = [
-        { name: "抽签助手 v1.0", platform: "windows", ext: "exe", date: "2024-09-14", url: "https://files.m-code.top/cqzs/抽签助手v1.0安装包.exe", desc: "最早发布的版本，.exe 安装包。" },
-        { name: "抽签助手 v1.1", platform: "windows", ext: "exe", date: "2024-10-01", url: "https://files.m-code.top/cqzs/抽签助手v1.1安装包.exe", desc: "v1.1 版本，修复并优化了部分功能。" },
-        { name: "抽签助手 v1.2", platform: "windows", ext: "exe", date: "2024-10-24", url: "https://files.m-code.top/cqzs/抽签助手v1.2安装包.exe", desc: "v1.2 版本，功能进一步完善。" },
-        { name: "抽签助手 v1.3", platform: "windows", ext: "exe", date: "2024-12-22", url: "https://files.m-code.top/cqzs/抽签助手v1.3安装包.exe", desc: "v1.3 版本，Windows 端的较新版本。" },
-        { name: "抽签助手（简化版）", platform: "windows", ext: "exe", date: "2025-07-11", url: "https://files.m-code.top/cqzs/抽签助手（简化版）安装包.exe", desc: "精简功能的轻量版本，简洁易用。" },
-        { name: "抽签助手（校园版 - Debian版）", platform: "linux", ext: "zip", date: "2025-07-29", url: "https://files.m-code.top/cqzs/抽签助手（校园版 - Debian版）安装包.zip", desc: "校园版的 Debian/统信UOS 适配版本，.zip 压缩包，解压后使用。" },
-        { name: "抽签助手（校园版）", platform: "windows", ext: "exe", date: "2025-09-25", url: "https://files.m-code.top/cqzs/抽签助手（校园版）安装包.exe", desc: "面向校园场景定制的版本。" }
+        { name: "抽签助手 v1.0", platform: "windows", ext: "exe", date: "2024-09-14", url: "https://files.m-code.top/cqzs/抽签助手v1.0安装包.exe", desc: "最早发布的版本，界面简单，支持从外部TXT、DOCX、XLSX文件中读取签号列表，也可使用默认签号列表(可编辑)，包含手动停止抽签模式及随机抽取50次。" },
+        { name: "抽签助手 v1.1", platform: "windows", ext: "exe", date: "2024-10-01", url: "https://files.m-code.top/cqzs/抽签助手v1.1安装包.exe", desc: "可自定义抽取随机次数模式下的抽取次数，并增加了界面＆按钮颜色选择功能。" },
+        { name: "抽签助手 v1.2", platform: "windows", ext: "exe", date: "2024-10-24", url: "https://files.m-code.top/cqzs/抽签助手v1.2安装包.exe", desc: "增加了复制抽签结果的功能，可自定义抽取频率，增加更多设置项（抽签结果字体大小、是否删除抽中结果等），并可查看抽签结果历史记录。" },
+        { name: "抽签助手 v1.3", platform: "windows", ext: "exe", date: "2024-12-22", url: "https://files.m-code.top/cqzs/抽签助手v1.3安装包.exe", desc: "增加后台秒开功能，主窗口自动置顶，增加设置项（重置默认签号列表、编辑初始默认签号列表、编辑默认的签号列表），优化编辑签号的界面。" },
+        { name: "抽签助手（简化版）", platform: "windows", ext: "exe", date: "2025-07-11", url: "https://files.m-code.top/cqzs/抽签助手（简化版）安装包.exe", desc: "精简功能的轻量版本，仅支持手动停止抽签模式，仅能使用默认签号列表(可编辑)，去除后台秒开功能，增加空格键开始/停止抽签，重构界面布局，小巧易用，推荐仅需基础抽签功能的用户。" },
+        { name: "抽签助手（校园版 - Debian版）", platform: "linux", ext: "zip", date: "2025-07-29", url: "https://files.m-code.top/cqzs/抽签助手（校园版 - Debian版）安装包.zip", desc: "校园版的 Debian/统信UOS 适配版本，在简化版的基础上增加了抓阄功能。软件解压后即可使用。" },
+        { name: "抽签助手（校园版）", platform: "windows", ext: "exe", date: "2025-09-25", url: "https://files.m-code.top/cqzs/抽签助手（校园版）安装包.exe", desc: "面向校园场景定制的版本，在简化版的基础上增加了抓阄功能，简单实用，普通用户亦可下载。" }
     ];
     const platformMeta = {
         windows: { label: "Windows", cls: "badge-windows" },
