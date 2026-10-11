@@ -606,7 +606,7 @@
     </div>
     <div class="container">
         <header class="hero">
-            <h1 id="heroTitle" title="点击查看说明">课程表进度条</h1>
+            <h1 id="heroTitle" title="点击查看软件说明">课程表进度条</h1>
             <p>v2.1.6 / v3.1.1 · Windows / 统信 UOS</p>
         </header>
         <h2 class="section-title">版本列表 <span class="count" id="versionCount"></span></h2>
@@ -853,6 +853,22 @@
     mdModal.addEventListener('click', function(e) {
         if (e.target === this) closeMdModal();
     });
+
+    function handleHashRoute() {
+        const hash = window.location.hash.toLowerCase();
+        if (hash === '#box1') {
+            openMdModal('readme');
+        } else if (hash === '#box2') {
+            openMdModal('v216');
+        } else if (hash === '#box3') {
+            openMdModal('v311');
+        } else if (hash === '#card1') {
+            showVersionModal();
+        }
+    }
+
+    window.addEventListener('hashchange', handleHashRoute);
+    handleHashRoute();
 </script>
 </body>
 </html>
