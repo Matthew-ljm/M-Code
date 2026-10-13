@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美洲文明探秘·双雄争霸赛</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0, 255, 100, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(46, 139, 87, 0.25) 0%, transparent 60%),
+      linear-gradient(135deg, #061a06 0%, #0d3b0d 30%, #1a5c1a 60%, #2e8b57 100%);
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .jungle-decoration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .jungle-decoration .deco {
+    position: absolute;
+    opacity: 0.16;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    user-select: none;
+  }
+  .jungle-decoration .leaf-big {
+    position: absolute;
+    opacity: 0.06;
+    font-size: 240px;
+    filter: blur(1px);
+  }
+
+  #confettiCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    display: none;
+  }
+
+  .win-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 9999;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.18) 0%, rgba(0, 0, 0, 0.30) 60%, rgba(0, 0, 0, 0.15) 100%);
+  }
+  .win-overlay.show { display: flex; animation: overlayFade 0.6s ease-out; }
+
+  .trophy-big {
+    font-size: 220px;
+    line-height: 1;
+    filter: drop-shadow(0 0 50px #ffd700) drop-shadow(0 0 100px rgba(255,140,0,0.7));
+    animation: trophyPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+               trophyFloat 2.2s ease-in-out 0.8s infinite alternate;
+  }
+
+  .win-text {
+    font-size: 84px;
+    font-weight: 900;
+    color: #ffd700;
+    text-shadow:
+      0 0 30px #ffd700,
+      0 0 60px #ff8c00,
+      0 0 90px rgba(255, 140, 0, 0.6),
+      5px 5px 0 #8b4513,
+      -2px -2px 0 #fff8dc;
+    letter-spacing: 8px;
+    margin-top: 24px;
+    text-align: center;
+    padding: 0 20px;
+    animation: textPop 0.8s 0.25s backwards cubic-bezier(0.34, 1.56, 0.64, 1),
+               textGlow 1.6s ease-in-out 1s infinite alternate;
+  }
+
+  @keyframes trophyPop {
+    0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+    60%  { transform: scale(1.15) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  @keyframes trophyFloat {
+    0%   { transform: translateY(0) scale(1) rotate(-2deg); }
+    100% { transform: translateY(-18px) scale(1.06) rotate(2deg); }
+  }
+  @keyframes textPop {
+    0%   { transform: scale(0); opacity: 0; }
+    70%  { transform: scale(1.12); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes textGlow {
+    0%   { text-shadow: 0 0 30px #ffd700, 0 0 60px #ff8c00, 5px 5px 0 #8b4513; }
+    100% { text-shadow: 0 0 50px #ffd700, 0 0 100px #ff8c00, 0 0 140px rgba(255,140,0,0.8), 5px 5px 0 #8b4513; }
+  }
+  @keyframes overlayFade {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .game-container {
+    width: 100%;
+    max-width: 1900px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .title-row {
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.55);
+    border: 3px solid #d4af37;
+    border-radius: 16px;
+    padding: 8px 20px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .title-row::before,
+  .title-row::after {
+    content: "🌿";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 26px;
+    opacity: 0.55;
+  }
+  .title-row::before { left: 20px; }
+  .title-row::after  { right: 20px; transform: translateY(-50%) scaleX(-1); }
+
+  h1 {
+    font-size: 32px;
+    color: #ffd700;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.85), 2px 2px 0 #8b4513;
+    letter-spacing: 4px;
+  }
+
+  .controls-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  button {
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    padding: 11px 30px;
+    font-size: 18px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+  }
+  button:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  #startBtn { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #3d2b00; }
+  #resetBtn { background: linear-gradient(135deg, #aaa, #666); color: #fff; }
+  #muteBtn  { background: linear-gradient(135deg, #4dabf7, #1c7ed6); color: #fff; }
+
+  .battlefield {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .team-panel {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.52);
+    border-radius: 16px;
+    padding: 14px 18px 18px;
+    backdrop-filter: blur(6px);
+    border: 3px solid;
+    display: flex;
+    flex-direction: column;
+    min-height: 620px;
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .team-panel.red-team {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 25px rgba(255, 107, 107, 0.4), inset 0 0 40px rgba(255, 107, 107, 0.06);
+  }
+  .team-panel.blue-team {
+    border-color: #4dabf7;
+    box-shadow: 0 0 25px rgba(77, 171, 247, 0.4), inset 0 0 40px rgba(77, 171, 247, 0.06);
+  }
+
+  .team-panel.red-team::before {
+    content: "🐆"; position: absolute; top: 10px; right: 16px;
+    font-size: 48px; opacity: 0.2; pointer-events: none;
+  }
+  .team-panel.blue-team::before {
+    content: "🐍"; position: absolute; top: 10px; right: 16px;
+    font-size: 48px; opacity: 0.2; pointer-events: none;
+  }
+
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .team-name { font-size: 32px; font-weight: bold; }
+  .red-team .team-name { color: #ff6b6b; text-shadow: 0 0 12px rgba(255, 107, 107, 0.8); }
+  .blue-team .team-name { color: #4dabf7; text-shadow: 0 0 12px rgba(77, 171, 247, 0.8); }
+
+  .question-counter {
+    font-size: 20px; color: #ddd;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 18px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .score-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    padding: 9px 16px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255,215,0,0.2);
+  }
+  .score-area .gold-label { font-size: 20px; font-weight: bold; white-space: nowrap; }
+  .gold-count { color: #ffd700; font-size: 26px; }
+  .gold-bar { display: flex; gap: 4px; flex-wrap: wrap; }
+  .gold-block {
+    width: 18px; height: 18px;
+    background: #4a4a4a;
+    border-radius: 3px;
+    border: 1px solid #777;
+    transition: all 0.3s;
+  }
+  .gold-block.earned {
+    background: linear-gradient(135deg, #ffd700, #ffaa00);
+    border-color: #ffd700;
+    box-shadow: 0 0 8px #ffd700;
+  }
+
+  .timer-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .timer-bar-bg {
+    flex: 1;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #28a745, #5cd65c);
+    border-radius: 10px;
+    transition: width 0.06s linear, background 0.3s;
+  }
+  .timer-text {
+    font-size: 20px; font-weight: bold; color: #ffd700;
+    min-width: 52px; text-align: center;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 8px;
+    padding: 4px 10px;
+  }
+
+  .question-text {
+    font-size: 30px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    min-height: 140px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border-left: 6px solid #ffd700;
+    font-weight: 600;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .option-btn {
+    text-align: left;
+    padding: 20px 22px;
+    font-size: 28px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    transition: all 0.18s;
+    box-shadow: none;
+    font-weight: 500;
+    line-height: 1.4;
+    min-height: 82px;
+  }
+  .option-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #ffd700;
+  }
+  .option-btn.correct {
+    background: rgba(40, 167, 69, 0.68);
+    border-color: #28a745;
+    box-shadow: 0 0 15px #28a745;
+  }
+  .option-btn.wrong {
+    background: rgba(220, 53, 69, 0.68);
+    border-color: #dc3545;
+  }
+  .option-btn:disabled { cursor: default; opacity: 0.92; }
+
+  .feedback {
+    margin-top: 14px;
+    font-size: 25px;
+    font-weight: bold;
+    min-height: 34px;
+    text-align: center;
+  }
+  .feedback.correct { color: #7dff7d; }
+  .feedback.wrong { color: #ff8a8a; }
+  .feedback .auto-hint {
+    display: block;
+    font-size: 17px;
+    font-weight: normal;
+    color: #ffd700;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+
+  .finish-info {
+    text-align: center;
+    padding: 30px 10px;
+    font-size: 26px;
+    line-height: 1.9;
+  }
+  .finish-info .big {
+    font-size: 44px;
+    color: #ffd700;
+    font-weight: bold;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+  }
+
+  .winner-announce {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 40px rgba(255, 215, 0, 0.5);
+    min-height: 46px;
+    padding: 6px;
+    letter-spacing: 2px;
+  }
+
+  @media (max-width: 1200px) {
+    .question-text { font-size: 24px; min-height: 110px; }
+    .option-btn { font-size: 22px; padding: 15px 16px; min-height: 66px; }
+    .team-name { font-size: 26px; }
+    .feedback { font-size: 20px; }
+  }
+
+  @media (max-width: 900px) {
+    .battlefield { flex-direction: column; }
+    h1 { font-size: 22px; }
+    .team-panel { min-height: auto; }
+    .trophy-big { font-size: 140px; }
+    .win-text { font-size: 42px; letter-spacing: 3px; }
+    .question-text { font-size: 20px; min-height: auto; }
+    .option-btn { font-size: 18px; padding: 12px 14px; min-height: 54px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="jungle-decoration">
+  <span class="leaf-big" style="top:-60px; left:-80px;">🌿</span>
+  <span class="leaf-big" style="bottom:-80px; right:-80px; transform: scaleX(-1);">🌿</span>
+  <span class="leaf-big" style="top:30%; left:-100px;">🍃</span>
+  <span class="leaf-big" style="top:45%; right:-100px; transform: scaleX(-1);">🍃</span>
+  <span class="deco" style="top:3%;    left:2%;   font-size:90px;">🌴</span>
+  <span class="deco" style="top:6%;    right:4%;  font-size:80px;">🌴</span>
+  <span class="deco" style="bottom:4%; left:4%;   font-size:100px;">🌴</span>
+  <span class="deco" style="bottom:6%; right:3%;  font-size:95px; transform: scaleX(-1);">🌴</span>
+  <span class="deco" style="top:22%;   left:1%;   font-size:55px;">🌿</span>
+  <span class="deco" style="top:35%;   right:1%;  font-size:60px; transform: scaleX(-1);">🌿</span>
+  <span class="deco" style="bottom:22%; left:2%;   font-size:60px;">🍃</span>
+  <span class="deco" style="bottom:30%; right:2%;  font-size:55px;">🍃</span>
+  <span class="deco" style="top:40%;   left:0.5%; font-size:65px;">🐆</span>
+  <span class="deco" style="top:58%;   right:0.5%;font-size:70px;">🐍</span>
+  <span class="deco" style="top:18%;   left:42%;  font-size:48px;">🦜</span>
+  <span class="deco" style="bottom:12%; right:22%; font-size:50px;">🦋</span>
+  <span class="deco" style="top:75%;   left:8%;   font-size:42px;">🦜</span>
+  <span class="deco" style="top:8%;    left:60%;  font-size:44px; transform: scaleX(-1);">🦜</span>
+  <span class="deco" style="top:65%;   left:0.8%; font-size:48px;">🌺</span>
+  <span class="deco" style="top:12%;   right:12%; font-size:50px;">🌺</span>
+  <span class="deco" style="bottom:18%; left:20%;  font-size:45px;">🌺</span>
+  <span class="deco" style="bottom:8%;  left:50%;  font-size:46px;">🌺</span>
+  <span class="deco" style="top:48%;   right:8%;  font-size:42px;">🌸</span>
+  <span class="deco" style="bottom:40%; left:6%;   font-size:40px;">🌼</span>
+</div>
+
+<canvas id="confettiCanvas"></canvas>
+
+<div class="win-overlay" id="winOverlay">
+  <div class="trophy-big">🏆</div>
+  <div class="win-text" id="winText"></div>
+</div>
+
+<div class="game-container">
+
+  <div class="title-row">
+    <h1>🌴 美洲文明探秘·双雄争霸赛 🐆</h1>
+  </div>
+
+  <div class="controls-row">
+    <button id="startBtn">开始游戏</button>
+    <button id="muteBtn">🔊 音乐开</button>
+    <button id="resetBtn">重新开始</button>
+  </div>
+
+  <div class="battlefield">
+    <div class="team-panel red-team" id="redPanel">
+      <div class="team-header">
+        <span class="team-name">🐆 红队</span>
+        <span class="question-counter" id="redCounter">第 0 / 10 题</span>
+      </div>
+
+      <div class="score-area">
+        <span class="gold-label">黄金：<span class="gold-count" id="redGoldCount">0</span> 块</span>
+        <div class="gold-bar" id="redGoldBar"></div>
+      </div>
+
+      <div class="timer-area">
+        <div class="timer-bar-bg">
+          <div class="timer-bar" id="redTimerBar"></div>
+        </div>
+        <span class="timer-text" id="redTimerText">15s</span>
+      </div>
+
+      <div class="question-text" id="redQuestion">点击“开始游戏”，红队将开始作答。</div>
+      <div class="options" id="redOptions"></div>
+      <div class="feedback" id="redFeedback"></div>
+    </div>
+
+    <div class="team-panel blue-team" id="bluePanel">
+      <div class="team-header">
+        <span class="team-name">🐍 蓝队</span>
+        <span class="question-counter" id="blueCounter">第 0 / 10 题</span>
+      </div>
+
+      <div class="score-area">
+        <span class="gold-label">黄金：<span class="gold-count" id="blueGoldCount">0</span> 块</span>
+        <div class="gold-bar" id="blueGoldBar"></div>
+      </div>
+
+      <div class="timer-area">
+        <div class="timer-bar-bg">
+          <div class="timer-bar" id="blueTimerBar"></div>
+        </div>
+        <span class="timer-text" id="blueTimerText">15s</span>
+      </div>
+
+      <div class="question-text" id="blueQuestion">点击“开始游戏”，蓝队将开始作答。</div>
+      <div class="options" id="blueOptions"></div>
+      <div class="feedback" id="blueFeedback"></div>
+    </div>
+  </div>
+
+  <div class="winner-announce" id="winnerAnnounce"></div>
+</div>
+
+<script>
+  // ==================== 题库（最新版） ====================
+  const questionBank = [
+    { id: 1, question: "下列农作物中，属于美洲居民培育的是",
+      options: ["A. 水稻", "B. 玉米", "C. 小麦", "D. 甘蔗"], answer: 1 },
+    { id: 2, question: "美洲居民驯化的动物主要是",
+      options: ["A. 马", "B. 牛", "C. 羊驼", "D. 骆驼"], answer: 2 },
+    { id: 3, question: "玛雅人使用什么文字",
+      options: ["A. 甲骨文", "B. 印章文字", "C. 结绳记事", "D. 象形文字"], answer: 3 },
+    { id: 4, question: "玛雅人在数学方面取得的成就有",
+      options: ["A. 10进制", "B. 60进制", "C. 15进制", "D. 20进制"], answer: 3 },
+    { id: 5, question: "关于玛雅历法，下列说法正确的是",
+      options: [
+        "A. 一年12个月，每月30天或31天",
+        "B. 一年18个月，每月20天，另加5天禁忌日",
+        "C. 一年10个月，每个月36天，另加5天禁忌日",
+        "D. 以月亮绕地球一周为一年"
+      ], answer: 1 },
+    { id: 6, question: "阿兹特克人的都城特诺奇蒂特兰建在湖中岛屿上。他们从湖中捞起淤泥，堆叠于木排上，形成“浮动园地”。下列关于“浮动园地”的说法，正确的是",
+      options: [
+        "A. 浮动园地是印加人在安第斯山区修建的梯田",
+        "B. 浮动园地是阿兹特克人从湖中捞泥堆在木排上形成的农田",
+        "C. 浮动园地是玛雅人用来观测天象的金字塔神庙",
+        "D. 浮动园地是阿兹特克人放牧羊驼的广阔牧场"
+      ], answer: 1 },
+    { id: 7, question: "阿兹特克都城中心广场的金字塔神庙中，供奉的神是",
+      options: ["A. 太阳神和雨神", "B. 风神和雷神", "C. 火神和水神", "D. 战神和农神"], answer: 0 },
+    { id: 8, question: "印加人在农业上的突出成就是",
+      options: [
+        "A. 使用铁犁牛耕",
+        "B. 修建庞大的梯田系统",
+        "C. 最早种植水稻",
+        "D. 最早种植小麦"
+      ], answer: 1 },
+    { id: 9, question: "印加帝国时期，国王执掌的权力包括",
+      options: [
+        "A. 只有政治权力",
+        "B. 只有军事权力",
+        "C. 政治、军事和宗教权力",
+        "D. 只有宗教权力"
+      ], answer: 2 },
+    { id: 10, question: "印加人为强化帝国联系、调动军队和传递情报，修建了",
+      options: ["A. 金字塔神庙", "B. 道路和邮驿", "C. 浮动园圃", "D. 象形文字"], answer: 1 }
+  ];
+
+  const QUESTION_TIME = 15;
+  const FEEDBACK_DELAY = 2000;
+
+  // 默认序列（游戏开始后会被打乱并错位）
+  let redSequence  = [0,1,2,3,4,5,6,7,8,9];
+  let blueSequence = [5,6,7,8,9,0,1,2,3,4];
+
+  function getSequence(team) { return team === 'red' ? redSequence : blueSequence; }
+
+  function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ==================== 音频系统 ====================
+  let audioCtx = null;
+  let bgmTimer = null;
+  let bgmNoteIndex = 0;
+  let bgmPlaying = false;
+  let muted = false;
+
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function playTone(freq, startTime, duration, volume, type) {
+    if (muted) return;
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(volume, startTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.05);
+  }
+
+  function playCorrectSound() {
+    if (muted) return;
+    const t = getAudioCtx().currentTime;
+    playTone(523.25, t,        0.15, 0.15, 'triangle');
+    playTone(659.25, t + 0.10, 0.15, 0.15, 'triangle');
+    playTone(783.99, t + 0.20, 0.28, 0.18, 'triangle');
+  }
+
+  function playWrongSound() {
+    if (muted) return;
+    const t = getAudioCtx().currentTime;
+    playTone(311.13, t,        0.22, 0.14, 'sawtooth');
+    playTone(233.08, t + 0.15, 0.38, 0.14, 'sawtooth');
+  }
+
+  function playWinSound() {
+    if (muted) return;
+    const t = getAudioCtx().currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((f, i) => playTone(f, t + i * 0.15, 0.45, 0.18, 'triangle'));
+    playTone(523.25, t + 0.65, 1.4, 0.10, 'sine');
+    playTone(659.25, t + 0.65, 1.4, 0.10, 'sine');
+    playTone(783.99, t + 0.65, 1.4, 0.10, 'sine');
+  }
+
+  const bgmPattern = [
+    261.63, 329.63, 392.00, 329.63,
+    440.00, 392.00, 329.63, 261.63,
+    523.25, 440.00, 392.00, 329.63,
+    392.00, 440.00, 523.25, 392.00
+  ];
+
+  function startBGM() {
+    if (bgmPlaying || muted) return;
+    bgmPlaying = true;
+    bgmNoteIndex = 0;
+    const beatMs = 350;
+
+    function tick() {
+      if (!bgmPlaying || muted) return;
+      const ctx = getAudioCtx();
+      const freq = bgmPattern[bgmNoteIndex % bgmPattern.length];
+      playTone(freq, ctx.currentTime, 0.5, 0.035, 'triangle');
+      if (bgmNoteIndex % 4 === 0) {
+        playTone(freq / 2, ctx.currentTime, 0.8, 0.022, 'sine');
+      }
+      bgmNoteIndex++;
+    }
+
+    tick();
+    bgmTimer = setInterval(tick, beatMs);
+  }
+
+  function stopBGM() {
+    bgmPlaying = false;
+    if (bgmTimer) { clearInterval(bgmTimer); bgmTimer = null; }
+  }
+
+  // ==================== 撒花系统 ====================
+  let confettiRafId = null;
+
+  function startConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.display = 'block';
+    const ctx = canvas.getContext('2d');
+
+    const colors = ['#ff6b6b', '#4dabf7', '#ffd700', '#5cd65c',
+                    '#ff8c00', '#ff69b4', '#a78bfa', '#00e5ff', '#ffffff'];
+    const particles = [];
+    const COUNT = 260;
+
+    for (let i = 0; i < COUNT; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: -Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 2.5,
+        vy: Math.random() * 3 + 1.5,
+        size: Math.random() * 12 + 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.18,
+        shape: Math.random() > 0.5 ? 'rect' : 'circle',
+        swing: Math.random() * Math.PI * 2,
+        swingSpeed: Math.random() * 0.05 + 0.02
+      });
+    }
+
+    const startTime = Date.now();
+    const duration = 10000;
+
+    function animate() {
+      const elapsed = Date.now() - startTime;
+      if (elapsed >= duration) {
+        canvas.style.display = 'none';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confettiRafId = null;
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.swing += p.swingSpeed;
+        p.x += p.vx + Math.sin(p.swing) * 0.9;
+        p.y += p.vy;
+        p.rotation += p.rotationSpeed;
+        if (p.y > canvas.height + 30) {
+          p.y = -20;
+          p.x = Math.random() * canvas.width;
+        }
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.fillStyle = p.color;
+        if (p.shape === 'rect') {
+          ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+        } else {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size / 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      });
+      confettiRafId = requestAnimationFrame(animate);
+    }
+
+    if (confettiRafId) cancelAnimationFrame(confettiRafId);
+    animate();
+  }
+
+  function stopConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    canvas.style.display = 'none';
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (confettiRafId) { cancelAnimationFrame(confettiRafId); confettiRafId = null; }
+  }
+
+  // ==================== 游戏状态 ====================
+  let gameStarted = false;
+  let startTime = 0;
+  let gameEnded = false;
+
+  function makeState() {
+    return {
+      score: 0, currentIndex: 0, finished: false, finishTime: null,
+      answered: false, timeLeft: QUESTION_TIME, timerId: null, advanceTimeoutId: null
+    };
+  }
+
+  let redState = makeState();
+  let blueState = makeState();
+
+  const startBtn = document.getElementById('startBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const muteBtn  = document.getElementById('muteBtn');
+  const winnerAnnounce = document.getElementById('winnerAnnounce');
+  const winOverlay = document.getElementById('winOverlay');
+  const winText = document.getElementById('winText');
+
+  const el = {
+    red: {
+      goldCount: document.getElementById('redGoldCount'),
+      goldBar:   document.getElementById('redGoldBar'),
+      counter:   document.getElementById('redCounter'),
+      question:  document.getElementById('redQuestion'),
+      options:   document.getElementById('redOptions'),
+      feedback:  document.getElementById('redFeedback'),
+      timerBar:  document.getElementById('redTimerBar'),
+      timerText: document.getElementById('redTimerText')
+    },
+    blue: {
+      goldCount: document.getElementById('blueGoldCount'),
+      goldBar:   document.getElementById('blueGoldBar'),
+      counter:   document.getElementById('blueCounter'),
+      question:  document.getElementById('blueQuestion'),
+      options:   document.getElementById('blueOptions'),
+      feedback:  document.getElementById('blueFeedback'),
+      timerBar:  document.getElementById('blueTimerBar'),
+      timerText: document.getElementById('blueTimerText')
+    }
+  };
+
+  // ==================== 黄金条 ====================
+  function initGoldBars() {
+    ['red', 'blue'].forEach(team => {
+      const bar = el[team].goldBar;
+      bar.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const b = document.createElement('div');
+        b.className = 'gold-block';
+        bar.appendChild(b);
+      }
+    });
+  }
+
+  function updateGoldBar(team) {
+    const state = team === 'red' ? redState : blueState;
+    const blocks = el[team].goldBar.children;
+    for (let i = 0; i < 10; i++) blocks[i].classList.toggle('earned', i < state.score);
+    el[team].goldCount.textContent = state.score;
+  }
+
+  // ==================== 倒计时 ====================
+  function resetTimerVisual(team) {
+    el[team].timerBar.style.width = '100%';
+    el[team].timerBar.style.background = 'linear-gradient(90deg, #28a745, #5cd65c)';
+    el[team].timerText.textContent = QUESTION_TIME + 's';
+  }
+
+  function startTimer(team) {
+    const state = team === 'red' ? redState : blueState;
+    stopTimer(team);
+    state.timeLeft = QUESTION_TIME;
+    resetTimerVisual(team);
+
+    state.timerId = setInterval(() => {
+      state.timeLeft -= 0.06;
+      if (state.timeLeft <= 0) {
+        state.timeLeft = 0;
+        updateTimerVisual(team);
+        stopTimer(team);
+        handleTimeout(team);
+        return;
+      }
+      updateTimerVisual(team);
+    }, 60);
+  }
+
+  function updateTimerVisual(team) {
+    const state = team === 'red' ? redState : blueState;
+    const pct = (state.timeLeft / QUESTION_TIME) * 100;
+    el[team].timerBar.style.width = pct + '%';
+    el[team].timerText.textContent = Math.ceil(state.timeLeft) + 's';
+    if (state.timeLeft > 9) {
+      el[team].timerBar.style.background = 'linear-gradient(90deg, #28a745, #5cd65c)';
+    } else if (state.timeLeft > 4) {
+      el[team].timerBar.style.background = 'linear-gradient(90deg, #ffc107, #ffdb4d)';
+    } else {
+      el[team].timerBar.style.background = 'linear-gradient(90deg, #dc3545, #ff6b6b)';
+    }
+  }
+
+  function stopTimer(team) {
+    const state = team === 'red' ? redState : blueState;
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+  }
+
+  // ==================== 渲染题目 ====================
+  function renderQuestion(team) {
+    const state = team === 'red' ? redState : blueState;
+    if (state.finished) return;
+
+    const q = questionBank[getSequence(team)[state.currentIndex]];
+    el[team].counter.textContent = `第 ${state.currentIndex + 1} / 10 题`;
+    el[team].question.textContent = q.question;
+
+    el[team].options.innerHTML = '';
+    el[team].feedback.textContent = '';
+    el[team].feedback.className = 'feedback';
+
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => handleAnswer(team, idx));
+      el[team].options.appendChild(btn);
+    });
+
+    state.answered = false;
+    startTimer(team);
+  }
+
+  // ==================== 答题 ====================
+  function handleAnswer(team, selectedIndex) {
+    const state = team === 'red' ? redState : blueState;
+    if (state.answered || state.finished || !gameStarted) return;
+    state.answered = true;
+    stopTimer(team);
+
+    const q = questionBank[getSequence(team)[state.currentIndex]];
+    const isCorrect = selectedIndex === q.answer;
+
+    const btns = el[team].options.querySelectorAll('.option-btn');
+    btns.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === q.answer) btn.classList.add('correct');
+      else if (idx === selectedIndex && !isCorrect) btn.classList.add('wrong');
+    });
+
+    if (isCorrect) {
+      state.score++;
+      el[team].feedback.innerHTML = '✅ 答对！+1 块黄金<span class="auto-hint">2 秒后自动进入下一题…</span>';
+      el[team].feedback.className = 'feedback correct';
+      playCorrectSound();
+    } else {
+      el[team].feedback.innerHTML = `❌ 答错，正确答案是 ${String.fromCharCode(65 + q.answer)}<span class="auto-hint">2 秒后自动进入下一题…</span>`;
+      el[team].feedback.className = 'feedback wrong';
+      playWrongSound();
+    }
+
+    updateGoldBar(team);
+    scheduleNext(team);
+  }
+
+  // ==================== 超时 ====================
+  function handleTimeout(team) {
+    const state = team === 'red' ? redState : blueState;
+    if (state.answered || state.finished) return;
+    state.answered = true;
+
+    const q = questionBank[getSequence(team)[state.currentIndex]];
+    const btns = el[team].options.querySelectorAll('.option-btn');
+    btns.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === q.answer) btn.classList.add('correct');
+    });
+
+    el[team].feedback.innerHTML = `⏰ 时间到！正确答案是 ${String.fromCharCode(65 + q.answer)}<span class="auto-hint">2 秒后自动进入下一题…</span>`;
+    el[team].feedback.className = 'feedback wrong';
+    playWrongSound();
+    scheduleNext(team);
+  }
+
+  // ==================== 自动下一题 ====================
+  function scheduleNext(team) {
+    const state = team === 'red' ? redState : blueState;
+    if (state.advanceTimeoutId) clearTimeout(state.advanceTimeoutId);
+
+    state.advanceTimeoutId = setTimeout(() => {
+      state.advanceTimeoutId = null;
+      state.currentIndex++;
+      if (state.currentIndex >= 10) {
+        state.finished = true;
+        state.finishTime = Date.now() - startTime;
+        showFinish(team);
+        checkBothFinished();
+      } else {
+        renderQuestion(team);
+      }
+    }, FEEDBACK_DELAY);
+  }
+
+  // ==================== 完成显示 ====================
+  function showFinish(team) {
+    const state = team === 'red' ? redState : blueState;
+    el[team].counter.textContent = '已完成 10 / 10 题';
+    el[team].question.innerHTML = '';
+    el[team].options.innerHTML = '';
+    el[team].feedback.innerHTML = '';
+    el[team].timerBar.style.width = '0%';
+    el[team].timerText.textContent = '--';
+
+    const seconds = (state.finishTime / 1000).toFixed(1);
+    const div = document.createElement('div');
+    div.className = 'finish-info';
+    div.innerHTML = `
+      <div>🎉 完成！</div>
+      <div>黄金：<span class="big">${state.score}</span> 块</div>
+      <div>用时：<span class="big">${seconds}</span> 秒</div>
+    `;
+    el[team].question.appendChild(div);
+  }
+
+  // ==================== 结算 ====================
+  function checkBothFinished() {
+    if (!(redState.finished && blueState.finished)) return;
+    if (gameEnded) return;
+    gameEnded = true;
+
+    let winnerText = '';
+    let winnerColor = '#ffd700';
+    if (redState.score > blueState.score) {
+      winnerText = '红队获胜！';
+    } else if (blueState.score > redState.score) {
+      winnerText = '蓝队获胜！';
+    } else {
+      if (redState.finishTime < blueState.finishTime) {
+        winnerText = '平分！红队用时更少，红队获胜！';
+      } else if (blueState.finishTime < redState.finishTime) {
+        winnerText = '平分！蓝队用时更少，蓝队获胜！';
+      } else {
+        winnerText = '完全平分！两队并列冠军！';
+        winnerColor = '#ffd700';
+      }
+    }
+
+    winnerAnnounce.textContent = '🏆 ' + winnerText + ' 🎉';
+
+    stopBGM();
+    playWinSound();
+    startConfetti();
+
+    setTimeout(() => {
+      winText.textContent = winnerText;
+      winText.style.color = winnerColor;
+      winOverlay.classList.add('show');
+    }, 900);
+  }
+
+  // ==================== 开始 / 重置 ====================
+  function startGame() {
+    if (gameStarted) return;
+    gameStarted = true;
+    gameEnded = false;
+    startTime = Date.now();
+    startBtn.disabled = true;
+
+    stopTimer('red'); stopTimer('blue');
+    if (redState.advanceTimeoutId) clearTimeout(redState.advanceTimeoutId);
+    if (blueState.advanceTimeoutId) clearTimeout(blueState.advanceTimeoutId);
+
+    // 红队随机打乱；蓝队 = 红队错位 5 位，保证同一时刻两边题目绝对不同
+    const base = [0,1,2,3,4,5,6,7,8,9];
+    redSequence = shuffleArray(base);
+    blueSequence = redSequence.map((_, i) => redSequence[(i + 5) % 10]);
+
+    redState = makeState();
+    blueState = makeState();
+    winnerAnnounce.textContent = '';
+    stopConfetti();
+    winOverlay.classList.remove('show');
+
+    updateGoldBar('red');
+    updateGoldBar('blue');
+
+    startBGM();
+
+    renderQuestion('red');
+    renderQuestion('blue');
+  }
+
+  function resetGame() {
+    gameStarted = false;
+    gameEnded = false;
+    startBtn.disabled = false;
+
+    stopTimer('red'); stopTimer('blue');
+    if (redState.advanceTimeoutId) clearTimeout(redState.advanceTimeoutId);
+    if (blueState.advanceTimeoutId) clearTimeout(blueState.advanceTimeoutId);
+
+    stopBGM();
+    stopConfetti();
+    winOverlay.classList.remove('show');
+
+    redState = makeState();
+    blueState = makeState();
+
+    winnerAnnounce.textContent = '';
+
+    el.red.counter.textContent = '第 0 / 10 题';
+    el.blue.counter.textContent = '第 0 / 10 题';
+    el.red.question.textContent = '点击“开始游戏”，红队将开始作答。';
+    el.blue.question.textContent = '点击“开始游戏”，蓝队将开始作答。';
+    el.red.options.innerHTML = '';
+    el.blue.options.innerHTML = '';
+    el.red.feedback.textContent = '';
+    el.blue.feedback.textContent = '';
+    el.red.feedback.className = 'feedback';
+    el.blue.feedback.className = 'feedback';
+
+    resetTimerVisual('red');
+    resetTimerVisual('blue');
+
+    initGoldBars();
+    updateGoldBar('red');
+    updateGoldBar('blue');
+  }
+
+  // ==================== 音乐开关 ====================
+  function toggleMute() {
+    muted = !muted;
+    if (muted) {
+      muteBtn.textContent = '🔇 音乐关';
+      stopBGM();
+    } else {
+      muteBtn.textContent = '🔊 音乐开';
+      if (gameStarted && !gameEnded) startBGM();
+    }
+  }
+
+  // ==================== 事件绑定 ====================
+  startBtn.addEventListener('click', startGame);
+  resetBtn.addEventListener('click', resetGame);
+  muteBtn.addEventListener('click', toggleMute);
+
+  // ==================== 初始化 ====================
+  initGoldBars();
+  updateGoldBar('red');
+  updateGoldBar('blue');
+  resetTimerVisual('red');
+  resetTimerVisual('blue');
+</script>
+</body>
+</html>
