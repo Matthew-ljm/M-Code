@@ -607,7 +607,7 @@
     <div class="container">
         <header class="hero">
             <h1 id="heroTitle" title="点击查看软件说明">课程表进度条</h1>
-            <p>v2.1.6 / v3.1.1 · Windows / 统信 UOS</p>
+            <p>v2.1.6 / v3.2.0 · Windows / 统信 UOS</p>
         </header>
         <h2 class="section-title">版本列表 <span class="count" id="versionCount"></span></h2>
         <div class="version-grid" id="versionGrid"></div>
@@ -659,11 +659,13 @@
 <script>
     const versionList = [
         { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
-        { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "2026-10-02", mdNote: "v311", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "最新 Windows 版本，功能更完善，推荐下载。" }
+        { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "2026-10-02", mdNote: "v311", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "经典稳定版本，功能完善。" },
+        { name: "课程表进度条 v3.2.0", platform: "windows", ext: "exe", date: "2026-10-17", mdNote: "v320", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.0/ClassSchedule-v3.2.0-Windows-Installer.exe", desc: "最新 Windows 版本，功能更完善，推荐下载。" }
     ];
     const mdNoteUrls = {
         v216: "https://test.m-code.top/class-schedule/CHANGELOG-v2.1.6.md",
         v311: "https://test.m-code.top/class-schedule/CHANGELOG-v3.1.1.md",
+        v320: "https://test.m-code.top/class-schedule/CHANGELOG-v3.2.0.md",
         readme: "https://test.m-code.top/class-schedule/README.md"
     };
     const platformMeta = {
@@ -785,6 +787,7 @@
     const mdNoteMeta = {
         v216: { title: '课程表进度条 v2.1.6 版本说明' },
         v311: { title: '课程表进度条 v3.1.1 版本说明' },
+        v320: { title: '课程表进度条 v3.2.0 版本说明' },
         readme: { title: '课程表进度条说明' }
     };
 
@@ -798,7 +801,7 @@
         if (!markedLoadingPromise) {
             markedLoadingPromise = new Promise(function(resolve, reject) {
                 const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+                script.src = './documents/marked.min.js';
                 script.onload = function() { resolve(window.marked); };
                 script.onerror = function() { reject(new Error('marked 加载失败')); };
                 document.head.appendChild(script);
