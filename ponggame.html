@@ -130,7 +130,8 @@
 
 	<canvas id="pong" width="800" height="500"></canvas>
 
-	<div id="gameOver">
+	<div id="gameOver" style="position: relative;">
+		<button id="backBtn" style="position:absolute;top:10px;left:10px;padding:6px 12px;font-size:14px;background:#333;color:#fff;border:2px solid #0ff;border-radius:5px;margin-top:0;">←返回</button>
 		<h2>游戏结束!</h2>
 		<div id="winner">玩家获胜!</div>
 		<div>最终得分: <span id="finalPlayerScore">0</span> - <span id="finalAiScore">0</span></div>
@@ -148,6 +149,7 @@
 		const aiScoreElement = document.getElementById('aiScore');
 		const startBtn = document.getElementById('startBtn');
 		const restartBtn = document.getElementById('restartBtn');
+		const backBtn = document.getElementById('backBtn');
 		const difficultySelect = document.getElementById('difficulty');
 		const gameTimeInput = document.getElementById('gameTime');
 
@@ -159,6 +161,12 @@
 		let timeRemaining = 0;
 		let gameInterval;
 		let isGameActive = false;
+
+		let isPaused = false;
+		let pauseText = '';
+		let pauseColor = '#f04';
+		let pauseTimeouts = [];
+		let serveState = 'idle';
 
 		const PADDLE_WIDTH = 10;
 		const PADDLE_HEIGHT = 100;
@@ -187,11 +195,11 @@
 		};
 
 		let ball = {
-			x: WIDTH/2 - BALL_SIZE/2,
-			y: HEIGHT/2 - BALL_SIZE/2,
+			x: 0,
+			y: 0,
 			size: BALL_SIZE,
 			speedX: 0,
-			speedY: 0,
+			speedY: 0
 		};
 
         function trackPageVisit() {
@@ -218,6 +226,7 @@
 
 		startBtn.addEventListener('click', startGame);
 		restartBtn.addEventListener('click', restartGame);
+		backBtn.addEventListener('click', restartGame);
 
 		canvas.addEventListener('mousemove', function(evt) {
 			if (!isGameActive) return;
@@ -257,6 +266,47 @@
 			}
 		}
 
+		function clearPauseTimeouts() {
+			for (let i = 0; i < pauseTimeouts.length; i++) {
+				clearTimeout(pauseTimeouts[i]);
+			}
+			pauseTimeouts = [];
+		}
+
+		function placeBallForServe() {
+			ball.x = ai.x - 60 - ball.size;
+			ball.y = ai.y + ai.height/2 - ball.size/2;
+			ball.speedX = 0;
+			ball.speedY = 0;
+		}
+
+		function runCountdown() {
+			clearPauseTimeouts();
+			isPaused = true;
+			serveState = 'countdown';
+			placeBallForServe();
+			pauseText = '3';
+			pauseColor = '#fff';
+			pauseTimeouts.push(setTimeout(function() { pauseText = '2'; }, 1000));
+			pauseTimeouts.push(setTimeout(function() { pauseText = '1'; }, 2000));
+			pauseTimeouts.push(setTimeout(function() {
+				pauseText = '';
+				serveState = 'approach';
+			}, 3000));
+		}
+
+		function triggerOut() {
+			clearPauseTimeouts();
+			isPaused = true;
+			serveState = 'out';
+			placeBallForServe();
+			pauseText = '出界';
+			pauseColor = '#f04';
+			pauseTimeouts.push(setTimeout(function() {
+				runCountdown();
+			}, 1000));
+		}
+
 		function startGame() {
 			gameDifficulty = difficultySelect.value;
 			gameDuration = Math.min(60, Math.max(5, parseInt(gameTimeInput.value) || 30));
@@ -274,17 +324,29 @@
 			countdownElement.textContent = timeRemaining;
 			
 			isGameActive = true;
+			clearInterval(gameInterval);
 			gameInterval = setInterval(updateCountdown, 1000);
+			
+			runCountdown();
 			gameLoop();
 		}
 
 		function restartGame() {
 			clearInterval(gameInterval);
+			clearPauseTimeouts();
+			isGameActive = false;
+			isPaused = false;
+			pauseText = '';
+			serveState = 'idle';
 			gameOver.style.display = 'none';
 			menu.style.display = 'block';
+			canvas.style.display = 'none';
+			gameInfo.style.display = 'none';
 		}
 
 		function updateCountdown() {
+			if (isPaused) return;
+
 			timeRemaining--;
 			countdownElement.textContent = timeRemaining;
 			
@@ -295,6 +357,10 @@
 
 		function endGame() {
 			isGameActive = false;
+			isPaused = false;
+			pauseText = '';
+			serveState = 'idle';
+			clearPauseTimeouts();
 			clearInterval(gameInterval);
 			
 			canvas.style.display = 'none';
@@ -318,6 +384,10 @@
 		}
 
 		function resetGame() {
+			clearPauseTimeouts();
+			isPaused = false;
+			pauseText = '';
+			serveState = 'idle';
 			player.score = 0;
 			ai.score = 0;
 			playerScoreElement.textContent = '0';
@@ -325,14 +395,7 @@
 			
 			player.y = HEIGHT/2 - PADDLE_HEIGHT/2;
 			ai.y = HEIGHT/2 - PADDLE_HEIGHT/2;
-			resetBall();
-		}
-
-		function resetBall() {
-			ball.x = WIDTH/2 - BALL_SIZE/2;
-			ball.y = HEIGHT/2 - BALL_SIZE/2;
-			ball.speedX = ballSpeed * (Math.random() > 0.5 ? 1 : -1);
-			ball.speedY = ballSpeed * (Math.random() * 2 - 1);
+			placeBallForServe();
 		}
 
 		function draw() {
@@ -353,6 +416,16 @@
 
 			ctx.fillStyle = '#fff';
 			ctx.fillRect(ball.x, ball.y, ball.size, ball.size);
+
+			if (pauseText) {
+				ctx.font = 'bold 100px Arial';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				ctx.fillStyle = pauseColor;
+				ctx.fillText(pauseText, WIDTH/2, HEIGHT/2);
+				ctx.textAlign = 'left';
+				ctx.textBaseline = 'alphabetic';
+			}
 		}
 
 		function isColliding(paddle, ball) {
@@ -366,6 +439,23 @@
 
 		function update() {
 			if (!isGameActive) return;
+
+			if (serveState === 'approach') {
+				ball.x += ballSpeed;
+				if (ball.x + ball.size >= ai.x) {
+					ball.x = ai.x - ball.size;
+					ball.speedX = -ballSpeed;
+					ball.speedY = (Math.random() * 2 - 1) * ballSpeed * 0.5;
+					if (Math.abs(ball.speedY) < ballSpeed * 0.2) {
+						ball.speedY = ballSpeed * 0.3 * (Math.random() > 0.5 ? 1 : -1);
+					}
+					serveState = 'live';
+					isPaused = false;
+				}
+				return;
+			}
+
+			if (isPaused) return;
 
 			ball.x += ball.speedX;
 			ball.y += ball.speedY;
@@ -400,11 +490,13 @@
 			if (ball.x + ball.size < 0) {
 				ai.score++;
 				aiScoreElement.textContent = ai.score;
-				resetBall();
+				triggerOut();
+				return;
 			} else if (ball.x > WIDTH) {
 				player.score++;
 				playerScoreElement.textContent = player.score;
-				resetBall();
+				triggerOut();
+				return;
 			}
 
 			let aiTargetY = ball.y + ball.size/2 - ai.height/2;
