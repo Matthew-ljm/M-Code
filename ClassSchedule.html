@@ -283,6 +283,7 @@
             flex: 1;
             min-width: 250px;
             padding: 22px 20px;
+            position: relative;
             border: 1.5px solid rgba(0, 0, 0, 0.09);
             border-radius: 14px;
             cursor: pointer;
@@ -382,6 +383,15 @@
         .md-hint-btn:hover {
             opacity: 1;
             transform: scale(1.15);
+        }
+        .option-md-hint {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+        }
+        .option-md-hint img {
+            width: 23px;
+            height: 23px;
         }
         .card-actions {
             position: absolute;
@@ -624,10 +634,11 @@
     <div id="versionModal">
         <div class="modal-content">
             <button class="close-button" id="modalCloseButton">&times;</button>
-            <h2>选择课程表进度条 v2.1.6 版本<button type="button" class="md-hint-btn" id="v216HintBtn" title="查看版本说明"><img src="icon/提示.png" alt="版本说明"></button></h2>
+            <h2><span id="versionModalTitle">选择课程表进度条 v2.1.6 版本</span><button type="button" class="md-hint-btn" id="versionHintBtn" data-md-note="v216" title="查看版本说明"><img src="icon/提示.png" alt="版本说明"></button></h2>
             <div class="modal-sub">两个平台任选 · 安装包 / 压缩包</div>
             <div class="options-container">
                 <div class="option" data-value="windows">
+                    <button type="button" class="md-hint-btn option-md-hint" data-md-note="v320" title="查看 Windows 版说明" hidden><img src="icon/提示.png" alt="Windows 版说明"></button>
                     <div class="exe-icon">EXE</div>
                     <div class="option-title">Windows 版</div>
                     <div class="option-description">
@@ -636,6 +647,7 @@
                     </div>
                 </div>
                 <div class="option" data-value="uos">
+                    <button type="button" class="md-hint-btn option-md-hint" data-md-note="v320uos" title="查看统信 UOS 版说明" hidden><img src="icon/提示.png" alt="统信 UOS 版说明"></button>
                     <div class="exe-icon">ZIP</div>
                     <div class="option-title">统信 UOS 版</div>
                     <div class="option-description">
@@ -658,15 +670,37 @@
     </div>
 <script>
     const versionList = [
-        { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
+        { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", platformKey: "v216", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
         { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "2026-10-02", mdNote: "v311", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "经典稳定版本，功能完善。" },
-        { name: "课程表进度条 v3.2.0", platform: "windows", ext: "exe", date: "2026-10-17", mdNote: "v320", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.0/ClassSchedule-v3.2.0-Windows-Installer.exe", desc: "最新 Windows 版本，功能更完善，推荐下载。" }
+        { name: "课程表进度条 v3.2.0", platform: "windows", ext: "exe/zip", date: "2026-11-08", special: "platform", platformKey: "v320", mdNote: "v320", linuxTag: true, desc: "最新版本，提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" }
     ];
     const mdNoteUrls = {
         v216: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v2.1.6.md",
         v311: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v3.1.1.md",
         v320: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v3.2.0.md",
+        v320uos: "https://test.m-code.top/class-schedule/UOS/CHANGELOG-v3.2.0.md",
         readme: "https://test.m-code.top/class-schedule/README.md"
+    };
+    const platformReleases = {
+        v216: {
+            title: "选择课程表进度条 v2.1.6 版本",
+            titleHintNote: "v216",
+            downloads: {
+                windows: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-Windows-Installer.exe",
+                uos: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-UOS.zip"
+            }
+        },
+        v320: {
+            title: "选择课程表进度条 v3.2.0 版本",
+            optionHintNotes: {
+                windows: "v320",
+                uos: "v320uos"
+            },
+            downloads: {
+                windows: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.0/ClassSchedule-v3.2.0-Windows-Installer.exe",
+                uos: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.0/ClassSchedule-v3.2.0-UOS.7z"
+            }
+        }
     };
     const platformMeta = {
         windows: { label: "Windows", cls: "badge-windows" }
@@ -704,7 +738,7 @@
         }
         card.addEventListener('click', () => {
             if (sw.special === 'platform') {
-                showVersionModal();
+                showVersionModal(sw.platformKey);
             } else {
                 window.location.href = sw.url;
             }
@@ -733,7 +767,24 @@
     const versionModal = document.getElementById('versionModal');
     const downloadConfirmBtn = document.getElementById('downloadConfirmBtn');
 
-    function showVersionModal() {
+    let currentPlatformKey = 'v216';
+    const versionModalTitle = document.getElementById('versionModalTitle');
+    const versionHintBtn = document.getElementById('versionHintBtn');
+
+    function showVersionModal(key) {
+        const meta = platformReleases[key];
+        if (!meta) return;
+        currentPlatformKey = key;
+        versionModalTitle.textContent = meta.title;
+        const titleNote = meta.titleHintNote || '';
+        versionHintBtn.hidden = !titleNote;
+        if (titleNote) versionHintBtn.setAttribute('data-md-note', titleNote);
+        document.querySelectorAll('#versionModal .option').forEach(option => {
+            const hintBtn = option.querySelector('.option-md-hint');
+            const optionNote = meta.optionHintNotes && meta.optionHintNotes[option.getAttribute('data-value')] || '';
+            hintBtn.hidden = !optionNote;
+            if (optionNote) hintBtn.setAttribute('data-md-note', optionNote);
+        });
         versionModal.style.display = 'flex';
     }
 
@@ -771,10 +822,9 @@
         if (!selectedOption) return;
 
         const version = selectedOption.getAttribute('data-value');
-        if (version === 'windows') {
-            window.location.href = 'https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-Windows-Installer.exe';
-        } else if (version === 'uos') {
-            window.location.href = 'https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-UOS.zip';
+        const downloadUrl = platformReleases[currentPlatformKey].downloads[version];
+        if (downloadUrl) {
+            window.location.href = downloadUrl;
         }
 
         versionModal.style.display = 'none';
@@ -788,6 +838,7 @@
         v216: { title: '课程表进度条 v2.1.6 版本说明' },
         v311: { title: '课程表进度条 v3.1.1 版本说明' },
         v320: { title: '课程表进度条 v3.2.0 版本说明' },
+        v320uos: { title: '课程表进度条 v3.2.0 统信 UOS 版说明' },
         readme: { title: '课程表进度条说明' }
     };
 
@@ -838,8 +889,15 @@
         mdModalBody.innerHTML = '';
     }
 
-    document.getElementById('v216HintBtn').addEventListener('click', function() {
-        openMdModal('v216');
+    document.getElementById('versionHintBtn').addEventListener('click', function() {
+        openMdModal(this.getAttribute('data-md-note'));
+    });
+
+    document.querySelectorAll('#versionModal .option-md-hint').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openMdModal(this.getAttribute('data-md-note'));
+        });
     });
 
     document.getElementById('heroTitle').addEventListener('click', function() {
@@ -868,7 +926,9 @@
         } else if (hash === '#box4') {
             openMdModal('v320');
         } else if (hash === '#card1') {
-            showVersionModal();
+            showVersionModal('v216');
+        } else if (hash === '#card2') {
+            showVersionModal('v320');
         }
     }
 
