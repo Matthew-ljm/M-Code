@@ -617,7 +617,7 @@
     <div class="container">
         <header class="hero">
             <h1 id="heroTitle" title="点击查看软件说明">课程表进度条</h1>
-            <p>v2.1.6 / v3.2.0 · Windows / 统信 UOS</p>
+            <p>v2.1.6 / v3.2.0 / v3.2.1 · Windows / 统信 UOS</p>
         </header>
         <h2 class="section-title">版本列表 <span class="count" id="versionCount"></span></h2>
         <div class="version-grid" id="versionGrid"></div>
@@ -672,13 +672,16 @@
     const versionList = [
         { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", platformKey: "v216", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
         { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "2026-10-02", mdNote: "v311", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "经典稳定版本，功能完善。" },
-        { name: "课程表进度条 v3.2.0", platform: "windows", ext: "exe/7z", date: "2026-11-08", special: "platform", platformKey: "v320", mdNote: "v320", linuxTag: true, desc: "最新版本，提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" }
+        { name: "课程表进度条 v3.2.0", platform: "windows", ext: "exe/7z", date: "2026-11-08", special: "platform", platformKey: "v320", mdNote: "v320", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
+        { name: "课程表进度条 v3.2.1", platform: "windows", ext: "exe/7z", date: "2026-11-08", special: "platform", platformKey: "v321", mdNote: "v321", linuxTag: true, desc: "最新版本，提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" }
     ];
     const mdNoteUrls = {
         v216: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v2.1.6.md",
         v311: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v3.1.1.md",
         v320: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v3.2.0.md",
         v320uos: "https://test.m-code.top/class-schedule/UOS/CHANGELOG-v3.2.0.md",
+        v321: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v3.2.1.md",
+        v321uos: "https://test.m-code.top/class-schedule/UOS/CHANGELOG-v3.2.1.md",
         readme: "https://test.m-code.top/class-schedule/README.md"
     };
     const platformReleases = {
@@ -707,6 +710,21 @@
             downloads: {
                 windows: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.0/ClassSchedule-v3.2.0-Windows-Installer.exe",
                 uos: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.0/ClassSchedule-v3.2.0-UOS.7z"
+            }
+        },
+        v321: {
+            title: "选择课程表进度条 v3.2.1 版本",
+            optionDetails: {
+                windows: { icon: "EXE", desc: ["适用于 Windows 系统", "安装包格式：.exe"] },
+                uos: { icon: "7Z", desc: ["适用于统信 UOS 系统", "压缩包格式：.7z"] }
+            },
+            optionHintNotes: {
+                windows: "v321",
+                uos: "v321uos"
+            },
+            downloads: {
+                windows: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.1/ClassSchedule-v3.2.1-Windows-Installer.exe",
+                uos: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.2.1/ClassSchedule-v3.2.1-UOS.7z"
             }
         }
     };
@@ -855,6 +873,8 @@
         v311: { title: '课程表进度条 v3.1.1 版本说明' },
         v320: { title: '课程表进度条 v3.2.0 版本说明' },
         v320uos: { title: '课程表进度条 v3.2.0 统信 UOS 版说明' },
+        v321: { title: '课程表进度条 v3.2.1 版本说明' },
+        v321uos: { title: '课程表进度条 v3.2.1 统信 UOS 版说明' },
         readme: { title: '课程表进度条说明' }
     };
 
@@ -941,10 +961,14 @@
             openMdModal('v311');
         } else if (hash === '#box4') {
             openMdModal('v320');
+        } else if (hash === '#box5') {
+            openMdModal('v321');
         } else if (hash === '#card1') {
             showVersionModal('v216');
         } else if (hash === '#card2') {
             showVersionModal('v320');
+        } else if (hash === '#card3') {
+            showVersionModal('v321');
         }
     }
 
