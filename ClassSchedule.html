@@ -672,7 +672,7 @@
     const versionList = [
         { name: "课程表进度条 v2.1.6", platform: "windows", ext: "exe/zip", date: "2026-06-11", special: "platform", platformKey: "v216", linuxTag: true, desc: "提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" },
         { name: "课程表进度条 v3.1.1", platform: "windows", ext: "exe", date: "2026-10-02", mdNote: "v311", url: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v3.1.1/ClassSchedule-v3.1.1-Windows-Installer.exe", desc: "经典稳定版本，功能完善。" },
-        { name: "课程表进度条 v3.2.0", platform: "windows", ext: "exe/zip", date: "2026-11-08", special: "platform", platformKey: "v320", mdNote: "v320", linuxTag: true, desc: "最新版本，提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" }
+        { name: "课程表进度条 v3.2.0", platform: "windows", ext: "exe/7z", date: "2026-11-08", special: "platform", platformKey: "v320", mdNote: "v320", linuxTag: true, desc: "最新版本，提供 Windows 与统信 UOS 两个版本，点击卡片后选择平台下载。" }
     ];
     const mdNoteUrls = {
         v216: "https://test.m-code.top/class-schedule/Win/CHANGELOG-v2.1.6.md",
@@ -685,6 +685,10 @@
         v216: {
             title: "选择课程表进度条 v2.1.6 版本",
             titleHintNote: "v216",
+            optionDetails: {
+                windows: { icon: "EXE", desc: ["适用于 Windows 系统", "安装包格式：.exe"] },
+                uos: { icon: "ZIP", desc: ["适用于统信 UOS 系统", "压缩包格式：.zip"] }
+            },
             downloads: {
                 windows: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-Windows-Installer.exe",
                 uos: "https://gitee.com/matthew-ljm/class-schedule/releases/download/v2.1.6/ClassSchedule-v2.1.6-UOS.zip"
@@ -692,6 +696,10 @@
         },
         v320: {
             title: "选择课程表进度条 v3.2.0 版本",
+            optionDetails: {
+                windows: { icon: "EXE", desc: ["适用于 Windows 系统", "安装包格式：.exe"] },
+                uos: { icon: "7Z", desc: ["适用于统信 UOS 系统", "压缩包格式：.7z"] }
+            },
             optionHintNotes: {
                 windows: "v320",
                 uos: "v320uos"
@@ -780,8 +788,16 @@
         versionHintBtn.hidden = !titleNote;
         if (titleNote) versionHintBtn.setAttribute('data-md-note', titleNote);
         document.querySelectorAll('#versionModal .option').forEach(option => {
+            const value = option.getAttribute('data-value');
+            const detail = meta.optionDetails && meta.optionDetails[value];
+            if (detail) {
+                option.querySelector('.exe-icon').textContent = detail.icon;
+                option.querySelector('.option-description').innerHTML = detail.desc.map(function(line) {
+                    return '<p>' + line + '</p>';
+                }).join('');
+            }
             const hintBtn = option.querySelector('.option-md-hint');
-            const optionNote = meta.optionHintNotes && meta.optionHintNotes[option.getAttribute('data-value')] || '';
+            const optionNote = meta.optionHintNotes && meta.optionHintNotes[value] || '';
             hintBtn.hidden = !optionNote;
             if (optionNote) hintBtn.setAttribute('data-md-note', optionNote);
         });
