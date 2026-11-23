@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icon/schulte-grid.ico" type="image/x-icon">
+    <title>舒尔特方格</title>
+    <style>
+        :root {
+            --size: 5;
+            --cell: 64px;
+            --gap: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 22px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .controls label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #374151;
+        }
+
+        .controls input[type="number"] {
+            width: 60px;
+            padding: 6px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        /* 开关样式 */
+        .switch-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .switch {
+            position: relative;
+            width: 42px;
+            height: 22px;
+            background: #d1d5db;
+            border-radius: 11px;
+            transition: background .2s;
+        }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform .2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+        }
+
+        .switch.on {
+            background: #2563eb;
+        }
+
+        .switch.on::after {
+            transform: translateX(20px);
+        }
+
+        .panel {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .panel b {
+            font-variant-numeric: tabular-nums;
+        }
+
+        button {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button.stop {
+            background: #dc2626;
+        }
+
+        button.stop:hover {
+            background: #b91c1c;
+        }
+
+        button.secondary {
+            background: #6b7280;
+        }
+
+        button.secondary:hover {
+            background: #4b5563;
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(var(--size), var(--cell));
+            gap: var(--gap);
+        }
+
+        .cell {
+            width: var(--cell);
+            height: var(--cell);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 600;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
+            cursor: pointer;
+            user-select: none;
+            transition: transform .1s, background .15s;
+        }
+
+        .cell:active {
+            transform: scale(.95);
+        }
+
+        .cell.done {
+            background: #dcfce7;
+            color: #166534;
+            cursor: default;
+        }
+
+        .cell.wrong {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .tip {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* 自定义弹窗 */
+        .modal-mask {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            animation: fadeIn .18s ease;
+        }
+
+        .modal-mask.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 14px;
+            padding: 28px 36px;
+            min-width: 280px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .18);
+            animation: popIn .22s cubic-bezier(.2, 1.3, .4, 1);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(.85); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+
+        .modal .icon {
+            font-size: 44px;
+            margin-bottom: 8px;
+        }
+
+        .modal .title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .modal .title.success { color: #16a34a; }
+        .modal .title.fail    { color: #dc2626; }
+        .modal .title.info    { color: #2563eb; }
+
+        .modal .msg {
+            color: #4b5563;
+            font-size: 15px;
+            margin-bottom: 18px;
+        }
+
+        .modal button {
+            padding: 8px 28px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>舒尔特方格</h1>
+
+    <div class="controls">
+        <label>
+            方块数 N×N:
+            <input type="number" id="sizeInput" min="2" max="12" value="5">
+        </label>
+        <button id="applySize" class="secondary">应用</button>
+        <label class="switch-wrap" id="switchWrap">
+            <span id="modeLabel">交互式</span>
+            <span class="switch on" id="modeSwitch"></span>
+        </label>
+    </div>
+
+    <div class="panel">
+        <span>用时：<b id="time">0.0</b> 秒</span>
+        <span id="progressBox">进度：<b id="progress">0</b>/<span id="total">25</span></span>
+        <span id="wrongBox">错误：<b id="wrongCount">0</b>/3</span>
+        <button id="mainBtn">开始</button>
+        <button id="resetBtn" class="secondary">重置</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="tip" id="tip">按 1 → <span id="tipTotal">25</span> 的顺序依次点击数字</div>
+
+    <!-- 自定义弹窗 -->
+    <div class="modal-mask" id="modalMask">
+        <div class="modal">
+            <div class="icon" id="modalIcon">🎉</div>
+            <div class="title" id="modalTitle">标题</div>
+            <div class="msg" id="modalMsg">内容</div>
+            <button id="modalOk">好的</button>
+        </div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const timeEl = document.getElementById('time');
+        const progressEl = document.getElementById('progress');
+        const totalEl = document.getElementById('total');
+        const tipTotalEl = document.getElementById('tipTotal');
+        const mainBtn = document.getElementById('mainBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const sizeInput = document.getElementById('sizeInput');
+        const applySizeBtn = document.getElementById('applySize');
+        const modeSwitch = document.getElementById('modeSwitch');
+        const modeLabel = document.getElementById('modeLabel');
+        const switchWrap = document.getElementById('switchWrap');
+        const progressBox = document.getElementById('progressBox');
+        const tipEl = document.getElementById('tip');
+
+        let SIZE = 5;
+        let TOTAL = SIZE * SIZE;
+        let interactive = true;       // true=交互式, false=纯计时
+        let running = false;          // 是否正在计时
+        let next = 1;
+        let wrongCount = 0;           // 错误次数（累计）
+        let startTime = null;
+        let timer = null;
+        let finished = false;
+
+        const wrongCountEl = document.getElementById('wrongCount');
+        const wrongBox = document.getElementById('wrongBox');
+
+        // 弹窗 DOM
+        const modalMask = document.getElementById('modalMask');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMsg = document.getElementById('modalMsg');
+        const modalOk = document.getElementById('modalOk');
+
+        function showModal(type, title, msg) {
+            const map = {
+                success: { icon: '🎉', cls: 'success' },
+                fail:    { icon: '💔', cls: 'fail'    },
+                info:    { icon: '⏱️', cls: 'info'   }
+            };
+            const cfg = map[type] || map.info;
+            modalIcon.textContent = cfg.icon;
+            modalTitle.textContent = title;
+            modalTitle.className = 'title ' + cfg.cls;
+            modalMsg.textContent = msg;
+            modalMask.classList.add('show');
+        }
+
+        function hideModal() {
+            modalMask.classList.remove('show');
+        }
+
+        modalOk.addEventListener('click', hideModal);
+        modalMask.addEventListener('click', (e) => {
+            if (e.target === modalMask) hideModal();
+        });
+
+        // 根据方块数量自动调整 cell 大小
+        function adjustCellSize() {
+            const maxSize = Math.min(window.innerWidth - 40, 600);
+            const cell = Math.floor((maxSize - (SIZE - 1) * 8) / SIZE);
+            const finalCell = Math.max(32, Math.min(cell, 64));
+            document.documentElement.style.setProperty('--cell', finalCell + 'px');
+        }
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timer = setInterval(() => {
+                timeEl.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
+            }, 100);
+        }
+
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        // showNumber: true=显示随机数字, false=全部显示问号
+        function renderGrid(showNumber = true) {
+            grid.innerHTML = '';
+            const nums = shuffle(Array.from({ length: TOTAL }, (_, i) => i + 1));
+            nums.forEach(n => {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.textContent = showNumber ? n : '?';
+                cell.dataset.num = n;
+                cell.addEventListener('click', () => onPick(cell, n));
+                grid.appendChild(cell);
+            });
+        }
+
+        // 重新洗牌并显示数字（开始游戏时调用）
+        function refreshGrid() {
+            renderGrid(true);
+        }
+
+        // 重置为问号状态
+        function blankGrid() {
+            renderGrid(false);
+        }
+
+        function onPick(cell, n) {
+            // 纯计时模式下不处理方块点击
+            if (!interactive) return;
+            if (!running || finished) return;
+
+            if (n === next) {
+                cell.classList.add('done');
+                next++;
+                progressEl.textContent = next - 1;
+                if (next > TOTAL) {
+                    finished = true;
+                    stopTimer();
+                    running = false;
+                    timeEl.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
+                    mainBtn.textContent = '开始';
+                    mainBtn.classList.remove('stop');
+                    showModal('success', '完成！', '用时 ' + timeEl.textContent + ' 秒');
+                }
+            } else {
+                cell.classList.add('wrong');
+                setTimeout(() => cell.classList.remove('wrong'), 300);
+                wrongCount++;
+                wrongCountEl.textContent = wrongCount;
+                if (wrongCount >= 3) {
+                    finished = true;
+                    stopTimer();
+                    running = false;
+                    timeEl.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
+                    mainBtn.textContent = '开始';
+                    mainBtn.classList.remove('stop');
+                    showModal('fail', '失败！', '错误 3 次，用时 ' + timeEl.textContent + ' 秒');
+                }
+            }
+        }
+
+        function updateUI() {
+            // tip 提示只在交互式下显示（纯计时不需要"按顺序点击"的文字）
+            tipEl.style.display = interactive ? '' : 'none';
+            tipTotalEl.textContent = TOTAL;
+        }
+
+        function reset() {
+            stopTimer();
+            running = false;
+            finished = false;
+            next = 1;
+            wrongCount = 0;
+            startTime = null;
+            timeEl.textContent = '0.0';
+            progressEl.textContent = '0';
+            wrongCountEl.textContent = '0';
+            mainBtn.textContent = '开始';
+            mainBtn.classList.remove('stop');
+            blankGrid();   // 重置为问号，不提前洗牌
+            updateUI();
+        }
+
+        // 应用按钮：只保存数量，不洗牌
+        function applySize() {
+            let n = parseInt(sizeInput.value, 10);
+            if (isNaN(n) || n < 2) n = 2;
+            if (n > 12) n = 12;
+            sizeInput.value = n;
+            SIZE = n;
+            TOTAL = SIZE * SIZE;
+            document.documentElement.style.setProperty('--size', SIZE);
+            totalEl.textContent = TOTAL;
+            adjustCellSize();
+            reset();
+        }
+
+        function toggleMode() {
+            interactive = !interactive;
+            modeSwitch.classList.toggle('on', interactive);
+            modeLabel.textContent = interactive ? '交互式' : '纯计时';
+            reset();
+        }
+
+        function handleMainBtn() {
+            if (running) {
+                // 停止
+                stopTimer();
+                running = false;
+                mainBtn.textContent = '开始';
+                mainBtn.classList.remove('stop');
+                if (!interactive) {
+                    showModal('info', '停止！', '用时 ' + timeEl.textContent + ' 秒');
+                }
+            } else {
+                // 开始：此时才真正洗牌 + 显示数字
+                next = 1;
+                wrongCount = 0;
+                progressEl.textContent = '0';
+                wrongCountEl.textContent = '0';
+                finished = false;
+                refreshGrid();  // 不管哪种模式，开始时都要洗牌显示数字
+                startTimer();
+                running = true;
+                mainBtn.textContent = '停止';
+                mainBtn.classList.add('stop');
+            }
+        }
+
+        // 事件绑定
+        mainBtn.addEventListener('click', handleMainBtn);
+        resetBtn.addEventListener('click', reset);
+        applySizeBtn.addEventListener('click', applySize);
+        switchWrap.addEventListener('click', toggleMode);
+        sizeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') applySize();
+        });
+        window.addEventListener('resize', adjustCellSize);
+
+        // 初始化
+        totalEl.textContent = TOTAL;
+        adjustCellSize();
+        reset();
+    </script>
+</body>
+
+</html>
