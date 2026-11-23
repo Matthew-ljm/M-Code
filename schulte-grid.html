@@ -61,7 +61,6 @@
             text-align: center;
         }
 
-        /* 开关样式 */
         .switch-wrap {
             display: flex;
             align-items: center;
@@ -189,7 +188,6 @@
             color: #6b7280;
         }
 
-        /* 自定义弹窗 */
         .modal-mask {
             position: fixed;
             inset: 0;
@@ -279,7 +277,6 @@
     <div class="grid" id="grid"></div>
     <div class="tip" id="tip">按 1 → <span id="tipTotal">25</span> 的顺序依次点击数字</div>
 
-    <!-- 自定义弹窗 -->
     <div class="modal-mask" id="modalMask">
         <div class="modal">
             <div class="icon" id="modalIcon">🎉</div>
@@ -318,7 +315,6 @@
         const wrongCountEl = document.getElementById('wrongCount');
         const wrongBox = document.getElementById('wrongBox');
 
-        // 弹窗 DOM
         const modalMask = document.getElementById('modalMask');
         const modalIcon = document.getElementById('modalIcon');
         const modalTitle = document.getElementById('modalTitle');
@@ -348,7 +344,6 @@
             if (e.target === modalMask) hideModal();
         });
 
-        // 根据方块数量自动调整 cell 大小
         function adjustCellSize() {
             const maxSize = Math.min(window.innerWidth - 40, 600);
             const cell = Math.floor((maxSize - (SIZE - 1) * 8) / SIZE);
@@ -378,7 +373,6 @@
             }
         }
 
-        // showNumber: true=显示随机数字, false=全部显示问号
         function renderGrid(showNumber = true) {
             grid.innerHTML = '';
             const nums = shuffle(Array.from({ length: TOTAL }, (_, i) => i + 1));
@@ -392,18 +386,15 @@
             });
         }
 
-        // 重新洗牌并显示数字（开始游戏时调用）
         function refreshGrid() {
             renderGrid(true);
         }
 
-        // 重置为问号状态
         function blankGrid() {
             renderGrid(false);
         }
 
         function onPick(cell, n) {
-            // 纯计时模式下不处理方块点击
             if (!interactive) return;
             if (!running || finished) return;
 
@@ -438,7 +429,6 @@
         }
 
         function updateUI() {
-            // tip 提示只在交互式下显示（纯计时不需要"按顺序点击"的文字）
             tipEl.style.display = interactive ? '' : 'none';
             tipTotalEl.textContent = TOTAL;
         }
@@ -455,11 +445,10 @@
             wrongCountEl.textContent = '0';
             mainBtn.textContent = '开始';
             mainBtn.classList.remove('stop');
-            blankGrid();   // 重置为问号，不提前洗牌
+            blankGrid();
             updateUI();
         }
 
-        // 应用按钮：只保存数量，不洗牌
         function applySize() {
             let n = parseInt(sizeInput.value, 10);
             if (isNaN(n) || n < 2) n = 2;
@@ -482,7 +471,6 @@
 
         function handleMainBtn() {
             if (running) {
-                // 停止
                 stopTimer();
                 running = false;
                 mainBtn.textContent = '开始';
@@ -491,13 +479,12 @@
                     showModal('info', '停止！', '用时 ' + timeEl.textContent + ' 秒');
                 }
             } else {
-                // 开始：此时才真正洗牌 + 显示数字
                 next = 1;
                 wrongCount = 0;
                 progressEl.textContent = '0';
                 wrongCountEl.textContent = '0';
                 finished = false;
-                refreshGrid();  // 不管哪种模式，开始时都要洗牌显示数字
+                refreshGrid();
                 startTimer();
                 running = true;
                 mainBtn.textContent = '停止';
@@ -505,7 +492,6 @@
             }
         }
 
-        // 事件绑定
         mainBtn.addEventListener('click', handleMainBtn);
         resetBtn.addEventListener('click', reset);
         applySizeBtn.addEventListener('click', applySize);
@@ -515,7 +501,6 @@
         });
         window.addEventListener('resize', adjustCellSize);
 
-        // 初始化
         totalEl.textContent = TOTAL;
         adjustCellSize();
         reset();
