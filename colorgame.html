@@ -217,6 +217,14 @@
             background-color: #b72121;
         }
 
+        .btn-back {
+            background-color: var(--gray-600);
+        }
+
+        .btn-back:hover {
+            background-color: var(--gray-800);
+        }
+
         .result {
             margin-top: 30px;
             font-size: 22px;
@@ -279,6 +287,7 @@
             <button id="start-btn" class="btn">开始游戏</button>
             <button id="next-btn" class="btn btn-success hidden" disabled>下一关</button>
             <button id="restart-btn" class="btn btn-danger hidden">重新开始</button>
+            <button id="back-btn" class="btn btn-back hidden">←返回</button>
         </div>
 
         <div id="result" class="result"></div>
@@ -317,6 +326,7 @@
             startBtn: document.getElementById('start-btn'),
             nextBtn: document.getElementById('next-btn'),
             restartBtn: document.getElementById('restart-btn'),
+            backBtn: document.getElementById('back-btn'),
             result: document.getElementById('result')
         };
 
@@ -324,6 +334,7 @@
             elements.startBtn.addEventListener('click', startGame);
             elements.nextBtn.addEventListener('click', goToNextLevel);
             elements.restartBtn.addEventListener('click', restartGame);
+            elements.backBtn.addEventListener('click', goBack);
         }
 
         function startGame() {
@@ -346,6 +357,7 @@
             elements.restartBtn.classList.add('btn-danger');
             
             elements.grid.classList.add('show');
+            elements.backBtn.classList.remove('hidden');
             loadLevel(gameConfig.currentLevel);
         }
 
@@ -480,6 +492,32 @@
 
         function restartGame() {
             startGame();
+        }
+
+        function goBack() {
+            if (gameConfig.highlightTimer) {
+                clearTimeout(gameConfig.highlightTimer);
+                gameConfig.highlightTimer = null;
+            }
+            stopTimer();
+            gameConfig.gameActive = false;
+            gameConfig.currentLevel = 0;
+            gameConfig.totalTime = 0;
+            elements.currentLevel.textContent = '1';
+            elements.timer.textContent = '0.0';
+            elements.result.textContent = '';
+            elements.result.style.fontSize = '';
+            elements.result.style.marginTop = '';
+            elements.result.classList.remove('success', 'failure');
+            elements.grid.classList.remove('show');
+            elements.grid.innerHTML = '';
+            elements.startBtn.classList.remove('hidden');
+            elements.nextBtn.classList.add('hidden');
+            elements.nextBtn.disabled = true;
+            elements.restartBtn.classList.add('hidden');
+            elements.restartBtn.textContent = '重新开始';
+            elements.restartBtn.classList.add('btn-danger');
+            elements.backBtn.classList.add('hidden');
         }
 
         window.addEventListener('load', () => {
